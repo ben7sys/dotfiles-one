@@ -47,7 +47,7 @@ link_directory() {
 
     # check if the target directory exists, if not, create it
     if [ ! -d "$target_dir" ]; then
-        echo "Verzeichnis $target_dir existiert nicht, wird erstellt..."
+        echo "Directory $target_dir does not exist, creating..."
         mkdir -p "$target_dir"
         echo "mkdir -p $target_dir ausgeführt"
     fi
@@ -63,13 +63,13 @@ link_directory() {
             local target_path='"$target_dir"'$relative_path
 
             if [ -d "$filepath" ]; then
-                # Es handelt sich um ein Verzeichnis
+                # It is a directory
                 mkdir -p "$target_path"
-                echo "mkdir -p $target_path ausgeführt"
+                echo "mkdir -p $target_path executed"
             elif [ -f "$filepath" ]; then
-                # Es handelt sich um eine Datei
+                # Its a file
                 ln -sfn "$filepath" "$target_path"
-                echo "ln -sfn $filepath $target_path ausgeführt"
+                echo "ln -sfn $filepath $target_path executed"
             fi
         done
     ' bash {} +

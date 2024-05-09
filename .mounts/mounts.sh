@@ -1,27 +1,28 @@
 #!/bin/bash
 
-# Dieses Script mountet NFS-Verzeichnisse, die in der .conf Datei definiert sind
-# Die .conf Datei sollte im Verzeichnis $USER_HOME/.mounts liegen
-# Das Script überprüft, ob nfs-common installiert ist
-# und ob die Verzeichnisse bereits gemountet sind
-# Wenn nicht, wird der Befehl aus der .conf Datei ausgeführt
+# This script mounts NFS directories defined in the .conf file
 
-# Pfadvariablen
-USER_HOME="/home/sieben"
-DOTFILES_DIR="$USER_HOME/dotfiles"
-LOGFILE="$USER_HOME/.mounts/mounts.log"
+# Path variables from .conf file
+SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+source "$SCRIPT_DIR/.conf"
 
-# Überprüfe, ob nfs-common installiert ist
+# The .conf file should be located in the $USER_HOME/.mounts directory
+# 1. checks if nfs-common is installed
+# 2. checks if the directories are already mounted
+#       if not, it executes the mount command from the .conf file
+# 3. logs the output to $USER_HOME/.mounts/mounts.log
+
+# Check if nfs-common is installed
 if ! dpkg -s nfs-common >/dev/null 2>&1; then
     echo "Fehler: nfs-common ist nicht installiert." | tee -a $LOGFILE
     exit 1
 fi
 
-# Funktion zu prüfen, ob ein Verzeichnis bereits gemountet ist
+# function to check if a directory is already mounted
 check_mounted() {
     local dir="$1"
 
-    # Überprüfe, ob das Verzeichnis ein Mountpunkt ist
+    # Check if the directory is a mount point
     if mountpoint -q "$dir"; then
         echo "Das Verzeichnis $dir ist bereits gemountet." | tee -a $LOGFILE
         return 0
@@ -31,40 +32,39 @@ check_mounted() {
     fi
 }
 
-
-# Funktion die die .conf Datei liest und die Mount-Befehle ausführt
-# Die Funktion ruft check_mounted auf, um zu überprüfen, ob das Verzeichnis bereits gemountet ist
+# Function that reads the .conf file and executes the mount commands
+# calls check_mounted to check if the directory is already mounted
 function mount_nfs() {
-    # Lese die .conf Datei und führe die Mount-Befehle aus
+    # reads the .conf file and executes the mount commands
     while read -r line; do
-        # Ignoriere Kommentare und leere Zeilen
+        # ignore comments and empty lines
         [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
 
-        # Validiere, dass der Befehl mit 'mount' beginnt
+        # validate the mount command
         if [[ "$line" =~ ^mount ]]; then
-            # Extrahiere das Verzeichnis aus dem mount Befehl
+            # extract the mount command from the line
             dir=$(echo $line | awk '{print $3}')
 
-            # Überprüfe, ob das Verzeichnis bereits gemountet ist
+            # checks if the directory is already mounted
             if check_mounted $dir; then
                 echo "Überspringe das Mounten von $dir, da es bereits gemountet ist." | tee -a $LOGFILE
                 continue
             fi
 
-            # Führe den Befehl aus
+            # execute the mount command
             echo "Ausführung des Befehls: $line" | tee -a $LOGFILE
             eval $line 2>>$LOGFILE
             if [ $? -ne 0 ]; then
-                echo "Fehler beim Ausführen des Befehls: $line" | tee -a $LOGFILE
+                echo "Error executing command: $line" | tee -a $LOGFILE
                 exit 1
             fi
         else
-            echo "Nicht erlaubter Befehl: $line" | tee -a $LOGFILE
+            echo "Command not allowed: $line" | tee -a $LOGFILE
             exit 1
         fi
     done < "$USER_HOME/.mounts/.conf"
 }
 
-# Aufruf der mount_nfs Funktion
+# call the function to mount the NFS directories
 mount_nfs
 
