@@ -1,0 +1,9 @@
+[Unit]  
+Description=Mount NFS:server:/path/
+  
+[Service]  
+Type=oneshot  
+ExecStart=/bin/mount -o hard,nolock 192.168.0.XXX:/volume1/nfs /mnt/nfs/servername/share
+
+[Install]  
+WantedBy=multi-user.target

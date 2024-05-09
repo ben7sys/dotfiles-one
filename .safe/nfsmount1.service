@@ -1,0 +1,9 @@
+[Unit]  
+Description=Mount NFS:zmbfs:/tank/manage
+  
+[Service]  
+Type=oneshot  
+ExecStart=/bin/mount -o hard,nolock 192.168.77.151:/tank/manage /mnt/nfs/zmbfs/manage
+
+[Install]  
+WantedBy=multi-user.target
