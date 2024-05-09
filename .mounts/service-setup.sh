@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Skript zur Einrichtung von Service-Verzeichnissen und -Dateien
+# Das Git-Repository welches die dotfiles enthält sollte nach $USER_HOME/dotfiles geklont werden
+# Wenn ein anderer Pfad verwendet wird, muss die Variable DOTFILES_DIR entsprechend angepasst werden
+# Jedes Verzeichnis und jede Datei inklusive versteckter Dateien innerhalb der Target-Verzeichnisse wird rekursiv verlinkt
+# Beispiel: ./dotfiles/.mounts/.conf wird zu ~/.mounts/.conf verlinkt
+# Anschließend werden die NFS-Mounts konfiguriert und gestartet welche in .mounts/.conf definiert sind
+
 # Pfadvariablen
 USER_HOME=$(eval echo ~$SUDO_USER)
 DOTFILES_DIR="$USER_HOME/dotfiles"
@@ -7,6 +14,7 @@ TARGET_DIRS=(".config" ".mounts" ".ssh")  # Liste der zu verlinkenden Verzeichni
 
 # Funktion, um Verzeichnisse zu verlinken
 link_directory() {
+    # Linke source_dir $1 nach target_dir $2
     local source_dir="$1"
     local target_dir="$2"
 
