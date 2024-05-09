@@ -6,6 +6,7 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 ExecStart=/home/sieben/.mounts/mounts.sh
+ExecStop=/home/sieben/.mounts/umounts.sh
 RemainAfterExit=yes
 
 [Install]

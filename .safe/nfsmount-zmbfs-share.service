@@ -4,6 +4,7 @@ Description=Mount NFS:zmbfs:/tank/manage
 [Service]  
 Type=oneshot  
 ExecStart=/bin/mount -o hard,nolock 192.168.77.151:/tank/share /mnt/nfs/zmbfs/share
+ExecStop=umount /mnt/nfs/zmbfs/share
 
 [Install]  
 WantedBy=multi-user.target
