@@ -8,8 +8,9 @@ systemd:
 `/etc/systemd/system/nfsmounts.service`
 
 Filelocation dotfiles clone, home oder `/usr/local/bin` und symlink:
-
+`nano ~/dotfiles/.safe/nfsmount-zmbfs-share.service`
 `nano /usr/local/bin/nfsmounts.service`
+
 
 `ln -s /usr/local/bin/nfsmounts.service /etc/systemd/system/nfsmounts.service`
   
@@ -37,5 +38,5 @@ Service registrieren und starten
 ```
 systemctl daemon-reload  
 systemctl enable nfsmounts.service
-systenctk start nfsmounts.service
+systemctl start nfsmounts.service
 ```

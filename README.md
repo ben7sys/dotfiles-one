@@ -78,3 +78,6 @@ Alt + F2 öffnet KRunner - Eine Suchfeldeingabe erscheint mit der Programme gest
 KWallet muss beim Stock Debian eingerichtet werden um benutzt werden zu können
 Systemeinstellungen KDE Passwortspeicher
 System Settings KWalletManager
+
+## NFS Dienste
+sudo apt install nfs-common
