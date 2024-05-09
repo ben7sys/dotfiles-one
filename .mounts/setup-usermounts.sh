@@ -31,24 +31,28 @@ link_directory() {
         echo "mkdir -p $target_dir ausgeführt"
     fi
 
-    # Kopiere oder verlinke Dateien und Verzeichnisse individuell
-    for entry in "$source_dir"/{*,.*}; do
-        local entry_name=$(basename "$entry")
-        # Ignoriere die speziellen Verzeichnisse . und ..
-        if [ "$entry_name" = "." ] || [ "$entry_name" = ".." ]; then
-            continue
-        fi
-        if [ -d "$entry" ]; then
-            # Es handelt sich um ein Verzeichnis
-            mkdir -p "$target_dir/$entry_name"
-            echo "mkdir -p $target_dir/$entry_name ausgeführt"
-            link_directory "$entry" "$target_dir/$entry_name"
-        elif [ -f "$entry" ]; then
-            # Es handelt sich um eine Datei
-            ln -sfn "$entry" "$target_dir/$entry_name"
-            echo "ln -sfn $entry $target_dir/$entry_name ausgeführt"
-        fi
-    done
+    # Verwende find, um durch alle Dateien und Verzeichnisse in source_dir zu gehen
+    # Für jede Datei oder jedes Verzeichnis wird ein relativer Pfad erstellt, 
+    # indem der source_dir-Pfad vom vollständigen Pfad entfernt wird. 
+    # Dieser relative Pfad wird dann zu target_dir hinzugefügt, 
+    # um den Ziel-Pfad zu erstellen. Wenn das Element ein Verzeichnis ist, wird es erstellt. 
+    # Wenn es eine Datei ist, wird ein symbolischer Link erstellt.
+    find "$source_dir" -mindepth 1 -exec bash -c '
+        for filepath do
+            local relative_path=${filepath#'"$source_dir"'}
+            local target_path='"$target_dir"'$relative_path
+
+            if [ -d "$filepath" ]; then
+                # Es handelt sich um ein Verzeichnis
+                mkdir -p "$target_path"
+                echo "mkdir -p $target_path ausgeführt"
+            elif [ -f "$filepath" ]; then
+                # Es handelt sich um eine Datei
+                ln -sfn "$filepath" "$target_path"
+                echo "ln -sfn $filepath $target_path ausgeführt"
+            fi
+        done
+    ' bash {} +
 }
 
 # Verlinken der Verzeichnisse
