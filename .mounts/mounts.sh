@@ -26,4 +26,4 @@ while read -r line; do
         echo "Nicht erlaubter Befehl: $line"
         exit 1
     fi
-done < ~/.mounts/.conf
+done < "$USER_HOME/.mounts/.conf"
