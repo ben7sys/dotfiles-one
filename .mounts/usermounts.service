@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount NFS Shares from .connections file
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStartPre=-/bin/echo "Starting NFS mount service..."
+ExecStart=/pfad/zu/deinem/mount_nfs.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
