@@ -7,8 +7,10 @@
 systemd:
 `/etc/systemd/system/nfsmounts.service`
 
-Home oder `/usr/local/bin` und symlink:
+Filelocation dotfiles clone, home oder `/usr/local/bin` und symlink:
+
 `nano /usr/local/bin/nfsmounts.service`
+
 `ln -s /usr/local/bin/nfsmounts.service /etc/systemd/system/nfsmounts.service`
   
 
