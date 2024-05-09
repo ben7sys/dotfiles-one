@@ -1,0 +1,9 @@
+[Unit]  
+Description=Custom Service to mount NFS
+  
+[Service]  
+Type=oneshot  
+ExecStart=/bin/mount -o hard,nolock 192.168.77.151:/tank/manage /mnt/remotes/zmbfs/manage
+
+[Install]  
+WantedBy=multi-user.target
