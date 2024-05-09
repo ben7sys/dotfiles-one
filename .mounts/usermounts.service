@@ -1,12 +1,11 @@
 [Unit]
-Description=Mount NFS Shares from .connections file
+Description=Mount NFS Shares from configuration file
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStartPre=-/bin/echo "Starting NFS mount service..."
-ExecStart=/pfad/zu/deinem/mount_nfs.sh
+ExecStart=/home/DEIN_BENUTZERNAME/.mounts/mounts.sh
 RemainAfterExit=yes
 
 [Install]
