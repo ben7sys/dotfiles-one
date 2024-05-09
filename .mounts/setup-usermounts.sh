@@ -1,42 +1,62 @@
 #!/bin/bash
 
-# Skript zur Einrichtung von Service-Verzeichnissen und -Dateien
+# Script for setting up service directories and files
 
 # Anleitung:
-# 1. Das Git-Repository dotfiles nach $USER_HOME/dotfiles klonen: git clone https://github.com/ben7sys/dotfiles.git
-#    !! Wenn ein anderer Pfad verwendet wird, muss die Variable DOTFILES_DIR entsprechend angepasst werden
-# Pfadvariablen
-USER_HOME=$(eval echo ~$SUDO_USER)
-DOTFILES_DIR="$USER_HOME/dotfiles"
-TARGET_DIRS=(".config" ".mounts" ".ssh")  # Liste der zu verlinkenden Verzeichnisse
+# 1. Clone the dotfiles Git repository to $USER_HOME/dotfiles: git clone https://github.com/ben7sys/dotfiles.git
+#    !! If a different path is used, the DOTFILES_DIR variable must be adjusted accordingly
+# Path variables
 
-# Beschreibung:
-# Dieses Skript verlinkt die Verzeichnisse .config, .mounts und .ssh aus dem dotfiles-Repository
-# in das Home-Verzeichnis des Benutzers. Anschließend wird ein systemd-Service registriert und gestartet
-# um die NFS-Mounts aus der .conf-Datei zu konfigurieren und zu starten.
-# Jedes Verzeichnis und jede Datei inklusive versteckter Dateien innerhalb der Target-Verzeichnisse wird rekursiv verlinkt
-# Beispiel: ./dotfiles/.mounts/.conf wird zu ~/.mounts/.conf verlinkt
-# Anschließend werden die NFS-Mounts konfiguriert und gestartet welche in .mounts/.conf definiert sind
+SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+source "$SCRIPT_DIR/.conf"
 
-# Funktion, um Verzeichnisse zu verlinken
+# Check if the variables are set correctly
+echo
+echo USER_HOME:         $USER_HOME
+echo TARGET_DIRS:       $TARGET_DIRS
+echo 
+echo AUTOMATED VARIABLES:
+echo SOURCE_DIR:        $SOURCE_DIR
+echo DOTFILES_DIR:      $DOTFILES_DIR
+echo LOGFILE_MOUNTS:    $LOGFILE_MOUNTS
+echo
+
+# Ask user: Are the variables correct?
+read -p "Are the variables correct? (y/n) " -n 1 -r
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Please edit the .conf file and run the script again."
+    exit 1
+fi
+
+
+# Description:
+# This script links the directories .config, .mounts, and .ssh from the dotfiles repository
+# to the user's home directory. Then, a systemd service is registered and started
+# to configure and start the NFS mounts defined in the .conf file.
+# Each directory and file, including hidden files, within the target directories is recursively linked.
+# Example: ./dotfiles/.mounts/.conf is linked to ~/.mounts/.conf
+# Afterwards, the NFS mounts defined in .mounts/.conf are configured and started.
+
+
+# function to link directories, including hidden files, from source_dir to target_dir
 link_directory() {
-    # Linke source_dir $1 nach target_dir $2
+    # link source_dir $1 to target_dir $2
     local source_dir="$1"
     local target_dir="$2"
 
-    # Überprüfe, ob das Zielverzeichnis existiert, wenn nicht, erstelle es
+    # check if the target directory exists, if not, create it
     if [ ! -d "$target_dir" ]; then
         echo "Verzeichnis $target_dir existiert nicht, wird erstellt..."
         mkdir -p "$target_dir"
         echo "mkdir -p $target_dir ausgeführt"
     fi
 
-    # Verwende find, um durch alle Dateien und Verzeichnisse in source_dir zu gehen
-    # Für jede Datei oder jedes Verzeichnis wird ein relativer Pfad erstellt, 
-    # indem der source_dir-Pfad vom vollständigen Pfad entfernt wird. 
-    # Dieser relative Pfad wird dann zu target_dir hinzugefügt, 
-    # um den Ziel-Pfad zu erstellen. Wenn das Element ein Verzeichnis ist, wird es erstellt. 
-    # Wenn es eine Datei ist, wird ein symbolischer Link erstellt.
+    # Use find to iterate through all files and directories in source_dir
+    # For each file or directory, create a relative path by removing the source_dir path from the full path.
+    # This relative path is then appended to target_dir to create the target path.
+    # If the element is a directory, it is created.
+    # If it is a file, a symbolic link is created.
     find "$source_dir" -mindepth 1 -exec bash -c '
         for filepath do
             local relative_path=${filepath#'"$source_dir"'}
@@ -55,22 +75,21 @@ link_directory() {
     ' bash {} +
 }
 
-# Verlinken der Verzeichnisse
+# link directories from dotfiles to user home
 for dir in "${TARGET_DIRS[@]}"; do
     link_directory "$DOTFILES_DIR/$dir" "$USER_HOME/$dir"
 done
 
-# Systemd Service registrieren und starten (Beispiel für .mounts)
+# systemd service link to /etc/systemd/system, deamon-reload, enable and start service
 if [ -f "$DOTFILES_DIR/.mounts/usermounts.service" ]; then
-    echo "Registriere und starte systemd service..."
-    #sudo cp "$DOTFILES_DIR/.mounts/usermounts.service" /etc/systemd/system/
+    echo "Register and start systemd service..."
     sudo ln -s "$USER_HOME/dotfiles/.mounts/usermounts.service" /etc/systemd/system/usermounts.service
     sudo systemctl daemon-reload
     sudo systemctl enable usermounts.service
     sudo systemctl start usermounts.service
 else
-    echo "Service-Datei usermounts.service nicht gefunden in $DOTFILES_DIR/.mounts"
+    echo "File not found: $DOTFILES_DIR/.mounts/usermounts.service"
     exit 1
 fi
 
-echo "Setup abgeschlossen."
+echo "Setup complete."
