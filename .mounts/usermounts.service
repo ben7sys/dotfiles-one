@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/DEIN_BENUTZERNAME/.mounts/mounts.sh
+ExecStart=/home/sieben/.mounts/mounts.sh
 RemainAfterExit=yes
 
 [Install]

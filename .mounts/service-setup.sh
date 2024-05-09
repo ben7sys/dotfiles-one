@@ -3,7 +3,6 @@
 # Pfadvariablen
 USER_HOME="/home/sieben"
 DOTFILES_DIR="$USER_HOME/dotfiles"
-
 TARGET_DIRS=(".config" ".mounts" ".ssh")  # Liste der zu verlinkenden Verzeichnisse
 
 # Funktion, um Verzeichnisse zu verlinken

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+USER_HOME="/home/sieben"
+DOTFILES_DIR="$USER_HOME/dotfiles"
+
 # Überprüfe, ob nfs-common installiert ist
 if ! dpkg -s nfs-common >/dev/null 2>&1; then
     echo "Fehler: nfs-common ist nicht installiert."
