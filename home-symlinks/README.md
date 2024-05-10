@@ -1,5 +1,7 @@
 # NFS Home Symlinks
 
+warning: CAUTION UNTESTET!!
+
 Dieses Bash-Skript erstellt symbolische Links von bestimmten Verzeichnissen in einem NFS-Freigabeverzeichnis zu entsprechenden Verzeichnissen im Home-Verzeichnis eines Benutzers.
 
 Hier ist eine Schritt-für-Schritt-Beschreibung des Skripts:
