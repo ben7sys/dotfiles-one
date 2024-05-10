@@ -17,7 +17,7 @@ Das "NFS JSON MOUNT TOOL" wird `jq` versuchen mithilfe von `sudo apt-get install
 Klonen Sie das Repository oder laden Sie den Unterordner dotfiles/nfsjsonmounts herunter:
 
 ```bash
-git clone [Ihr-Repository-Link]/dotfiles.git
+git clone https://github.com/ben7sys/dotfiles.git
 cd dotfiles/nfsjsonmounts
 ```
 
