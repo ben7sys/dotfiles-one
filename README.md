@@ -1,6 +1,46 @@
 # dotfiles
 my dotfiles
 
+# First steps after fresh debian 12 install
+
+**Install updates**
+
+Alt+Space Terminal/Konsole
+
+```
+sudo apt update
+sudo apt upgrade
+sudo apt dist-upgrade
+sudo apt full-upgrade
+```
+
+**Install Flatpak**
+ sudo apt install flatpak
+ 
+Source: https://flatpak.org/setup/Debian
+
+If you are running GNOME
+
+`sudo apt install gnome-software-plugin-flatpak`
+
+If you are running KDE
+
+`sudo apt install plasma-discover-backend-flatpak`
+
+Add Flathub Repository
+ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+**Get latest Firefox**
+    sudo apt remove firefox-esr
+    flatpak install flathub org.mozilla.firefox
+
+**Remove LibreOffice**
+    sudo apt autopurge libreoffice*
+
+**Only Office Installation**
+    flatpak install flathub org.onlyoffice.desktopeditors
+
+
 
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
@@ -66,6 +106,9 @@ sudo apt update
 sudo apt install code # or code-insiders
 
 ## Spotify
+
+sudo flatpak install flathub com.spotify.Client
+
 curl -sS https://download.spotify.com/debian/pubkey_6224F9941A8AA6D1.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
 echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
