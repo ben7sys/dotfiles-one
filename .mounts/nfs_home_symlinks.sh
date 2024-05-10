@@ -15,7 +15,7 @@ link_directory() {
     # Wenn das Zielverzeichnis existiert und ein Verzeichnis ist, entferne es
     if [ -d "$target_dir" ]; then
         echo "Verzeichnis $target_dir existiert, wird entfernt..."
-        rm -r "$target_dir"
+        #rm -r "$target_dir"
         echo "rm -r $target_dir ausgeführt"
     fi
 
