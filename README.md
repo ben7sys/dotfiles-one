@@ -5,7 +5,7 @@ my dotfiles
 
 **Install updates**
 
-Alt+Space Terminal/Konsole
+hint: Alt+Space > öffnet KRunner > Terminal/Konsole
 
 ```
 sudo apt update
@@ -15,7 +15,8 @@ sudo apt full-upgrade
 ```
 
 **Install Flatpak**
- sudo apt install flatpak
+
+`sudo apt install flatpak`
  
 Source: https://flatpak.org/setup/Debian
 
@@ -28,22 +29,30 @@ If you are running KDE
 `sudo apt install plasma-discover-backend-flatpak`
 
 Add Flathub Repository
- flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+`flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`
 
 **Get latest Firefox**
-    sudo apt remove firefox-esr
-    flatpak install flathub org.mozilla.firefox
+
+```
+sudo apt remove firefox-esr
+flatpak install flathub org.mozilla.firefox
+```
 
 **Remove LibreOffice**
-    sudo apt autopurge libreoffice*
+
+`sudo apt autopurge libreoffice*`
 
 **Only Office Installation**
-    flatpak install flathub org.onlyoffice.desktopeditors
 
+https://helpcenter.onlyoffice.com/installation/desktop-install-flatpak.aspx
 
+`flatpak install flathub org.onlyoffice.desktopeditors`
 
+```
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
+```
 
 ---
 
