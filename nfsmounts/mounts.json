@@ -2,19 +2,19 @@
     {
         "NFS_SERVER": "192.168.77.151",
         "NFS_EXPORT": "tank/exports",
-        "NFS_OPTIONS": "hard,nolock,anonuid=1000,anongid=1000,vers=4",
+        "NFS_OPTIONS": "hard,nolock",
         "LOCAL_NFS_MOUNT": "/mnt/nfs/zmbfs/exports"
     },
     {
         "NFS_SERVER": "192.168.77.151",
         "NFS_EXPORT": "tank/manage",
-        "NFS_OPTIONS": "hard,nolock,anonuid=100000,anongid=100000,vers=4",
+        "NFS_OPTIONS": "hard,nolock",
         "LOCAL_NFS_MOUNT": "/mnt/nfs/zmbfs/manage"
     },
     {
         "NFS_SERVER": "192.168.77.151",
         "NFS_EXPORT": "tank/share",
-        "NFS_OPTIONS": "hard,nolock,anonuid=1002,anongid=1002,vers=4",
+        "NFS_OPTIONS": "hard,nolock",
         "LOCAL_NFS_MOUNT": "/mnt/nfs/zmbfs/share"
     }
 ]
