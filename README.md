@@ -35,8 +35,8 @@ Add Flathub Repository
 **Get latest Firefox**
 
 ```
-    sudo apt remove firefox-esr
-    flatpak install flathub org.mozilla.firefox
+sudo apt remove firefox-esr
+flatpak install flathub org.mozilla.firefox
 ```
 
 **Remove LibreOffice**
@@ -44,6 +44,8 @@ Add Flathub Repository
 `sudo apt autopurge libreoffice*`
 
 **Only Office Installation**
+
+https://helpcenter.onlyoffice.com/installation/desktop-install-flatpak.aspx
 
 `flatpak install flathub org.onlyoffice.desktopeditors`
 
