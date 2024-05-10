@@ -16,10 +16,10 @@ Alt+Space Terminal/Konsole
 Source: https://flatpak.org/setup/Debian
 
 If you are running GNOME
- sudo apt install gnome-software-plugin-flatpak
+    `sudo apt install gnome-software-plugin-flatpak`
 
 If you are running KDE
- sudo apt install plasma-discover-backend-flatpak
+    sudo apt install plasma-discover-backend-flatpak
 
 Add Flathub Repository
  flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
