@@ -1,6 +1,32 @@
 # dotfiles
 my dotfiles
 
+# First steps after fresh debian 12 install
+
+**Install updates**
+Alt+Space Terminal/Konsole
+ sudo apt update
+ sudo apt upgrade
+ sudo apt dist-upgrade
+ sudo apt full-upgrade
+
+**Install Flatpak**
+ sudo apt install flatpak
+ 
+Source: https://flatpak.org/setup/Debian
+
+If you are running GNOME
+ sudo apt install gnome-software-plugin-flatpak
+
+If you are running KDE
+ sudo apt install plasma-discover-backend-flatpak
+
+Add Flathub Repository
+ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+
+
+
 
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
