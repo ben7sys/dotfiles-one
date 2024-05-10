@@ -4,11 +4,15 @@ my dotfiles
 # First steps after fresh debian 12 install
 
 **Install updates**
+
 Alt+Space Terminal/Konsole
- sudo apt update
- sudo apt upgrade
- sudo apt dist-upgrade
- sudo apt full-upgrade
+
+```
+sudo apt update
+sudo apt upgrade
+sudo apt dist-upgrade
+sudo apt full-upgrade
+```
 
 **Install Flatpak**
  sudo apt install flatpak
