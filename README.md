@@ -24,7 +24,15 @@ If you are running KDE
 Add Flathub Repository
  flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
+**Get latest Firefox**
+    sudo apt remove firefox-esr
+    flatpak install flathub org.mozilla.firefox
 
+**Remove LibreOffice**
+    sudo apt autopurge libreoffice*
+
+**Only Office Installation**
+    flatpak install flathub org.onlyoffice.desktopeditors
 
 
 
@@ -92,6 +100,9 @@ sudo apt update
 sudo apt install code # or code-insiders
 
 ## Spotify
+
+sudo flatpak install flathub com.spotify.Client
+
 curl -sS https://download.spotify.com/debian/pubkey_6224F9941A8AA6D1.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
 echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
