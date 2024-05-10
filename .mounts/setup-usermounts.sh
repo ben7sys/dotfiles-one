@@ -2,13 +2,19 @@
 
 # Script for setting up service directories and files
 
-# Anleitung:
+# check if findutils is aviable, when yes go to the next step, when no  print an error message
+# and exit the script
+if ! dpkg -s findutils >/dev/null 2>&1; then
+    echo "Error: findutils is not installed. Please install findutils and try again."
+    exit 1
+fi
+
 # 1. Clone the dotfiles Git repository to $USER_HOME/dotfiles: git clone https://github.com/ben7sys/dotfiles.git
-#    !! If a different path is used, the DOTFILES_DIR variable must be adjusted accordingly
-# Path variables
+#    !! If a different path is used, the DOTFILES_DIR variable must be adjusted in the .conf file !!
 
 SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "$SCRIPT_DIR/.conf"
+
 
 # Check if the variables are set correctly
 echo
@@ -16,14 +22,14 @@ echo USER_HOME:         $USER_HOME
 echo TARGET_DIRS:       $TARGET_DIRS
 echo 
 echo AUTOMATED VARIABLES:
-echo SOURCE_DIR:        $SOURCE_DIR
 echo DOTFILES_DIR:      $DOTFILES_DIR
 echo LOGFILE_MOUNTS:    $LOGFILE_MOUNTS
 echo
 
 # Ask user: Are the variables correct?
 read -p "Are the variables correct? (y/n) " -n 1 -r
-
+echo
+# if yes, the 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "Please edit the .conf file and run the script again."
     exit 1
@@ -59,8 +65,8 @@ link_directory() {
     # If it is a file, a symbolic link is created.
     find "$source_dir" -mindepth 1 -exec bash -c '
         for filepath do
-            local relative_path=${filepath#'"$source_dir"'}
-            local target_path='"$target_dir"'$relative_path
+            relative_path=${filepath#'"$source_dir"'}
+            target_path='"$target_dir"'$relative_path
 
             if [ -d "$filepath" ]; then
                 # It is a directory

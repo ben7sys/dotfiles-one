@@ -6,6 +6,19 @@
 SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "$SCRIPT_DIR/.conf"
 
+# Check if the variables are set correctly
+echo
+echo USER_HOME:         $USER_HOME
+echo
+
+# Ask user: Are the variables correct? if no exit, if yes continue
+read -p "Are the variables correct? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Please edit the .conf file and run the script again."
+    exit 1
+fi
+
 # The .conf file should be located in the $USER_HOME/.mounts directory
 # 1. checks if nfs-common is installed
 # 2. checks if the directories are already mounted
@@ -24,10 +37,10 @@ check_mounted() {
 
     # Check if the directory is a mount point
     if mountpoint -q "$dir"; then
-        echo "Das Verzeichnis $dir ist bereits gemountet." | tee -a $LOGFILE
+        echo "The directory $dir is already mounted." | tee -a $LOGFILE
         return 0
     else
-        echo "Das Verzeichnis $dir ist nicht gemountet." | tee -a $LOGFILE
+        echo "The directory $dir is not mounted." | tee -a $LOGFILE
         return 1
     fi
 }
