@@ -1,3 +1,47 @@
+# NFS JSON MOUNT TOOL
+
+Das "NFS JSON MOUNT TOOL" ist ein Bash-Skript, das es ermöglicht, NFS-Shares basierend auf einer JSON-Konfigurationsdatei zu mounten und zu unmounten. Dieses Tool bietet eine automatisierte Lösung zur Verwaltung von NFS-Mounts und verbessert die Effizienz und Fehlerfreiheit im Umgang mit Netzwerkdateisystemen.
+
+## Merkmale
+
+- **Automatisches Mounten/Unmounten**: Mounten oder Unmounten von NFS-Shares basierend auf dem aktuellen Zustand und Benutzereingaben.
+- **JSON-basierte Konfiguration**: Einfaches Ändern und Erweitern der NFS-Shares durch Bearbeiten einer einzigen JSON-Datei.
+- **Interaktive Benutzeroberfläche**: Benutzerfreundliche Prompts für das Mounten und Unmounten mit klarer, farbiger Konsolenausgabe.
+
+## Voraussetzungen
+
+Das "NFS JSON MOUNT TOOL" wird `jq` versuchen mithilfe von `sudo apt-get install jq` auf Ihrem System zu installieren um die JSON-Konfigurationsdatei zu parsen.
+
+## Installation
+
+Klonen Sie das Repository oder laden Sie den Unterordner dotfiles/nfsjsonmounts herunter:
+
+```bash
+git clone [Ihr-Repository-Link]/dotfiles.git
+cd dotfiles/nfsjsonmounts
+```
+
+Stellen Sie sicher, dass das Skript ausführbar ist:
+
+```bash
+chmod +x setup.sh
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # mounts
 
 Dieses Skript ist ein Bash-Skript, das zum Einbinden von NFS-Shares (Network File System) aus einer JSON-Datei verwendet wird. Es wird zuerst die Existenz einer JSON-Datei überprüft und dann die darin enthaltenen Informationen verwendet, um die NFS-Shares einzubinden.
