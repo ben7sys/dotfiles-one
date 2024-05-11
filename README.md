@@ -75,9 +75,11 @@ sudo apt install appimagelauncher
 
 ## DEBIAN AppImageLauncher
 Manueller Download
+```
 https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage
-chmod a+x appimagelauncher-lite-
-appimagelauncher-lite install
+chmod a+x appimagelauncher-lite-*
+appimagelauncher-lite-* install
+```
 
 ## AppImages under ~/Application
 Cryptomator
