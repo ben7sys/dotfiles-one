@@ -136,16 +136,37 @@ sudo apt install nfs-common
 
 ## Signal
 
-# NOTE: These instructions only work for 64-bit Debian-based
-# Linux distributions such as Ubuntu, Mint etc.
+**NOTE: These instructions only work for 64-bit Debian-based**
+**Linux distributions such as Ubuntu, Mint etc.**
 
-# 1. Install our official public software signing key:
+### 1. Install our official public software signing key:
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg
 cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
 
-# 2. Add our repository to your list of repositories:
+### 2. Add our repository to your list of repositories:
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' |\
   sudo tee /etc/apt/sources.list.d/signal-xenial.list
 
-# 3. Update your package database and install Signal:
+### 3. Update your package database and install Signal:
 sudo apt update && sudo apt install signal-desktop
+
+
+## Miniconda
+
+### One-Liner
+```bash
+mkdir -p ~/miniconda3 && cd ~/miniconda3 && wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh && bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && rm -rf ~/miniconda3/miniconda.sh && ~/miniconda3/bin/conda init bash
+```
+
+
+https://docs.anaconda.com/free/miniconda/index.html
+
+**Latest Installation and Cleanup:**
+```bash
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+~/miniconda3/bin/conda init bash
+```
+
