@@ -170,3 +170,11 @@ rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 ```
 
+**Conda-Umgebung erstellen und aktivieren**
+
+`conda create -n myenv python=3.9`
+
+`conda activate myenv`
+
+
+
