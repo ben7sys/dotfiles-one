@@ -1,5 +1,5 @@
 [Unit]  
-Description=Mount NFS:zmbfs:/tank/manage
+Description=Mount NFS:zmbfs:/tank/share
   
 [Service]  
 Type=oneshot  

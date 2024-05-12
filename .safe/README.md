@@ -4,6 +4,9 @@
 
 **Service erstellen:**
 
+Create your service's unit file with the ".service" suffix in the /etc/systemd/system directory.
+In our example, we will be creating a /etc/systemd/system/myservice.service file.
+
 systemd:
 `/etc/systemd/system/nfsmounts.service`
 
@@ -11,7 +14,7 @@ Filelocation dotfiles clone, home oder `/usr/local/bin` und symlink:
 `nano ~/dotfiles/.safe/nfsmount-zmbfs-share.service`
 `nano /usr/local/bin/nfsmounts.service`
 
-
+`ln -s ~/.dotfiles/
 `ln -s /usr/local/bin/nfsmounts.service /etc/systemd/system/nfsmounts.service`
   
 

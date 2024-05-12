@@ -1,0 +1,10 @@
+[Unit]  
+Description=Mount NFS:zmbfs:/tank/exports
+  
+[Service]  
+Type=oneshot  
+ExecStart=/bin/mount -t cifs -o credentials=/home/sieben/.smbcredentials //192.168.77.151/exports /mnt/smb/zmbfs/exports
+ExecStop=umount /mnt/smb/zmbfs/exports
+
+[Install]  
+WantedBy=multi-user.target
