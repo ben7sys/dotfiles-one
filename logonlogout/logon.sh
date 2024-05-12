@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 # Definiere die NFS-Shares, ihre Server und ihre Mount-Punkte
 declare -A mounts=(
     ["192.168.77.151:tank/share"]="/mnt/nfs/zmbfs/share"
