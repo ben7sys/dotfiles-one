@@ -4,11 +4,13 @@
 
 **Anleitung für User**
 
-
+```
 sudo apt-get install cifs-utils
 mount -t cifs -o credentials=/home/username/.smbcredentials //samba.domain.internal/exports /mnt/smb/zmbfs/exports
+```
 
-service file prüfen
+ - service file prüfen
+```
 sudo nano ~/.smbcredentials
 sudo chmod 600 ~/.smbcredentials
 sudo -i
@@ -16,13 +18,12 @@ ln -s servicefile.service /etc/systemd/system/servicefile.service
 systemctl daemon-reload  
 systemctl enable nfsmounts.service
 systemctl start nfsmounts.service
-
-
+```
 
 **Service erstellen:**
 
-Create your service's unit file with the ".service" suffix in the /etc/systemd/system directory.
-In our example, we will be creating a /etc/systemd/system/myservice.service file.
+ - Create your service's unit file with the ".service" suffix in the /etc/systemd/system directory.
+ - In our example, we will be creating a /etc/systemd/system/myservice.service file.
 
 systemd:
 `/etc/systemd/system/nfsmounts.service`
