@@ -295,11 +295,12 @@ rm -rf ~/miniconda3/miniconda.sh
 
 `git clone https://github.com/vinceliuice/grub2-themes.git`
 
-Verfügbare Displayauflösung: `xrandr`
+Verfügbare Displayauflösung: `xrandr` 1920x1200x32
 
-Open /etc/default/grub, and edit GRUB_GFXMODE=[height]x[width]x32 to match your resolution
+ - Open /etc/default/grub, and edit GRUB_GFXMODE=[height]x[width]x32 to match your resolution
 
-Finally, run grub-mkconfig -o /boot/grub/grub.cfg to update your grub config
+ - Finally, run `grub-mkconfig -o /boot/grub/grub.cfg` to update your grub config
+
 
 **Custom Background**
 
@@ -308,12 +309,15 @@ sudo apt-get update
 sudo apt-get install imagemagick
 ```
 
+ - Make sure your background matches your resolution
 
-Make sure your background matches your resolution
+ - Place your custom background inside the root of the project, and name it background.jpg
 
-Place your custom background inside the root of the project, and name it background.jpg
+ - Run the installer like normal, but with -s [YOUR_RESOLUTION] and -t [THEME] and -i [ICON]
 
-Run the installer like normal, but with -s [YOUR_RESOLUTION] and -t [THEME] and -i [ICON]
+ ```sh
 
-    Make sure to replace [YOUR_RESOLUTION] with your resolution and [THEME] with the theme
+ ```
+
+ - Make sure to replace [YOUR_RESOLUTION] with your resolution and [THEME] with the theme
 
