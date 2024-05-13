@@ -11,10 +11,11 @@ mount -t cifs -o credentials=/home/username/.smbcredentials //samba.domain.inter
 service file prüfen
 sudo nano ~/.smbcredentials
 sudo chmod 600 ~/.smbcredentials
-sudo ln -s servicefile.service /etc/systemd/system/servicefile.service
-sudo systemctl daemon-reload  
-sudo systemctl enable nfsmounts.service
-sudo systemctl start nfsmounts.service
+sudo -i
+ln -s servicefile.service /etc/systemd/system/servicefile.service
+systemctl daemon-reload  
+systemctl enable nfsmounts.service
+systemctl start nfsmounts.service
 
 
 
@@ -44,10 +45,13 @@ Filelocation dotfiles clone, home oder `/usr/local/bin` und symlink:
 ```
 [Unit]  
 Description=Custom Service to mount NFS
+After=network-online.target
+Wants=network-online.target
   
 [Service]  
 Type=oneshot  
 ExecStart=/bin/mount -o hard,nolock 192.168.0.XXX:/share/folder /mnt/nfs/servername/folder
+ExecStop=/bin/umount /mnt/nfs/servername/folder
 
 [Install]  
 WantedBy=multi-user.target  

@@ -1,5 +1,7 @@
 [Unit]  
 Description=Mount SMB zmbfs exports
+After=network-online.target
+Wants=network-online.target
   
 [Service]  
 Type=oneshot  

@@ -1,5 +1,7 @@
 [Unit]  
 Description=Mount NFS:zmbfs:/tank/exports
+After=network-online.target
+Wants=network-online.target
   
 [Service]  
 Type=oneshot  
