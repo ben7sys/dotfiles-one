@@ -1,6 +1,9 @@
 # dotfiles
 my dotfiles
 
+
+## Unicode 
+
     Technology enthusiast: 🚀 (U+1F680)
     System administration: 🔧 (U+1F527)
     Programming: 💡 (U+1F4A1)
@@ -10,7 +13,7 @@ my dotfiles
     Sports: ⚽ (U+26BD)
     Games: 🎮 (U+1F3AE)
 
-    
+
 ## Struktur
 
 
