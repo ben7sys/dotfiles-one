@@ -1,6 +1,16 @@
 # dotfiles
 my dotfiles
 
+    Technology enthusiast: 🚀 (U+1F680)
+    System administration: 🔧 (U+1F527)
+    Programming: 💡 (U+1F4A1)
+    Automation: 🤖 (U+1F916)
+    Ethical: 💎 (U+1F48E)
+    Growth: 🌱 (U+1F331)
+    Sports: ⚽ (U+26BD)
+    Games: 🎮 (U+1F3AE)
+
+    
 ## Struktur
 
 
