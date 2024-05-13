@@ -22,8 +22,7 @@ systemctl start nfsmounts.service
 
 **Service erstellen:**
 
- - Create your service's unit file with the ".service" suffix in the /etc/systemd/system directory.
- - In our example, we will be creating a /etc/systemd/system/myservice.service file.
+ - Create a service's unit file with the ".service" suffix in the /etc/systemd/system directory.
 
 systemd:
 `/etc/systemd/system/nfsmounts.service`
@@ -36,7 +35,7 @@ Filelocation dotfiles clone, home oder `/usr/local/bin` und symlink:
 `ln -s ~/dotfiles/.mounts/mount-nfs.service.example /etc/systemd/system/nfsmounts.service`
 `ln -s /usr/local/bin/nfsmounts.service /etc/systemd/system/nfsmounts.service`
 
-> :warning: Die entsprechenden mount folder müssen natürlich angelegt werden
+> :warning: Die entsprechenden mount folder müssen angelegt sein damit der dienst funktioniert
 
 `mkdir -d /mnt/nfs`
 `mkdir -d /mnt/nfs/servername`
