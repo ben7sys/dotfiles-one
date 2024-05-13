@@ -1,24 +1,53 @@
 # dotfiles
 my dotfiles
 
+
+---
+
+
+## Todo: Install Skript schreiben
+
+```sh
+#!/bin/bash
+...
+```
+
+
+--- 
+
+
+# Befehlssammlung
+
+## Fehlerprüfung
+
+```sh
+sudo dmesg | tail
+```
+
+---
+
+
 # First steps after fresh debian 12 install
 
-**Install updates**
+## Install updates
 
-hint: Alt+Space > öffnet KRunner > Terminal/Konsole
+ - hint: Alt+Space > öffnet KRunner > Terminal/Konsole
 
-```
+```sh
 sudo apt update
 sudo apt upgrade
 sudo apt dist-upgrade
 sudo apt full-upgrade
 ```
 
-**Install Flatpak**
+## Install Flatpak
 
-`sudo apt install flatpak`
- 
-Source: https://flatpak.org/setup/Debian
+
+```sh
+sudo apt install flatpak`
+```
+
+_Source: https://flatpak.org/setup/Debian_
 
 If you are running GNOME
 
@@ -32,18 +61,18 @@ Add Flathub Repository
 
 `flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`
 
-**Get latest Firefox**
+## Get latest Firefox
 
 ```
 sudo apt remove firefox-esr
 flatpak install flathub org.mozilla.firefox
 ```
 
-**Remove LibreOffice**
+## Remove LibreOffice**
 
 `sudo apt autopurge libreoffice*`
 
-**Only Office Installation**
+### Only Office Installation
 
 https://helpcenter.onlyoffice.com/installation/desktop-install-flatpak.aspx
 
@@ -54,12 +83,6 @@ git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
 ```
 
----
-
-## Todo: Install Skript schreiben
-#!/bin/bash
-...
-
 ## Brave Browser
 sudo apt install curl
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
@@ -67,27 +90,24 @@ echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] http
 sudo apt update
 sudo apt install brave-browser -y
 
-## !!! UBUNTU ONLY !!! AppImageLauncher
-sudo apt install python3-launchpadlib software-properties-common
-sudo add-apt-repository ppa:appimagelauncher-team/stable
-sudo apt update
-sudo apt install appimagelauncher
-
 ## DEBIAN AppImageLauncher
 Manueller Download
+ - Nochmal überprüfen, es gibt noch weitere projekte
 ```
 https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage
 chmod a+x appimagelauncher-lite-*
 appimagelauncher-lite-* install
 ```
+### !!! UBUNTU ONLY !!! AppImageLauncher
+sudo apt install python3-launchpadlib software-properties-common
+sudo add-apt-repository ppa:appimagelauncher-team/stable
+sudo apt update
+sudo apt install appimagelauncher
 
-## AppImages under ~/Application
+### AppImages under ~/Application
 Cryptomator
 KeepassXC
 Obsidian
-
-## Fehlerprüfung
-sudo dmesg | tail
 
 ## Sensoren
 sudo apt install lm-sensors
@@ -152,14 +172,12 @@ echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] 
 ### 3. Update your package database and install Signal:
 sudo apt update && sudo apt install signal-desktop
 
-
 ## Miniconda
 
 ### One-Liner
 ```bash
 mkdir -p ~/miniconda3 && cd ~/miniconda3 && wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh && bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && rm -rf ~/miniconda3/miniconda.sh && ~/miniconda3/bin/conda init bash
 ```
-
 
 https://docs.anaconda.com/free/miniconda/index.html
 
@@ -178,5 +196,32 @@ rm -rf ~/miniconda3/miniconda.sh
 
 `conda activate myenv`
 
+---
 
+## Custom Grub2 Boot theme
+https://github.com/vinceliuice/grub2-themes?tab=readme-ov-file
+
+`git clone https://github.com/vinceliuice/grub2-themes.git`
+
+Verfügbare Displayauflösung: `xrandr`
+
+Open /etc/default/grub, and edit GRUB_GFXMODE=[height]x[width]x32 to match your resolution
+
+Finally, run grub-mkconfig -o /boot/grub/grub.cfg to update your grub config
+
+**Custom Background**
+
+```
+sudo apt-get update
+sudo apt-get install imagemagick
+```
+
+
+Make sure your background matches your resolution
+
+Place your custom background inside the root of the project, and name it background.jpg
+
+Run the installer like normal, but with -s [YOUR_RESOLUTION] and -t [THEME] and -i [ICON]
+
+    Make sure to replace [YOUR_RESOLUTION] with your resolution and [THEME] with the theme
 
