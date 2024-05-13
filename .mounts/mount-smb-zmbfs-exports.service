@@ -1,0 +1,13 @@
+[Unit]  
+Description=Mount SMB zmbfs exports
+After=network-online.target
+Wants=network-online.target
+  
+[Service]  
+Type=oneshot  
+ExecStart=/bin/mount -t cifs -o credentials=/home/sieben/.smbcredentials //192.168.77.151/exports /mnt/smb/zmbfs/exports
+ExecStop=/bin/umount /mnt/smb/zmbfs/exports
+RemainAfterExit=yes
+
+[Install]  
+WantedBy=multi-user.target

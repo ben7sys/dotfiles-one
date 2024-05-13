@@ -1,10 +1,13 @@
 [Unit]  
 Description=Mount NFS:syno:/volume1/nfs
-  
+After=network-online.target
+Wants=network-online.target
+
 [Service]  
 Type=oneshot  
 ExecStart=/bin/mount -o hard,nolock 192.168.77.77:/volume1/nfs /mnt/nfs/syno/nfs
 ExecStop=umount /mnt/nfs/syno/nfs
+RemainAfterExit=yes
 
 [Install]  
 WantedBy=multi-user.target

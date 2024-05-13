@@ -45,6 +45,19 @@ Diese Einstellung sorgt dafür, dass Git versucht, die Änderungen zusammenzufü
 ---
 
 
+```
+.config
+.git
+.mounts
+.safe
+.ssh
+dev
+dotfiles.code-workspace
+README.md
+```
+
+
+
 # First steps after fresh debian 12 install
 
 ## Install updates

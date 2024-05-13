@@ -1,10 +1,13 @@
 [Unit]  
 Description=Mount NFS:zmbfs:/tank/share
-  
+After=network-online.target
+Wants=network-online.target
+
 [Service]  
 Type=oneshot  
 ExecStart=/bin/mount -o hard,nolock 192.168.77.151:/tank/share /mnt/nfs/zmbfs/share
-ExecStop=umount /mnt/nfs/zmbfs/share
+ExecStop=/bin/umount /mnt/nfs/zmbfs/share
+RemainAfterExit=yes
 
 [Install]  
 WantedBy=multi-user.target
