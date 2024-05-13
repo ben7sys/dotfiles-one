@@ -1,6 +1,20 @@
 # dotfiles
 my dotfiles
 
+## Struktur
+
+
+```sh
+.config
+.git
+.mounts
+.safe
+.ssh
+dev
+dotfiles.code-workspace
+README.md
+```
+
 
 ---
 
@@ -38,24 +52,11 @@ Diese Einstellung sorgt dafür, dass Git versucht, die Änderungen zusammenzufü
 
  - Visual Studio Code als Standard-Merge-Tool einrichten:
 
-
-
+```sh
+git config --global core.editor "code --wait"
+git config --global merge.tool vscode
+git config --global mergetool.vscode.cmd 'code --wait $MERGED'
 ```
-
----
-
-
-```
-.config
-.git
-.mounts
-.safe
-.ssh
-dev
-dotfiles.code-workspace
-README.md
-```
-
 
 
 # First steps after fresh debian 12 install
