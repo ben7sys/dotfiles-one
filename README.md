@@ -100,11 +100,13 @@ sudo apt remove firefox-esr
 flatpak install flathub org.mozilla.firefox
 ```
 
-## Remove LibreOffice**
+
+## Only Office Installation
+
+### First Remove LibreOffice
 
 `sudo apt autopurge libreoffice*`
 
-### Only Office Installation
 
 https://helpcenter.onlyoffice.com/installation/desktop-install-flatpak.aspx
 
@@ -116,49 +118,68 @@ git config --global user.name "Your Name"
 ```
 
 ## Brave Browser
+
+```sh
 sudo apt install curl
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/>
 sudo apt update
 sudo apt install brave-browser -y
+```
 
 ## DEBIAN AppImageLauncher
-Manueller Download
- - Nochmal überprüfen, es gibt noch weitere projekte
+
+ - Manueller Download
+
+!warning: Nochmal überprüfen, es gibt noch weitere projekte
+
 ```
 https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage
 chmod a+x appimagelauncher-lite-*
 appimagelauncher-lite-* install
 ```
+
 ### !!! UBUNTU ONLY !!! AppImageLauncher
+
+```sh
 sudo apt install python3-launchpadlib software-properties-common
 sudo add-apt-repository ppa:appimagelauncher-team/stable
 sudo apt update
 sudo apt install appimagelauncher
+```
 
 ### AppImages under ~/Application
-Cryptomator
-KeepassXC
-Obsidian
+ - Cryptomator
+ - KeepassXC
+ - Obsidian
 
 ## Sensoren
+
+```sh
 sudo apt install lm-sensors
 sudo sensors-detect
 sensors
+```
 
 ## Net-Tools
-sudo apt install net-tools
+
+`sudo apt install net-tools`
 
 ## HTOP
-sudo apt install htop
+
+`sudo apt install htop`
 
 ## Fastfetch (neofetch-like tool)
-Debian / Ubuntu: Download fastfetch-linux-<proper architecture>.deb from Github release page
-fastfetch
+
+ - Debian / Ubuntu: Download fastfetch-linux-<proper architecture>.deb from Github release page
+
 Usage: https://github.com/fastfetch-cli/fastfetch?tab=readme-ov-file
-fastfetch ~/.config/fastfetch/*
+
+`fastfetch ~/.config/fastfetch/*`
 
 ## Visual Studio Code
+
+```sh
 sudo apt-get install wget gpg
 wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
 sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
@@ -167,53 +188,78 @@ rm -f packages.microsoft.gpg
 sudo apt install apt-transport-https
 sudo apt update
 sudo apt install code # or code-insiders
+```
 
 ## Spotify
 
-sudo flatpak install flathub com.spotify.Client
+ - flatpak install `sudo flatpak install flathub com.spotify.Client`
 
+ - apt install
+
+```sh
 curl -sS https://download.spotify.com/debian/pubkey_6224F9941A8AA6D1.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
 echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
 sudo apt-get update && sudo apt-get install spotify-client -y
+```
 
 ## KDE
-Alt + F2 öffnet KRunner - Eine Suchfeldeingabe erscheint mit der Programme gestartet oder Dateien gesucht werden können (Suchmodule)
+
+ - Alt + F2 öffnet KRunner
+
+ Eine Suchfeldeingabe erscheint mit der Programme gestartet oder Dateien gesucht werden können (Suchmodule)
 
 ## KWallet
-KWallet muss beim Stock Debian eingerichtet werden um benutzt werden zu können
-Systemeinstellungen KDE Passwortspeicher
-System Settings KWalletManager
+
+ - KWallet in `stock` Debian einrichten
+
+```
+Systemeinstellungen > KDE Passwortspeicher
+System Settings > KWalletManager
+```
 
 ## NFS Dienste
+
+```sh
 sudo apt install nfs-common
+```
 
 ## Signal
 
 **NOTE: These instructions only work for 64-bit Debian-based**
 **Linux distributions such as Ubuntu, Mint etc.**
 
-### 1. Install our official public software signing key:
+ - 1. Install our official public software signing key:
+
+```sh
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg
 cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
+```
 
-### 2. Add our repository to your list of repositories:
+ - 2. Add our repository to your list of repositories:
+
+```sh
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' |\
   sudo tee /etc/apt/sources.list.d/signal-xenial.list
+```
 
-### 3. Update your package database and install Signal:
+ - 3. Update your package database and install Signal:
+```sh
 sudo apt update && sudo apt install signal-desktop
+```
 
 ## Miniconda
 
-### One-Liner
+ - **One-Liner**
+
 ```bash
 mkdir -p ~/miniconda3 && cd ~/miniconda3 && wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh && bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && rm -rf ~/miniconda3/miniconda.sh && ~/miniconda3/bin/conda init bash
 ```
 
-https://docs.anaconda.com/free/miniconda/index.html
+ - Dokumentation https://docs.anaconda.com/free/miniconda/index.html
 
-**Latest Installation and Cleanup:**
+ - **Miniconda latest Installation and Cleanup:**
+
 ```bash
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
@@ -222,7 +268,7 @@ rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 ```
 
-**Conda-Umgebung erstellen und aktivieren**
+ - **Conda-Umgebung erstellen und aktivieren**
 
 `conda create -n myenv python=3.9`
 
@@ -231,7 +277,8 @@ rm -rf ~/miniconda3/miniconda.sh
 ---
 
 ## Custom Grub2 Boot theme
-https://github.com/vinceliuice/grub2-themes?tab=readme-ov-file
+
+ - Custom Grub2 Boot theme https://github.com/vinceliuice/grub2-themes?tab=readme-ov-file
 
 `git clone https://github.com/vinceliuice/grub2-themes.git`
 
