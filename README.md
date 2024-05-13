@@ -1,6 +1,19 @@
 # dotfiles
 my dotfiles
 
+```
+.config
+.git
+.mounts
+.safe
+.ssh
+dev
+dotfiles.code-workspace
+README.md
+```
+
+
+
 # First steps after fresh debian 12 install
 
 **Install updates**
