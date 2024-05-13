@@ -24,6 +24,32 @@ my dotfiles
 sudo dmesg | tail
 ```
 
+## Git Konfiguration
+
+ - Konfiguriere Git, um Merge-Konflikte zu verwenden:
+
+Um immer einen Merge durchzuführen, wenn du git pull ausführst, kannst du Git so konfigurieren, dass es standardmäßig den Merge-Modus verwendet:
+
+```bash
+git config --global pull.rebase false
+```
+
+Diese Einstellung sorgt dafür, dass Git versucht, die Änderungen zusammenzuführen, und es dir ermöglicht, Merge-Konflikte in einem Editor, wie Visual Studio Code, zu lösen.
+
+ - Visual Studio Code als Standard-Merge-Tool einrichten:
+
+Um Visual Studio Code als dein bevorzugtes Tool für die Bearbeitung von Merge-Konflikten einzurichten, kannst du die folgenden Git-Konfigurationen verwenden:
+
+```bash
+git config --global merge.tool vscode
+git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+```
+
+Damit wird Visual Studio Code automatisch geöffnet, wenn du git mergetool ausführst, um Merge-Konflikte zu lösen.
+
+
+```
+
 ---
 
 
