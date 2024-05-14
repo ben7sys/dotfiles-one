@@ -1,0 +1,11 @@
+[Unit]
+Description=Mount ZMBFS:/tank/share
+
+[Mount]
+What=192.168.77.151:/tank/share
+Where=/home/sieben/share
+Type=nfs
+Options=_netdev,auto
+
+[Install]
+WantedBy=multi-user.target
