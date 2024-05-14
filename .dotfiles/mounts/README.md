@@ -15,13 +15,14 @@ Manpages systemd.automount https://manpages.debian.org/testing/manpages-de/syste
 
 - Unit-Files erstellen
 
+**Mount File**
+
 ```sh
 sudo nano home-username.mount
-sudo nano home-username.automount
 ```
 
 ```sh
-# /home/username/dotfiles/.mounts/home-username.mount
+# /home/username/.dotfiles/home-username.mount
 [Unit]
 Description=Mount server:/exports/share
 
@@ -36,8 +37,14 @@ WantedBy=multi-user.target
 
 ```
 
+**Automount File**
+
 ```sh
-# /home/username/dotfiles/.mounts/home-username.automount
+sudo nano home-username.automount
+```
+
+```sh
+# /home/username/.dotfiles/home-username.automount
 [Unit]
 Description=Automount server:/exports/share
 
