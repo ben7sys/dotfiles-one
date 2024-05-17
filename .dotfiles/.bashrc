@@ -1,0 +1,3 @@
+# Terminalstart
+
+fastfetch

@@ -293,14 +293,15 @@ rm -rf ~/miniconda3/miniconda.sh
 
  - Custom Grub2 Boot theme https://github.com/vinceliuice/grub2-themes?tab=readme-ov-file
 
-`git clone https://github.com/vinceliuice/grub2-themes.git`
+ - `git clone https://github.com/vinceliuice/grub2-themes.git`
 
-Verfügbare Displayauflösung: `xrandr` 1080p:1920x1080, 2k:2560x1440, 
+ - Verfügbare Displayauflösung: `xrandr` 1080p:1920x1080, 2k:2560x1440, 
 
- - Other Resolution? 1920x1200? Open /etc/default/grub, and edit GRUB_GFXMODE=[height]x[width]x32 to match your resolution
+ - Auflösung anpassen `nano /etc/default/grub` edit GRUB_GFXMODE=[height]x[width]x32 to match your resolution
 
- - Finally, run `grub-mkconfig -o /boot/grub/grub.cfg` to update your grub config
+ - run `grub-mkconfig -o /boot/grub/grub.cfg` to update your grub config
 
+ - Reihenfolgen ändern `ls -la /etc/grub.d` `nano  
 
 **Custom Background**
 
@@ -316,7 +317,8 @@ sudo apt-get install imagemagick
  - Run the installer like normal, but with -s [YOUR_RESOLUTION] and -t [THEME] and -i [ICON]
 
  ```sh
-sudo ./setup -t tela -s 2k
+sudo ./install.sh -t vimix -i color -s 2k
+# sudo ./install.sh -t tela -s 2k
  ```
 
  - Make sure to replace [YOUR_RESOLUTION] with your resolution and [THEME] with the theme
