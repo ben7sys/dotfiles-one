@@ -321,3 +321,19 @@ sudo ./setup -t tela -s 2k
 
  - Make sure to replace [YOUR_RESOLUTION] with your resolution and [THEME] with the theme
 
+## Kvantum
+
+Wenn Fehler bei:
+  sudo add-apt-repository ppa:papirus/papirus
+
+Lösung:
+  sudo apt-get install python3-launchpadlib
+
+Entfernen:
+  sudo add-apt-repository --remove ppa:papirus/papirus
+
+- Selbst kompilieren
+
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DWITHOUT_KF=ON
+
+
