@@ -336,6 +336,14 @@ Entfernen:
 
 - Selbst kompilieren
 
+git clone
+
+cd into cloned repo
+
+mkdir build
+
+cd build
+
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DWITHOUT_KF=ON
 
-
+sudo make install
