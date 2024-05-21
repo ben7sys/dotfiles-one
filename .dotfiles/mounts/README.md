@@ -67,4 +67,6 @@ sudo ln -s /home/username/dotfiles/.mounts/home-username.automount /etc/systemd/
 
 ```sh
 sudo systemctl enable home-username.automount
+```
+
 
