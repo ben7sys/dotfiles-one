@@ -79,6 +79,39 @@ disable_mount() {
   fi
 }
 
+delete_mount_file_from_systemd() {
+  local mount_name=$1
+  local systemd_file="$SYSTEMD_DIR/$mount_name.mount"
+
+  if [ -f "$systemd_file" ]; then
+    systemctl_status=$(systemctl is-enabled "$mount_name.mount" 2>/dev/null)
+    systemctl_active=$(systemctl is-active "$mount_name.mount" 2>/dev/null)
+
+    if [ "$systemctl_status" = "disabled" ] && [ "$systemctl_active" = "inactive" ]; then
+      read -p "Are you sure you want to delete $mount_name.mount from systemd? [y/N]: " confirm
+      if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        sudo rm "$systemd_file"
+        echo -e "$(color_text green "Successfully deleted $mount_name.mount from systemd")"
+      else
+        echo -e "$(color_text yellow "Deletion of $mount_name.mount canceled")"
+      fi
+    else
+      read -p "$mount_name.mount is not inactive and disabled. Do you want to stop, disable, and delete it? [y/N]: " confirm
+      if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        sudo systemctl stop "$mount_name.mount"
+        sudo systemctl disable "$mount_name.mount"
+        sudo rm "$systemd_file"
+        echo -e "$(color_text green "Successfully stopped, disabled, and deleted $mount_name.mount from systemd")"
+      else
+        echo -e "$(color_text yellow "Operation for $mount_name.mount canceled")"
+      fi
+    fi
+  else
+    echo -e "$(color_text red "$mount_name.mount does not exist in $SYSTEMD_DIR")"
+  fi
+}
+
+
 # Function to check the status of .mount files
 status_mount() {
   color_text blue "Checking status of .mount files in $MOUNT_DIR and $SYSTEMD_DIR..."
@@ -160,19 +193,21 @@ mount_menu() {
     echo "2) Stop"
     echo "3) Enable"
     echo "4) Disable"
-    echo "5) Back"
+    echo "5) Delete"
+    echo "6) Back"
     read -p "Enter your choice: " choice
 
-    if [[ "$choice" =~ ^[1-5]$ ]]; then
+    if [[ "$choice" =~ ^[1-6]$ ]]; then
       case $choice in
         1) start_mount "$1" ;;
         2) stop_mount "$1" ;;
         3) enable_mount "$1" ;;
         4) disable_mount "$1" ;;
-        5) break ;;
+        5) delete_mount_file_from_systemd "$1" ;;
+        6) break ;;
       esac
     else
-      echo -e "$(color_text red "Invalid choice. Please enter a number between 1 and 5.")"
+      echo -e "$(color_text red "Invalid choice. Please enter a number between 1 and 6.")"
     fi
   done
 }
