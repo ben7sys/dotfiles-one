@@ -1,4 +1,0 @@
-# cp ~/dotfiles/logonlogout/mount-sudoers /etc/sudoers.d/mount-sudoers
-sieben ALL=(ALL) NOPASSWD: /bin/mount
-sieben ALL=(ALL) NOPASSWD: /bin/umount
-
