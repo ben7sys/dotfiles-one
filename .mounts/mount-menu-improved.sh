@@ -218,36 +218,34 @@ display_main_menu() {
 
 # Function to display a menu for a specific .mount file
 mount_menu() {
-  while true; do
+  echo -e "$(color_text blue "Select an action for $1:")"
+  echo ""
+  echo -e "$(color_text green "1) Mount immediately")"
+  echo -e "$(color_text red "2) Unmount immediately")"
+  echo -e "$(color_text green "3) Enable Startup Mount")"
+  echo -e "$(color_text yellow "4) Disable Startup Mount")"
+  echo -e "$(color_text red "5) Delete Mount File from systemd")"
+  echo -e "$(color_text green "6) Back to main menu")"
+  echo ""
+  read -p "Enter your choice: " choice
+  echo ""
+
+  if [[ "$choice" =~ ^[1-6]$ ]]; then
+    case $choice in
+      1) start_mount "$1" ;;
+      2) stop_mount "$1" ;;
+      3) enable_mount "$1" ;;
+      4) disable_mount "$1" ;;
+      5) delete_mount_file_from_systemd "$1" ;;
+      6) clear && return ;;
+    esac
     clear
-    echo -e "$(color_text blue "Select an action for $1:")"
+    main_menu  # Reload the main menu after completing the action
+  else
+    echo -e "$(color_text red "Invalid choice. Please enter a number between 1 and 6.")"
     echo ""
-    echo -e "$(color_text green "1) Mount immediately")"
-    echo -e "$(color_text red "2) Unmount immediately")"
-    echo -e "$(color_text green "3) Enable Startup Mount")"
-    echo -e "$(color_text yellow "4) Disable Startup Mount")"
-    echo -e "$(color_text red "5) Delete Mount File from systemd")"
-    echo -e "$(color_text green "6) Back to main menu")"
-    echo ""
-    read -p "Enter your choice: " choice
-    echo ""
-
-    if [[ "$choice" =~ ^[1-6]$ ]]; then
-      case $choice in
-        1) start_mount "$1" ;;
-        2) stop_mount "$1" ;;
-        3) enable_mount "$1" ;;
-        4) disable_mount "$1" ;;
-        5) delete_mount_file_from_systemd "$1" ;;
-        6) break ;;
-      esac
-    else
-      echo -e "$(color_text red "Invalid choice. Please enter a number between 1 and 6.")"
-      echo ""
-    fi
-  done
+  fi
 }
-
 
 # Main menu function to handle the main menu logic
 main_menu() {
@@ -259,12 +257,13 @@ main_menu() {
       if menu_choice_is_valid "$choice" "$i"; then
         mount_name=$(ls "$MOUNT_DIR"/*.mount | awk -F'/' '{print $NF}' | sed 's/.mount//' | sed -n "${choice}p")
         mount_menu "$mount_name"
+        display_main_menu  # Show the main menu again after the submenu action
       else
         echo -e "$(color_text red "Invalid choice. Please enter a valid number.")"
       fi
     elif [[ "$choice" =~ ^[rx]$ ]]; then
       case $choice in
-        r) ;;
+        r) clear && main_menu ;;
         x) exit 0 ;;
       esac
     else
