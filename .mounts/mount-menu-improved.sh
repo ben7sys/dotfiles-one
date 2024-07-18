@@ -120,8 +120,21 @@ delete_mount_file_from_systemd() {
 
 # Function to check the status of .mount files
 status_mount() {
-  echo -e "Processing $(color_text blue "$MOUNT_DIR") and $(color_text yellow "$SYSTEMD_DIR") ..."
+  
+clear
+  echo -e "Processing $(color_text blue "$MOUNT_DIR") and $(color_text red "$SYSTEMD_DIR") ..."
   echo ""
+  
+  # Print the table header
+  printf "| %-4s | %-33s | %-24s | %-26s | %-20s |\n" \
+    "$(color_text blue "o")" \
+    "$(color_text blue "Mount-file")" \
+    "$(color_text blue "Mount status")" \
+    "$(color_text blue "System start")" \
+    "$(color_text blue "Compare with systemd")"
+  echo -e "----|--------------------------|-----------------|-------------------|----------------------|"
+
+
   # Check if the MOUNT_DIR is empty
   if [ -z "$(ls -A "$MOUNT_DIR")" ]; then
     echo -e "$(color_text red "Error: No .mount files found in $MOUNT_DIR")"
