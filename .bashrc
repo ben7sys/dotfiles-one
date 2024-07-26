@@ -2,47 +2,66 @@
 # ~/.bashrc
 #
 
-# Terminalstart
-fastfetch
+# Run fastfetch on terminal start if available
+if command -v fastfetch &> /dev/null; then
+    fastfetch
+fi
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-PS1='[\u@\h \W]\$ '
+# Load common settings
+for file in ~/.{env_common,aliases,exports,functions}; do
+    [ -r "$file" ] && [ -f "$file" ] && source "$file"
+done
 
-# Append to the history file, don't overwrite it
-shopt -s histappend
+# Load system-specific settings
+[ -r ~/.env_systemd ] && [ -d /run/systemd/system ] && source ~/.env_systemd
+[ -r ~/.env_kde ] && [ -d ~/.config/plasma-workspace ] && source ~/.env_kde
 
-# Check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
+# Bash-specific settings
+shopt -s histappend  # Append to the history file, don't overwrite it
+shopt -s checkwinsize  # Check the window size after each command and update LINES and COLUMNS if necessary
 
-# (Explaination missing)
-colors() {
-	local fgc bgc vals seq0
+# Enable bash-completion if available
+[ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
-	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
-	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
-	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
-	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
+# Compact Fancy Bash Prompt Configuration
 
-	# foreground colors
-	for fgc in {30..37}; do
-		# background colors
-		for bgc in {40..47}; do
-			fgc=${fgc#37} # white
-			bgc=${bgc#40} # black
+# Colors
+RESET="\[\033[0m\]"
+RED="\[\033[0;31m\]"
+GREEN="\[\033[0;32m\]"
+YELLOW="\[\033[0;33m\]"
+BLUE="\[\033[0;34m\]"
+MAGENTA="\[\033[0;35m\]"
+CYAN="\[\033[0;36m\]"
 
-			vals="${fgc:+$fgc;}${bgc}"
-			vals=${vals%%;}
-
-			seq0="${vals:+\e[${vals}m}"
-			printf "  %-9s" "${seq0:-(default)}"
-			printf " ${seq0}TEXT\e[m"
-			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
-		done
-		echo; echo
-	done
+# Git branch function
+git_branch() {
+    local branch=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+    [ -n "$branch" ] && echo " ($branch)"
 }
+
+# Python virtual environment function
+venv_info() {
+    [ -n "$VIRTUAL_ENV" ] && echo " ($(basename $VIRTUAL_ENV))"
+}
+
+# Exit status function
+exit_status() {
+    local exit_code=$?
+    local symbol="${GREEN}✓${RESET}"
+    [ $exit_code -ne 0 ] && symbol="${RED}✗${RESET}"
+    echo -e "$symbol"
+}
+
+# Set the corrected compact fancy prompt
+PROMPT_COMMAND='PS1="${CYAN}\u${RESET}@${GREEN}\h${RESET} ${YELLOW}\W${RESET}${RED}$(git_branch)${BLUE}$(venv_info)${RESET} $(exit_status) ${MAGENTA}▶${RESET} "'
+
+# Enable color support for ls and grep
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+fi
