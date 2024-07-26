@@ -1,0 +1,49 @@
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ~='cd ~'
+alias -- -='cd -'
+
+# List directory contents
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Grep with color
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# Common commands
+alias c='clear'
+alias h='history'
+alias j='jobs -l'
+alias now='date +"%T"'
+alias nowdate='date +"%d-%m-%Y"'
+
+# System
+alias update='sudo pacman -Syu'
+alias sysinfo='inxi -Fxxxz'
+
+# Git
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline --graph --decorate'
+
+# Python virtual environment
+alias ve='python -m venv ./venv'
+alias va='source ./venv/bin/activate'
+alias vd='deactivate'
+
+# Docker
+alias dps='docker ps'
+alias dimg='docker images'
+alias dex='docker exec -it'
+
+# Misc
+alias weather='curl wttr.in'
+alias myip='curl http://ipecho.net/plain; echo'
