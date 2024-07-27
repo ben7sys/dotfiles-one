@@ -146,7 +146,55 @@ install_aur_helper() {
     fi
 }
 
+# Function to check the operating system
+check_os() {
+    case "$(uname -s)" in
+        Linux*)
+            if [ -f "/etc/arch-release" ]; then
+                echo "arch"
+            elif [ -f "/etc/debian_version" ]; then
+                echo "debian"
+            elif [ -f "/etc/fedora-release" ]; then
+                echo "fedora"
+            else
+                echo "unknown"
+            fi
+            ;;
+        Darwin*)    
+            echo "macos"
+            ;;
+        *)          
+            echo "unknown"
+            ;;
+    esac
+}
+
+# Function to set up user environment
+setup_user_env() {
+    log_message "Setting up user environment..." "yellow"
+    
+    # Create Python virtual environment
+    python3 -m venv "$HOME/.venv"
+    
+    # Check if venv_info function already exists in .bashrc
+    if ! grep -q "venv_info()" "$HOME/.bashrc"; then
+        echo '
+# Python virtual environment function
+venv_info() {
+    [ -n "$VIRTUAL_ENV" ] && echo " ($(basename $VIRTUAL_ENV))"
+}
+' >> "$HOME/.bashrc"
+    fi
+    
+    # Add activation of venv to .bashrc if not already present
+    if ! grep -q "source \"\$HOME/.venv/bin/activate\"" "$HOME/.bashrc"; then
+        echo 'source "$HOME/.venv/bin/activate"' >> "$HOME/.bashrc"
+    fi
+    
+    log_message "Python virtual environment created and .bashrc updated" "green"
+}
+
 # Export all functions
 export -f color_text log_message install_packages check_requirements backup_dotfiles \
            stow_dotfiles check_root check_not_root confirm command_exists \
-           ensure_dir_exists symlink_file install_aur_helper
+           ensure_dir_exists symlink_file install_aur_helper check_os setup_user_env
