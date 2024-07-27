@@ -1,0 +1,56 @@
+{
+    "core": [
+      "base-devel",
+      "git",
+      "stow",
+      "vim",
+      "zsh",
+      "htop",
+      "fastfetch",
+      "firewalld"
+    ],
+    "extended": [
+      "python",
+      "python-pip",
+      "nodejs",
+      "npm",
+      "docker",
+      "docker-compose",
+      "git-lfs",
+      "tmux",
+      "ranger",
+      "fzf",
+      "jq",
+      "ripgrep",
+      "bat",
+      "exa",
+      "fd",
+      "zoxide"
+    ],
+    "gui": [
+      "xorg-server",
+      "xorg-xinit",
+      "i3-wm",
+      "i3status",
+      "dmenu",
+      "alacritty"
+    ],
+    "virtualization": [
+      "qemu",
+      "virt-manager",
+      "libvirt",
+      "nvidia",
+      "nvidia-utils",
+      "nvidia-settings"
+    ],
+    "games": [
+      "steam",
+      "lutris"
+    ],
+    "admintools": [
+      "wireshark-qt",
+      "nmap",
+      "tcpdump",
+      "openssh"
+    ]
+  }
