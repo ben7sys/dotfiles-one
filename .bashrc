@@ -2,6 +2,13 @@
 # ~/.bashrc
 #
 
+# Load custom dir_colors if exists
+if [ -f ~/.dir_colors ]; then
+    eval "$(dircolors -b ~/.dir_colors)"
+else
+    eval "$(dircolors -b)"
+fi
+
 # Run fastfetch on terminal start if available
 if command -v fastfetch &> /dev/null; then
     fastfetch
