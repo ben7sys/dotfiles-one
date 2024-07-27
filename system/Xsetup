@@ -1,0 +1,6 @@
+#!/bin/sh
+# Xsetup - run as root before the login dialog appears
+# /usr/share/sddm/scripts/Xsetup 
+
+xrandr --output DP-1 --auto --primary 
+xrandr --output DP-2 --right-of DP-1 --noprimary
