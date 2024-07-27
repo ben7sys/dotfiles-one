@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the directory containing the .mount files
-MOUNT_DIR="$HOME/GitHub/dotfiles/.mounts"
+MOUNT_DIR="$HOME/dotfiles/mounts"
 SYSTEMD_DIR="/etc/systemd/system"
 
 # Function for color formatting
