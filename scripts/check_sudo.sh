@@ -7,11 +7,3 @@ check_sudo() {
         exit 1
     fi
 }
-
-# Check if the script is run as root (we generally want to avoid this)
-check_not_root() {
-    if [ $EUID -eq 0 ]; then
-        echo "This script should not be run as root" 1>&2
-        exit 1
-    fi
-}

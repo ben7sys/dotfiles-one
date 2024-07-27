@@ -9,7 +9,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source helper functions
 source "$DOTFILES_DIR/scripts/utils.sh"
 
-# Check if running as root
+# Check if not running as root
 check_not_root
 
 # Install base packages
@@ -20,7 +20,5 @@ check_not_root
 
 # Set up system configurations
 "$DOTFILES_DIR/scripts/configure_system.sh"
-
-# Additional setup steps can be added here
 
 echo "Setup complete. Please restart your session to apply all changes."
