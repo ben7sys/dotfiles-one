@@ -1,3 +1,6 @@
+# Scripts
+alias genfiles='$HOME/dotfiles/scripts/generate_file_list.sh'
+
 # Navigation
 alias ..='cd ..'
 alias ...='cd ../..'
