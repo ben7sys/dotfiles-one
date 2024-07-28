@@ -47,7 +47,7 @@ check_requirements() {
     command -v stow >/dev/null 2>&1 || sudo pacman -S --noconfirm stow
 }
 
-# Function to backup existing dotfiles
+# Function to backup existing dotfiles has to be completely rewritten!
 backup_dotfiles() {
     local dotfiles_dir="$1"
     local backup_dir="$2"
