@@ -186,6 +186,6 @@ venv_info() {
 }
 
 # Export all functions
-export -f color_text log_message install_packages check_requirements backup_dotfiles \
+export -f color_text log_message check_requirements backup_dotfiles \
            stow_dotfiles check_root check_not_root confirm command_exists \
            ensure_dir_exists symlink_file install_aur_helper check_os setup_user_env
