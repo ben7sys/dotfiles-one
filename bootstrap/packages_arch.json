@@ -1,83 +1,145 @@
 {
-    "core": {
-      "pacman": [
-        "base-devel",
-        "git",
-        "stow",
-        "vim",
-        "zsh",
-        "htop",
-        "fastfetch",
-        "firewalld"
-      ],
-      "yay": []
-    },
-    "extended": {
-      "pacman": [
-        "python",
-        "python-pip",
-        "nodejs",
-        "npm",
-        "docker",
-        "docker-compose",
-        "git-lfs",
-        "tmux",
-        "ranger",
-        "fzf",
-        "jq",
-        "ripgrep",
-        "bat",
-        "exa",
-        "fd",
-        "zoxide"
-      ],
-      "yay": [
-        "visual-studio-code-bin",
-        "spotify"
-      ]
-    },
-    "gui": {
-      "pacman": [
-        "xorg-server",
-        "xorg-xinit",
-        "i3-wm",
-        "i3status",
-        "dmenu",
-        "alacritty"
-      ],
-      "yay": [
-        "polybar"
-      ]
-    },
-    "virtualization": {
-      "pacman": [
-        "qemu",
-        "virt-manager",
-        "libvirt",
-        "nvidia",
-        "nvidia-utils",
-        "nvidia-settings"
-      ],
-      "yay": []
-    },
-    "games": {
-      "pacman": [
-        "steam"
-      ],
-      "yay": [
-        "lutris-git",
-        "discord"
-      ]
-    },
-    "admintools": {
-      "pacman": [
-        "wireshark-qt",
-        "nmap",
-        "tcpdump",
-        "openssh"
-      ],
-      "yay": [
-        "postman-bin"
-      ]
-    }
+  "core": {
+    "pacman": [
+      "base-devel",
+      "git",
+      "stow",
+      "vim",
+      "zsh",
+      "htop",
+      "fastfetch",
+      "firewalld",
+      "python",
+      "python-pip",
+      "nodejs",
+      "npm",
+      "docker",
+      "docker-compose",
+      "git-lfs",
+      "tmux",
+      "ranger",
+      "fzf",
+      "jq",
+      "ripgrep",
+      "bat",
+      "exa",
+      "fd",
+      "zoxide"
+    ],
+    "yay": []
+  },
+  "office": {
+    "pacman": [
+      "keepassxc",
+      "thunderbird"
+    ],
+    "yay": [
+      "obsidian",
+      "cryptomator",
+      "bitwarden",
+      "onlyoffice-bin"
+    ]
+  },
+  "communication": {
+    "pacman": [
+      "signal-desktop",
+      "telegram-desktop"
+    ],
+    "yay": [
+      "whatsapp-nativefier",
+      "discord",
+      "teamspeak3"
+    ]
+  },
+  "browsers": {
+    "pacman": [
+      "firefox"
+    ],
+    "yay": [
+      "brave-bin",
+      "vivaldi"
+    ]
+  },
+  "multimedia": {
+    "pacman": [
+      "gimp",
+      "vlc",
+      "okular"
+    ],
+    "yay": [
+      "spotify",
+      "strawberry-qt5"
+    ]
+  },
+  "gaming": {
+    "pacman": [
+      "steam"
+    ],
+    "yay": [
+      "lutris-git"
+    ]
+  },
+  "productivity": {
+    "pacman": [
+      "kcalc",
+      "filelight"
+    ],
+    "yay": [
+      "visual-studio-code-bin",
+      "citrix-workspace",
+      "anydesk-bin"
+    ]
+  },
+  "system_tools": {
+    "pacman": [
+      "remmina",
+      "nmap",
+      "tcpdump",
+      "openssh",
+      "wireshark-qt"
+    ],
+    "yay": [
+      "postman-bin"
+    ]
+  },
+  "gui": {
+    "pacman": [
+      "xorg-server",
+      "xorg-xinit",
+      "i3-wm",
+      "i3status",
+      "dmenu",
+      "alacritty",
+      "spectacle"
+    ],
+    "yay": [
+      "polybar"
+    ]
+  },
+  "virtualization": {
+    "pacman": [
+      "qemu",
+      "virt-manager",
+      "libvirt"
+    ],
+    "yay": []
+  },
+  "nvidia": {
+    "pacman": [
+      "nvidia",
+      "nvidia-utils",
+      "nvidia-settings"
+    ],
+    "yay": []
+  },
+  "optional_tools": {
+    "pacman": [],
+    "yay": [
+      "picard",
+      "hardinfo",
+      "adriconf",
+      "czkawka-gui",
+      "grsync"
+    ]
   }
+}
