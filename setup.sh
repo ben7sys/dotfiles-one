@@ -12,42 +12,8 @@ source "$(dirname "$0")/configure_system.sh"
 DOTFILES_DIR="$HOME/.dotfiles"
 BACKUP_DIR="$HOME/.dotfiles_backup"
 
-# Function to install packages based on OS
-install_os_packages() {
-    local os=$1
-    local package_file="$DOTFILES_DIR/install/packages_${os}.txt"
-
-    if [ ! -f "$package_file" ]; then
-        log_message "Package list for $os not found: $package_file" "red"
-        return 1
-    fi
-
-    log_message "Installing packages for $os..." "yellow"
-    case $os in
-        arch)
-            install_packages "$package_file"
-            install_aur_helper
-            if command_exists yay; then
-                log_message "Updating system including AUR packages..." "yellow"
-                yay -Syu --noconfirm
-            fi
-            ;;
-        debian|fedora)
-            install_packages "$package_file"
-            ;;
-        macos)
-            if ! command_exists brew; then
-                log_message "Installing Homebrew..." "yellow"
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            fi
-            install_packages "$package_file"
-            ;;
-        *)
-            log_message "Unsupported operating system: $os" "red"
-            return 1
-            ;;
-    esac
-}
+# In setup.sh
+"$DOTFILES_DIR/scripts/install_packages.sh" "$DOTFILES_DIR/packages_arch.json" core extended
 
 # Main function to orchestrate the setup
 main() {

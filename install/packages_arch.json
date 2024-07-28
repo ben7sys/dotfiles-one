@@ -1,56 +1,83 @@
 {
-    "core": [
-      "base-devel",
-      "git",
-      "stow",
-      "vim",
-      "zsh",
-      "htop",
-      "fastfetch",
-      "firewalld"
-    ],
-    "extended": [
-      "python",
-      "python-pip",
-      "nodejs",
-      "npm",
-      "docker",
-      "docker-compose",
-      "git-lfs",
-      "tmux",
-      "ranger",
-      "fzf",
-      "jq",
-      "ripgrep",
-      "bat",
-      "exa",
-      "fd",
-      "zoxide"
-    ],
-    "gui": [
-      "xorg-server",
-      "xorg-xinit",
-      "i3-wm",
-      "i3status",
-      "dmenu",
-      "alacritty"
-    ],
-    "virtualization": [
-      "qemu",
-      "virt-manager",
-      "libvirt",
-      "nvidia",
-      "nvidia-utils",
-      "nvidia-settings"
-    ],
-    "games": [
-      "steam",
-      "lutris"
-    ],
-    "admintools": [
-      "wireshark-qt",
-      "nmap",
-      "tcpdump",
-      "openssh"
-    ]
+    "core": {
+      "pacman": [
+        "base-devel",
+        "git",
+        "stow",
+        "vim",
+        "zsh",
+        "htop",
+        "fastfetch",
+        "firewalld"
+      ],
+      "yay": []
+    },
+    "extended": {
+      "pacman": [
+        "python",
+        "python-pip",
+        "nodejs",
+        "npm",
+        "docker",
+        "docker-compose",
+        "git-lfs",
+        "tmux",
+        "ranger",
+        "fzf",
+        "jq",
+        "ripgrep",
+        "bat",
+        "exa",
+        "fd",
+        "zoxide"
+      ],
+      "yay": [
+        "visual-studio-code-bin",
+        "spotify"
+      ]
+    },
+    "gui": {
+      "pacman": [
+        "xorg-server",
+        "xorg-xinit",
+        "i3-wm",
+        "i3status",
+        "dmenu",
+        "alacritty"
+      ],
+      "yay": [
+        "polybar"
+      ]
+    },
+    "virtualization": {
+      "pacman": [
+        "qemu",
+        "virt-manager",
+        "libvirt",
+        "nvidia",
+        "nvidia-utils",
+        "nvidia-settings"
+      ],
+      "yay": []
+    },
+    "games": {
+      "pacman": [
+        "steam"
+      ],
+      "yay": [
+        "lutris-git",
+        "discord"
+      ]
+    },
+    "admintools": {
+      "pacman": [
+        "wireshark-qt",
+        "nmap",
+        "tcpdump",
+        "openssh"
+      ],
+      "yay": [
+        "postman-bin"
+      ]
+    }
   }
