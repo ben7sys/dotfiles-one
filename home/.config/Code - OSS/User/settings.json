@@ -1,7 +1,7 @@
 {
     "window.customTitleBarVisibility": "auto",
-    "git.autofetch": "true",
-    "explorer.confirmDragAndDrop": "false",
-    "github.copilot.enable": "true",
-    "github.copilot.inlineSuggest.enable": "true"
+    "git.autofetch": true,
+    "explorer.confirmDragAndDrop": false,
+    "github.copilot.enable": true,
+    "github.copilot.inlineSuggest.enable": true
 }
