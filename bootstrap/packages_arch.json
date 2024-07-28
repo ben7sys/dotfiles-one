@@ -1,5 +1,23 @@
 {
-  "core": {
+  "Admin": {
+    "pacman": [
+      "tmux",
+      "nmap",
+      "tcpdump",
+      "wireshark-qt"
+    ],
+    "yay": []
+  },
+  "Browsers": {
+    "pacman": [
+      "firefox"
+    ],
+    "yay": [
+      "brave-bin",
+      "vivaldi"
+    ]
+  },
+  "Core": {
     "pacman": [
       "base-devel",
       "git",
@@ -13,65 +31,45 @@
       "python-pip",
       "nodejs",
       "npm",
-      "docker",
-      "docker-compose",
-      "git-lfs",
-      "tmux",
-      "ranger",
       "fzf",
-      "jq",
-      "ripgrep",
-      "bat",
-      "exa",
-      "fd",
-      "zoxide"
+      "jq"
     ],
     "yay": []
   },
-  "office": {
+  "Desktop": {
     "pacman": [
       "keepassxc",
-      "thunderbird"
+      "thunderbird",
+      "signal-desktop",
+      "telegram-desktop",
+      "okular",
+      "openssh",
+      "spectacle",
+      "haruna"
     ],
     "yay": [
       "obsidian",
       "cryptomator",
       "bitwarden",
-      "onlyoffice-bin"
-    ]
-  },
-  "communication": {
-    "pacman": [
-      "signal-desktop",
-      "telegram-desktop"
-    ],
-    "yay": [
+      "onlyoffice-bin",
       "whatsapp-nativefier",
       "discord",
-      "teamspeak3"
-    ]
-  },
-  "browsers": {
-    "pacman": [
-      "firefox"
-    ],
-    "yay": [
-      "brave-bin",
-      "vivaldi"
-    ]
-  },
-  "multimedia": {
-    "pacman": [
-      "gimp",
-      "vlc",
-      "okular"
-    ],
-    "yay": [
+      "teamspeak3",
       "spotify",
-      "strawberry-qt5"
+      "visual-studio-code-bin"
     ]
   },
-  "gaming": {
+  "Developer": {
+    "pacman": [
+      "docker",
+      "docker-compose",
+      "git-lfs"
+    ],
+    "yay": [
+      "postman-bin"
+    ]
+  },
+  "Gaming": {
     "pacman": [
       "steam"
     ],
@@ -79,52 +77,28 @@
       "lutris-git"
     ]
   },
-  "productivity": {
-    "pacman": [
-      "kcalc",
-      "filelight"
-    ],
-    "yay": [
-      "visual-studio-code-bin",
-      "citrix-workspace",
-      "anydesk-bin"
-    ]
-  },
-  "system_tools": {
-    "pacman": [
-      "remmina",
-      "nmap",
-      "tcpdump",
-      "openssh",
-      "wireshark-qt"
-    ],
-    "yay": [
-      "postman-bin"
-    ]
-  },
-  "gui": {
+  "GUI": {
     "pacman": [
       "xorg-server",
       "xorg-xinit",
       "i3-wm",
       "i3status",
       "dmenu",
-      "alacritty",
-      "spectacle"
+      "alacritty"
     ],
     "yay": [
       "polybar"
     ]
   },
-  "virtualization": {
+  "Multimedia": {
     "pacman": [
-      "qemu",
-      "virt-manager",
-      "libvirt"
+      "gimp"
     ],
-    "yay": []
+    "yay": [
+      "picard"
+    ]
   },
-  "nvidia": {
+  "NVIDIA": {
     "pacman": [
       "nvidia",
       "nvidia-utils",
@@ -132,14 +106,46 @@
     ],
     "yay": []
   },
-  "optional_tools": {
-    "pacman": [],
+  "Productivity": {
+    "pacman": [
+      "kcalc",
+      "filelight"
+    ],
+    "yay": []
+  },
+  "Staging": {
+    "pacman": [
+      "ranger",
+      "ripgrep",
+      "bat",
+      "exa",
+      "fd",
+      "zoxide"
+    ],
     "yay": [
-      "picard",
+      "strawberry-qt5",
       "hardinfo",
       "adriconf",
       "czkawka-gui",
-      "grsync"
+      "grsync",
+      "timeshift"
+    ]
+  },
+  "Virtualization": {
+    "pacman": [
+      "qemu",
+      "virt-manager",
+      "libvirt"
+    ],
+    "yay": []
+  },
+  "Work": {
+    "pacman": [
+      "remmina"
+    ],
+    "yay": [
+      "citrix-workspace",
+      "anydesk-bin"
     ]
   }
 }

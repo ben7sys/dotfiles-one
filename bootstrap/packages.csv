@@ -1,0 +1,77 @@
+﻿Category,Package,Description ,Source 
+Admin,tmux,Terminal multiplexer,pacman
+Admin,nmap,Network scanner,pacman
+Admin,tcpdump,Network packet analyzer,pacman
+Admin,wireshark-qt,Network protocol analyzer,pacman
+Browsers,firefox,Web browser,pacman
+Browsers,brave-bin,Privacy-focused web browser,yay
+Browsers,vivaldi,Feature-rich web browser,yay
+Core,base-devel,Group of packages for building,pacman
+Core,git,Version control system,pacman
+Core,stow,Symlink farm manager,pacman
+Core,vim,Highly configurable text editor,pacman
+Core,zsh,Advanced shell,pacman
+Core,htop,Interactive process viewer,pacman
+Core,fastfetch,System information tool,pacman
+Core,firewalld,Firewall management tool,pacman
+Core,python,High-level programming language,pacman
+Core,python-pip,Python package installer,pacman
+Core,nodejs,JavaScript runtime,pacman
+Core,npm,Node.js package manager,pacman
+Core,fzf,Command-line fuzzy finder,pacman
+Core,jq,Command-line JSON processor,pacman
+Desktop,keepassxc,Cross-platform password manager,pacman
+Desktop,thunderbird,Email client,pacman
+Desktop,obsidian,Knowledge base and note-taking software,yay
+Desktop,cryptomator,Cloud encryption tool,yay
+Desktop,bitwarden,Open source password manager,yay
+Desktop,onlyoffice-bin,Office suite,yay
+Desktop,signal-desktop,Secure messenger,pacman
+Desktop,telegram-desktop,Cloud-based instant messaging,pacman
+Desktop,whatsapp-nativefier,WhatsApp desktop client,yay
+Desktop,discord,Voice and text chat,yay
+Desktop,teamspeak3,Voice chat software,yay
+Desktop,haruna,Multimedia player,
+Desktop,okular,Document viewer,pacman
+Desktop,spotify,Music streaming service,yay
+Desktop,visual-studio-code-bin,Code editor,yay
+Desktop,openssh,SSH connectivity tools,pacman
+Desktop,spectacle,Screenshot capture utility,pacman
+Developer,docker,Container platform,pacman
+Developer,docker-compose,Multi-container Docker applications,pacman
+Developer,git-lfs,Git extension for versioning large files,pacman
+Developer,postman-bin,API development environment,yay
+Gaming,steam,Gaming platform,pacman
+Gaming,lutris-git,Game manager,yay
+GUI,xorg-server,X.Org X server,pacman
+GUI,xorg-xinit,X.Org initialisation program,pacman
+GUI,i3-wm,Tiling window manager,pacman
+GUI,i3status,Status bar for i3,pacman
+GUI,dmenu,Dynamic menu for X,pacman
+GUI,alacritty,GPU-accelerated terminal emulator,pacman
+GUI,polybar,Status bar,yay
+Multimedia,gimp,Image manipulation program,pacman
+Multimedia,picard,Music tagger,yay
+NVIDIA,nvidia,NVIDIA drivers,pacman
+NVIDIA,nvidia-utils,NVIDIA driver utilities,pacman
+NVIDIA,nvidia-settings,Tool for configuring the NVIDIA graphics driver,pacman
+Productivity,kcalc,Scientific calculator,pacman
+Productivity,filelight,Disk usage visualization,pacman
+Staging,ranger,Console file manager,pacman
+Staging,ripgrep,Fast search tool,pacman
+Staging,bat,Cat clone with syntax highlighting,pacman
+Staging,exa,Modern replacement for ls,pacman
+Staging,fd,"Simple, fast alternative to find",pacman
+Staging,zoxide,Smarter cd command,pacman
+Staging,strawberry-qt5,Music player and collection organizer,yay
+Staging,hardinfo,System information and benchmark tool,yay
+Staging,adriconf,Advanced DRI (Direct Rendering Infrastructure) Configurator,yay
+Staging,czkawka-gui,"Multi-functional app to find duplicates, empty folders, similar images, etc.",yay
+Staging,grsync,GTK+ GUI for rsync,yay
+Virtualization,qemu,Generic machine emulator and virtualizer,pacman
+Virtualization,virt-manager,Desktop user interface for managing virtual machines,pacman
+Virtualization,libvirt,API for controlling virtualization,pacman
+Work,citrix-workspace,Remote desktop software,yay
+Work,anydesk-bin,Remote desktop software,yay
+Work,remmina,Remote desktop client,pacman
+Staging,timeshift
