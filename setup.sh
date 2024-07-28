@@ -54,12 +54,13 @@ main() {
         exit 1
     fi
     
-    stow_dotfiles "$DOTFILES_DIR" "$HOME" "home"
+    stow_dotfiles "$DOTFILES_DIR" "$HOME" "home" "$BACKUP_DIR"
     configure_system
     setup_user_env
     
     log_message "Setup completed successfully!" "green"
     log_message "Please restart your shell or source your .bashrc for changes to take effect." "yellow"
+    log_message "Your original dotfiles have been backed up to $BACKUP_DIR" "cyan"
 }
 
 # Run the main function

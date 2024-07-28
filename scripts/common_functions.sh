@@ -47,25 +47,46 @@ check_requirements() {
     command -v stow >/dev/null 2>&1 || sudo pacman -S --noconfirm stow
 }
 
-# Function to backup existing dotfiles has to be completely rewritten!
+# Improved function to backup existing dotfiles
 backup_dotfiles() {
     local dotfiles_dir="$1"
     local backup_dir="$2"
     
     log_message "Backing up existing dotfiles..." "yellow"
     mkdir -p "$backup_dir"
+    
+    # First, handle hidden files and directories
     for file in "$dotfiles_dir"/home/.*; do
-        [ -e "$HOME/$(basename "$file")" ] && mv "$HOME/$(basename "$file")" "$backup_dir/"
+        base_name=$(basename "$file")
+        if [ -e "$HOME/$base_name" ] && [ ! -L "$HOME/$base_name" ]; then
+            mv "$HOME/$base_name" "$backup_dir/"
+            log_message "Backed up $base_name" "cyan"
+        fi
+    done
+    
+    # Then, handle non-hidden files and directories
+    for file in "$dotfiles_dir"/home/*; do
+        base_name=$(basename "$file")
+        if [ -e "$HOME/$base_name" ] && [ ! -L "$HOME/$base_name" ]; then
+            mv "$HOME/$base_name" "$backup_dir/"
+            log_message "Backed up $base_name" "cyan"
+        fi
     done
 }
 
-# Function to stow dotfiles
+# Updated stow_dotfiles function
 stow_dotfiles() {
     local dotfiles_dir="$1"
     local target_dir="$2"
     local stow_dir="$3"
+    local backup_dir="$4"
     
     log_message "Stowing $stow_dir to $target_dir" "yellow"
+    
+    # Backup existing dotfiles before stowing
+    backup_dotfiles "$dotfiles_dir" "$backup_dir"
+    
+    # Now stow the files
     stow -v -R -t "$target_dir" -d "$dotfiles_dir" "$stow_dir"
 }
 
