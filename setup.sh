@@ -4,19 +4,36 @@
 
 set -euo pipefail
 
+# Function to ensure correct directory
+ensure_correct_directory() {
+    local current_dir=$(pwd)
+    local repo_name=$(basename "$current_dir")
+    local desired_dir="$HOME/.dotfiles"
+
+    if [[ "$repo_name" != ".dotfiles" ]]; then
+        if [[ "$current_dir" != "$desired_dir" ]]; then
+            log_message "Moving repository to $desired_dir..." "yellow"
+            mv "$current_dir" "$desired_dir"
+            cd "$desired_dir"
+            log_message "Repository moved successfully. Re-run this script from the new location." "green"
+            exit 0
+        fi
+    fi
+}
+
 # Source common functions and system configuration
-source "$(dirname "$0")/common_functions.sh"
-source "$(dirname "$0")/configure_system.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/scripts/common_functions.sh"
+source "$SCRIPT_DIR/scripts/configure_system.sh"
 
 # Main directories
 DOTFILES_DIR="$HOME/.dotfiles"
 BACKUP_DIR="$HOME/.dotfiles_backup"
 
-# In setup.sh
-"$DOTFILES_DIR/scripts/install_packages.sh" "$DOTFILES_DIR/packages_arch.json" core extended
-
 # Main function to orchestrate the setup
 main() {
+    ensure_correct_directory
+
     local os=$(check_os)
     log_message "Starting setup process for $os..." "green"
     
@@ -24,10 +41,7 @@ main() {
     check_requirements
     backup_dotfiles "$DOTFILES_DIR" "$BACKUP_DIR"
     
-    if ! install_os_packages "$os"; then
-        log_message "Failed to install packages. Exiting." "red"
-        exit 1
-    fi
+    "$DOTFILES_DIR/scripts/install_packages.sh" "$DOTFILES_DIR/packages_arch.json" core extended
     
     stow_dotfiles "$DOTFILES_DIR" "$HOME" "home"
     configure_system
