@@ -40,52 +40,6 @@ log_message() {
     echo "$(date): $message" >> "$LOG_FILE"
 }
 
-install_packages() {
-    local json_file="$1"
-    shift
-    local modules=("$@")
-
-    if [ ! -f "$json_file" ]; then
-        log_message "Package JSON file not found: $json_file" "red"
-        return 1
-    fi
-
-    # Check if jq is installed
-    if ! command -v jq &> /dev/null; then
-        log_message "jq is required but not installed. Installing jq..." "yellow"
-        sudo pacman -S --noconfirm jq
-    fi
-
-    # Update the system first
-    log_message "Updating system packages..." "yellow"
-    sudo pacman -Syu --noconfirm
-
-    for module in "${modules[@]}"; do
-        log_message "Installing packages for module: $module" "yellow"
-        
-        # Install pacman packages
-        pacman_packages=$(jq -r ".$module.pacman[]" "$json_file")
-        if [ -n "$pacman_packages" ]; then
-            log_message "Installing pacman packages for $module..." "cyan"
-            echo "$pacman_packages" | sudo pacman -S --needed --noconfirm -
-        fi
-
-        # Install yay packages
-        yay_packages=$(jq -r ".$module.yay[]" "$json_file")
-        if [ -n "$yay_packages" ]; then
-            if ! command -v yay &> /dev/null; then
-                log_message "yay is required but not installed. Installing yay..." "yellow"
-                install_aur_helper
-            fi
-            log_message "Installing yay packages for $module..." "magenta"
-            echo "$yay_packages" | yay -S --needed --noconfirm -
-        fi
-    done
-}
-
-# Example usage:
-# install_packages "packages_arch.json" "core" "extended" "gui"
-
 # Function to check system requirements
 check_requirements() {
     log_message "Checking system requirements..." "yellow"
