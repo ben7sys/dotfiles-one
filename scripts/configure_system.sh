@@ -3,7 +3,7 @@
 # configure_system.sh: System-specific configurations
 
 # Source common functions
-source "$(dirname "$0")/common_functions.sh"
+source "$(dirname "$0")/scripts/common_functions.sh"
 
 configure_system() {
     local os=$(check_os)
