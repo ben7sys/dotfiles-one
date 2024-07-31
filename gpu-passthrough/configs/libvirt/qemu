@@ -1,0 +1,9 @@
+#!/bin/bash
+VM_NAME="$1"
+VM_ACTION="$2"
+
+if [[ "$VM_ACTION" == "prepare" && -f "/etc/libvirt/hooks/qemu.d/$VM_NAME/prepare/begin.sh" ]]; then
+    bash "/etc/libvirt/hooks/qemu.d/$VM_NAME/prepare/begin.sh"
+elif [[ "$VM_ACTION" == "release" && -f "/etc/libvirt/hooks/qemu.d/$VM_NAME/release/end.sh" ]]; then
+    bash "/etc/libvirt/hooks/qemu.d/$VM_NAME/release/end.sh"
+fi
