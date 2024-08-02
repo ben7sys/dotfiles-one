@@ -5,8 +5,9 @@
 set -euo pipefail
 
 # Source common functions and system configuration
-source "$(dirname "$0")/config.sh"
-source "$dotfiles_dir/functions.sh"
+DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$DOTFILES_ROOT/config.sh"
+source "$DOTFILES_ROOT/functions.sh"
 
 # Ensure the repository is in the correct location
 ensure_correct_location() {
@@ -43,12 +44,19 @@ main() {
     check_not_root
     check_requirements
     
-    if ! "$dotfiles_dir/scripts/install_packages.sh" "$dotfiles_dir/bootstrap/packages_$os.json" $setup_install_packages; then
+    local packages_file="$DOTFILES_ROOT/bootstrap/packages_$os.json"
+    if [ ! -f "$packages_file" ]; then
+        log_message "Error: Package file $packages_file not found." "red"
+        exit 1
+    fi
+
+    if ! "$DOTFILES_ROOT/scripts/install_packages.sh" "$packages_file" $setup_install_packages; then
         log_message "Failed to install packages. Exiting." "red"
         exit 1
     fi
     
-    stow_dotfiles "$stow_source_dir" "$stow_target_dir" "home" "$dotfiles_backup_dir"
+    "$DOTFILES_ROOT/scripts/stow.sh"
+    #"$DOTFILES_ROOT/scripts/configure_system.sh"
     setup_user_env
     
     log_message "Setup completed successfully!" "green"
@@ -56,4 +64,7 @@ main() {
     log_message "Your original dotfiles have been backed up to $dotfiles_backup_dir" "cyan"
 }
 
-main
+# Run the main function if the script is executed directly
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main
+fi
