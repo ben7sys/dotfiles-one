@@ -1,7 +1,6 @@
-
 #!/bin/bash
 
-# install_packages.sh: A script to install packages from a JSON configuration file
+# install_packages.sh: A script to install packages from a YAML configuration file
 
 set -euo pipefail
 
@@ -11,19 +10,19 @@ source "$SCRIPT_DIR/common_functions.sh"
 
 # Main function to install packages
 install_packages() {
-    local json_file="$1"
+    local yaml_file="$1"
     shift
     local modules=("$@")
 
-    if [ ! -f "$json_file" ]; then
-        log_message "Package JSON file not found: $json_file" "red"
+    if [ ! -f "$yaml_file" ]; then
+        log_message "Package YAML file not found: $yaml_file" "red"
         exit 1
     fi
 
-    # Check if jq is installed
-    if ! command_exists jq; then
-        log_message "jq is required but not installed. Installing jq..." "yellow"
-        sudo pacman -S --noconfirm jq
+    # Check if yq is installed
+    if ! command_exists yq; then
+        log_message "yq is required but not installed. Installing yq..." "yellow"
+        sudo pacman -S --noconfirm yq
     fi
 
     # Update the system first
@@ -34,14 +33,14 @@ install_packages() {
         log_message "Installing packages for module: $module" "yellow"
         
         # Install pacman packages
-        pacman_packages=$(jq -r ".$module.pacman[]" "$json_file")
+        pacman_packages=$(yq e ".$module.pacman[]" "$yaml_file")
         if [ -n "$pacman_packages" ]; then
             log_message "Installing pacman packages for $module..." "cyan"
             echo "$pacman_packages" | sudo pacman -S --needed --noconfirm -
         fi
 
         # Install yay packages
-        yay_packages=$(jq -r ".$module.yay[]" "$json_file")
+        yay_packages=$(yq e ".$module.yay[]" "$yaml_file")
         if [ -n "$yay_packages" ]; then
             if ! command_exists yay; then
                 log_message "yay is required but not installed. Installing yay..." "yellow"
@@ -55,14 +54,14 @@ install_packages() {
 
 # Main execution
 if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 <json_file> <module1> [<module2> ...]"
+    echo "Usage: $0 <yaml_file> <module1> [<module2> ...]"
     exit 1
 fi
 
-json_file="$1"
+yaml_file="$1"
 shift
 modules=("$@")
 
-install_packages "$json_file" "${modules[@]}"
+install_packages "$yaml_file" "${modules[@]}"
 
 log_message "Package installation completed successfully!" "green"
