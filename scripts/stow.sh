@@ -2,8 +2,8 @@
 
 # Source the config file and common functions
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/functions.sh"
-source "$SCRIPT_DIR/config.sh"
+source "$SCRIPT_DIR/../functions.sh"
+source "$SCRIPT_DIR/../config.sh"
 
 # Function to stow files
 stow_files() {
