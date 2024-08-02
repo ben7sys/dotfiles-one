@@ -6,8 +6,7 @@ set -euo pipefail
 
 # Source common functions and system configuration
 source "$(dirname "$0")/config.sh"
-source "$dotfiles_dir/scripts/common_functions.sh"
-source "$dotfiles_dir/scripts/configure_system.sh"
+source "$dotfiles_dir/functions.sh"
 
 # Ensure the repository is in the correct location
 ensure_correct_location() {
@@ -50,7 +49,6 @@ main() {
     fi
     
     stow_dotfiles "$stow_source_dir" "$stow_target_dir" "home" "$dotfiles_backup_dir"
-    configure_system
     setup_user_env
     
     log_message "Setup completed successfully!" "green"
