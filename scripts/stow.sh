@@ -1,9 +1,13 @@
 #!/bin/bash
 
-# Source the config file and common functions
+# Determine the directory of the setup script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../functions.sh"
-source "$SCRIPT_DIR/../config.sh"
+
+# Source the config file
+source "$SCRIPT_DIR/config.sh"
+
+# Source other files
+source "$dotfiles_dir/functions.sh"
 
 # Function to stow files
 stow_files() {
