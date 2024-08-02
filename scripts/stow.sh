@@ -2,7 +2,7 @@
 
 # Source the config file and common functions
 source "$(dirname "$0")/config.sh"
-source "$(dirname "$0")/common_functions.sh"
+source "$(dirname "$0")/functions.sh"
 
 # Function to stow files
 stow_files() {
