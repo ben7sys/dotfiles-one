@@ -4,10 +4,12 @@ This repository contains my personal dotfiles, designed to make a freshly instal
 
 ## Main Purpose
 
-- Quick and consistent setup of a new system
+- Quick and consistent setup of a new system (arch, debian)
 - Portability of configurations
 - Collection of frequently used scripts and functions
 - Useful aliases
+
+Documentation and list of scripts, functions and aliases planned
 
 ## Included Components
 
