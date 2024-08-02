@@ -4,9 +4,14 @@
 
 set -eo pipefail
 
-# Source common functions
+# Determine the directory of the setup script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../functions.sh"
+
+# Source the config file
+source "$SCRIPT_DIR/config.sh"
+
+# Source other files
+source "$dotfiles_dir/functions.sh"
 
 # Install packages using specified package manager
 install_packages() {
