@@ -33,14 +33,14 @@ install_packages() {
         log_message "Installing packages for module: $module" "yellow"
         
         # Install pacman packages
-        pacman_packages=$(yq e ".$module.pacman[]" "$yaml_file")
+        pacman_packages=$(yq eval ".$module.pacman[]" "$yaml_file")
         if [ -n "$pacman_packages" ]; then
             log_message "Installing pacman packages for $module..." "cyan"
             echo "$pacman_packages" | sudo pacman -S --needed --noconfirm -
         fi
 
         # Install yay packages
-        yay_packages=$(yq e ".$module.yay[]" "$yaml_file")
+        yay_packages=$(yq eval ".$module.yay[]" "$yaml_file")
         if [ -n "$yay_packages" ]; then
             if ! command_exists yay; then
                 log_message "yay is required but not installed. Installing yay..." "yellow"
