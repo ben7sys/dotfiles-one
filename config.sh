@@ -6,7 +6,8 @@ dotfiles_backup_dir="$HOME/.dotfiles_backup"
 dotfiles_log_file="$HOME/dotfiles_setup.log"
 
 # Packages to be installed
-setup_install_packages="core desktop browsers"
+# Packages available to install: 
+setup_install_packages="core desktop"
 
 # Stow configuration
 stow_source_dir="$dotfiles_dir/home"

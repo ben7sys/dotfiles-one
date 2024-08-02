@@ -1,5 +1,5 @@
 {
-  "Admin": {
+  "admin": {
     "pacman": [
       "tmux",
       "nmap",
@@ -8,16 +8,7 @@
     ],
     "yay": []
   },
-  "Browsers": {
-    "pacman": [
-      "firefox"
-    ],
-    "yay": [
-      "brave-bin",
-      "vivaldi"
-    ]
-  },
-  "Core": {
+  "core": {
     "pacman": [
       "base-devel",
       "git",
@@ -33,11 +24,14 @@
       "npm",
       "fzf",
       "jq",
-      "go"
+      "go",
+      "kcalc",
+      "filelight",
+      "firefox"
     ],
     "yay": []
   },
-  "Desktop": {
+  "desktop": {
     "pacman": [
       "keepassxc",
       "thunderbird",
@@ -61,7 +55,7 @@
       "visual-studio-code-bin"
     ]
   },
-  "Developer": {
+  "developer": {
     "pacman": [
       "docker",
       "docker-compose",
@@ -71,7 +65,7 @@
       "postman-bin"
     ]
   },
-  "Gaming": {
+  "gaming": {
     "pacman": [
       "steam"
     ],
@@ -79,7 +73,7 @@
       "lutris-git"
     ]
   },
-  "GUI": {
+  "gui": {
     "pacman": [
       "xorg-server",
       "xorg-xinit",
@@ -92,7 +86,7 @@
       "polybar"
     ]
   },
-  "Multimedia": {
+  "multimedia": {
     "pacman": [
       "gimp"
     ],
@@ -100,7 +94,7 @@
       "picard"
     ]
   },
-  "NVIDIA": {
+  "nvidia": {
     "pacman": [
       "nvidia",
       "nvidia-utils",
@@ -108,14 +102,13 @@
     ],
     "yay": []
   },
-  "Productivity": {
+  "productivity": {
     "pacman": [
-      "kcalc",
-      "filelight"
+
     ],
     "yay": []
   },
-  "Staging": {
+  "staging": {
     "pacman": [
       "ranger",
       "ripgrep",
@@ -130,10 +123,12 @@
       "adriconf",
       "czkawka-gui",
       "grsync",
-      "timeshift"
+      "timeshift",
+      "brave-bin",
+      "vivaldi"
     ]
   },
-  "Virtualization": {
+  "virtualization": {
     "pacman": [
       "qemu",
       "virt-manager",
@@ -141,7 +136,7 @@
     ],
     "yay": []
   },
-  "Work": {
+  "work": {
     "pacman": [
       "remmina"
     ],
