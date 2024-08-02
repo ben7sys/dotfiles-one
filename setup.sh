@@ -59,8 +59,8 @@ main() {
         exit 1
     fi
     
-    "$dotfiles_root/scripts/stow.sh"
-    #"$dotfiles_root/scripts/configure_system.sh"
+    "$dotfiles_dir/scripts/stow.sh"
+    #"$dotfiles_dir/scripts/configure_system.sh"
     setup_user_env
     
     log_message "Setup completed successfully!" "green"
