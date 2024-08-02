@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# install_packages.sh: A script to install packages from a YAML configuration file
+# install_packages.sh: Install packages from YAML config for multiple package managers
 
 set -eo pipefail
 
 # Source common functions
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/common_functions.sh"
+source "$SCRIPT_DIR/../functions.sh"
 
-# Function to install packages
+# Install packages using specified package manager
 install_packages() {
     local package_manager="$1"
     shift
@@ -23,7 +23,7 @@ install_packages() {
     done
 }
 
-# Main function
+# Main function to process YAML and install packages
 main() {
     local yaml_file="$1"
     shift
@@ -34,7 +34,7 @@ main() {
         exit 1
     fi
 
-    # Update the system first
+    # Update system packages
     log_message "Updating system packages..." "yellow"
     sudo pacman -Syu --noconfirm
 
@@ -61,7 +61,7 @@ main() {
     done
 }
 
-# Main execution
+# Script entry point
 if [ "$#" -lt 2 ]; then
     echo "Usage: $0 <yaml_file> <module1> [<module2> ...]"
     exit 1
