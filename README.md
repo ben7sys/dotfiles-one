@@ -31,6 +31,9 @@ Current method:
    cd ~/.dotfiles
    ./setup.sh
    ```
+3. ```
+   sudo cp -R /home/sieben/dotfiles/gpu-passthrough/configs/libvirt/hooks /etc/libvirt/hooks
+   ```
 
 Future plan:
 - A single command via a specific domain that automatically executes everything.
