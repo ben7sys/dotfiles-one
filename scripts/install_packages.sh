@@ -33,7 +33,7 @@ install_packages() {
         log_message "Installing packages for module: $module" "yellow"
         
         # Install pacman packages
-        pacman_packages=$(yq eval ".$module.pacman[]" "$yaml_file")
+        pacman_packages=$(yq eval "$module.pacman[]" "$yaml_file")
         if [ -n "$pacman_packages" ]; then
             log_message "Installing pacman packages for $module..." "cyan"
             echo "$pacman_packages" | sudo pacman -S --needed --noconfirm -
