@@ -46,19 +46,19 @@ main() {
     check_not_root
     check_requirements
     
-    local packages_file="$DOTFILES_ROOT/packages_$os.yaml"
+    local packages_file="$dotfiles_root/packages_$os.yaml"
     if [ ! -f "$packages_file" ]; then
         log_message "Error: Package file $packages_file not found." "red"
         exit 1
     fi
 
-    if ! "$DOTFILES_ROOT/scripts/install_packages.sh" "$packages_file" $setup_install_packages; then
+    if ! "$dotfiles_root/scripts/install_packages.sh" "$packages_file" $setup_install_packages; then
         log_message "Failed to install packages. Exiting." "red"
         exit 1
     fi
     
-    "$DOTFILES_ROOT/scripts/stow.sh"
-    #"$DOTFILES_ROOT/scripts/configure_system.sh"
+    "$dotfiles_root/scripts/stow.sh"
+    #"$dotfiles_root/scripts/configure_system.sh"
     setup_user_env
     
     log_message "Setup completed successfully!" "green"
