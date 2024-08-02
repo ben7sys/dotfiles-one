@@ -44,7 +44,7 @@ main() {
     check_not_root
     check_requirements
     
-    local packages_file="$DOTFILES_ROOT/bootstrap/packages_$os.yaml"
+    local packages_file="$DOTFILES_ROOT/packages_$os.yaml"
     if [ ! -f "$packages_file" ]; then
         log_message "Error: Package file $packages_file not found." "red"
         exit 1
