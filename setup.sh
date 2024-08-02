@@ -4,10 +4,12 @@
 
 set -euo pipefail
 
-# Source common functions and system configuration
-DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$DOTFILES_ROOT/config.sh"
-source "$DOTFILES_ROOT/functions.sh"
+# Determine the directory of the setup script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the config file
+source "$SCRIPT_DIR/config.sh"
+source "$dotfiles_dir/functions.sh"
 
 # Ensure the repository is in the correct location
 ensure_correct_location() {
