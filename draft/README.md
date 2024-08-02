@@ -1,8 +1,8 @@
-# Bootstrap Debian System
+# Draft and Bootstrap Ultimate System
 
 ## Goals
 
- - Get a Debian System production ready with one command
+ - Get a Linux System production ready with one command
  - Only one Configuration File
  
 ## Thoughts
