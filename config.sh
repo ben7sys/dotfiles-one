@@ -10,12 +10,24 @@ dotfiles_dir="$HOME/.dotfiles"
 dotfiles_backup_dir="$HOME/dotfiles_backup"
 dotfiles_log_file="$HOME/dotfiles_setup.log"
 
-# Packages to be installed
+# Easy package installation
+# for setup.sh
+# usable as alias: "install [package]"
+
 # Packages available to install: 
-setup_install_packages="core desktop work"
+available_packages="$dotfiles_dir/packages.yaml"
+
+# Set of packages
+packages_core="base-devel git stow vim zsh htop"
+packages_desktop="obsidian crytomator spotify"
+packages_developer="code"
+
+# Packages to be installed (space-separated list of package sets or individual packages)
+setup_install_packages="$packages_core $packages_desktop $packages_developer" 
 
 # Stow configuration
 stow_source_dir="$dotfiles_dir/home"
 stow_target_dir="$HOME"
 
 # Additional configuration options can be added here
+
