@@ -16,33 +16,25 @@ install_single_package() {
     log_message "Attempting to install single package: $package with $package_manager" "cyan"
 
     if [ "$package_manager" = "pacman" ]; then
-        if check_root; then
-            log_message "Installing $package with pacman as root" "yellow"
-            pacman -S --needed --noconfirm "$package" || log_message "Failed to install $package with pacman" "red"
-        else
-            log_message "Installing $package with pacman using sudo" "yellow"
-            sudo pacman -S --needed --noconfirm "$package" || log_message "Failed to install $package with pacman" "red"
-        fi
-        if pacman -Qi "$package" >/dev/null 2>&1; then
-            log_message "$package successfully installed with pacman" "green"
-        else
-            log_message "$package installation with pacman failed or package not found" "red"
-        fi
+        log_message "Using pacman for $package" "yellow"
+        sudo pacman -S --needed --noconfirm "$package" || log_message "Failed to install $package with pacman" "red"
     elif [ "$package_manager" = "yay" ]; then
+        log_message "Using yay for $package" "yellow"
         if ! command_exists yay; then
             log_message "yay is not installed. Installing yay..." "yellow"
             install_aur_helper
         fi
-        log_message "Installing $package with yay" "yellow"
         yay -S --needed --noconfirm "$package" || log_message "Failed to install $package with yay" "red"
-        if yay -Qi "$package" >/dev/null 2>&1; then
-            log_message "$package successfully installed with yay" "green"
-        else
-            log_message "$package installation with yay failed or package not found" "red"
-        fi
     else
         log_message "Unknown package manager: $package_manager" "red"
         return 1
+    fi
+
+    # Check if installation was successful
+    if command -v "$package" >/dev/null 2>&1 || pacman -Qi "$package" >/dev/null 2>&1; then
+        log_message "$package successfully installed" "green"
+    else
+        log_message "$package installation failed or package not found" "red"
     fi
 }
 
