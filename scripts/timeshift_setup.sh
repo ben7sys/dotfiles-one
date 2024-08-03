@@ -19,7 +19,7 @@ show_usage() {
     echo "  or"
     echo "  DOTFILES_DIR=\$HOME/.dotfiles $0"
     echo ""
-    echo "Note: This script requires root privileges to run."
+    echo "Note: This script requires root privileges to run certain actions."
 }
 
 # Check for help argument
@@ -62,9 +62,6 @@ else
     echo "Error: functions.sh not found in $dotfiles_dir" >&2
     exit 1
 fi
-
-# Check if we're running as root
-check_root || { log_message "This script must be run as root. Please use sudo or run as root." "red"; exit 1; }
 
 # Function to check Timeshift-specific requirements
 check_timeshift_requirements() {
@@ -122,7 +119,7 @@ check_timeshift_requirements || { log_message "Failed to meet Timeshift-specific
 # Backup GRUB configuration before modifying
 backup_grub_config() {
     if [ -f /etc/default/grub ]; then
-        cp /etc/default/grub /etc/default/grub.bak
+        sudo cp /etc/default/grub /etc/default/grub.bak
         log_message "Backup of GRUB configuration created at /etc/default/grub.bak" "green"
     else
         log_message "No GRUB configuration file found to backup." "yellow"
@@ -152,7 +149,7 @@ install_if_not_exists() {
     if ! command_exists "$package"; then
         if confirm_action "Package $package is not installed. Do you want to install it?"; then
             log_message "Installing $package..." "yellow"
-            pacman -S --noconfirm "$package" || { log_message "Failed to install $package" "red"; exit 1; }
+            sudo pacman -S --noconfirm "$package" || { log_message "Failed to install $package" "red"; exit 1; }
         else
             log_message "Skipping installation of $package. This may affect the script's functionality." "yellow"
         fi
@@ -170,7 +167,7 @@ done
 if ! timeshift --list | grep -q "btrfs"; then
     if confirm_action "Configure Timeshift for system snapshots?"; then
         log_message "Configuring Timeshift for system snapshots..." "yellow"
-        timeshift --btrfs --snapshot-device /dev/sda2 --exclude "/home/**" --create || { log_message "Failed to configure Timeshift" "red"; exit 1; }
+        sudo timeshift --btrfs --snapshot-device /dev/sda2 --exclude "/home/**" --create || { log_message "Failed to configure Timeshift" "red"; exit 1; }
     else
         log_message "Skipping Timeshift configuration." "yellow"
     fi
@@ -182,7 +179,7 @@ fi
 if ! snapper list-configs | grep -q "home"; then
     if confirm_action "Configure Snapper for /home snapshots?"; then
         log_message "Configuring Snapper for /home snapshots..." "yellow"
-        snapper -c home create-config /home || { log_message "Failed to configure Snapper for /home" "red"; exit 1; }
+        sudo snapper -c home create-config /home || { log_message "Failed to configure Snapper for /home" "red"; exit 1; }
     else
         log_message "Skipping Snapper configuration for /home." "yellow"
     fi
@@ -192,8 +189,8 @@ fi
 
 # Create Systemd units for automatic snapshots
 if confirm_action "Create systemd units for automatic snapshots?"; then
-    create_systemd_service "timeshift-boot-snapshot" "/usr/bin/timeshift --create --comments 'Auto snapshot after boot' --tags B"
-    create_systemd_service "snapper-boot-snapshot" "/usr/bin/snapper -c home create -c timeline -d 'Auto snapshot after boot'"
+    sudo create_systemd_service "timeshift-boot-snapshot" "/usr/bin/timeshift --create --comments 'Auto snapshot after boot' --tags B"
+    sudo create_systemd_service "snapper-boot-snapshot" "/usr/bin/snapper -c home create -c timeline -d 'Auto snapshot after boot'"
 else
     log_message "Skipping creation of systemd units for automatic snapshots." "yellow"
 fi
@@ -203,8 +200,8 @@ if ! grep -q "GRUB_DISABLE_SUBMENU=n" /etc/default/grub; then
     if confirm_action "Modify GRUB configuration to show snapshots in boot menu?"; then
         backup_grub_config
         log_message "Configuring GRUB to show snapshots..." "yellow"
-        sed -i 's/GRUB_DISABLE_SUBMENU=y/GRUB_DISABLE_SUBMENU=n/' /etc/default/grub
-        grub-mkconfig -o /boot/grub/grub.cfg || { log_message "Failed to update GRUB configuration" "red"; exit 1; }
+        sudo sed -i 's/GRUB_DISABLE_SUBMENU=y/GRUB_DISABLE_SUBMENU=n/' /etc/default/grub
+        sudo grub-mkconfig -o /boot/grub/grub.cfg || { log_message "Failed to update GRUB configuration" "red"; exit 1; }
     else
         log_message "Skipping GRUB configuration modification." "yellow"
     fi
