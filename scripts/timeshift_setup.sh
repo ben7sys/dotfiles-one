@@ -75,7 +75,7 @@ modify_grub_config() {
     echo "Modifying GRUB configuration to include BTRFS snapshots..."
     sudo sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=10/' /etc/default/grub
     sudo sed -i 's/^#GRUB_SAVEDEFAULT=true$/GRUB_SAVEDEFAULT=true/' /etc/default/grub
-    sudo update-grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 # Create and enable a systemd service for Timeshift snapshots
