@@ -65,9 +65,8 @@ install_packages() {
             package_manager="pacman"
         fi
 
-        log_message "Package $package will be installed with $package_manager" "yellow"
-        
         if [ -n "$package_manager" ]; then
+            log_message "Package $package found in YAML, will be installed with $package_manager" "yellow"
             install_single_package "$package_manager" "$package"
         else
             log_message "Package not found in YAML: $package" "red"
