@@ -4,7 +4,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../config.sh"
-source "$SCRIPT_DIR/../functions.sh"
+source "$dotfiles_dir/functions.sh"
 
 check_root || { log_message "This script must be run as root" "red"; exit 1; }
 
