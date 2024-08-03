@@ -1,5 +1,6 @@
 # Scripts
-alias genfiles='$HOME/dotfiles/scripts/generate_file_list.sh'
+alias genfiles='$HOME/.dotfiles/scripts/generate_file_list.sh'
+alias deploy='$HOME/.dotfiles/scripts/install_packages.sh'
 
 # Navigation
 alias ..='cd ..'
