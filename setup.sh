@@ -30,7 +30,6 @@ ensure_correct_location() {
     fi
 }
 
-
 # Main function to orchestrate the setup
 main() {
     local os=$(check_os)
