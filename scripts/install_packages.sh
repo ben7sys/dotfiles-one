@@ -8,6 +8,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../config.sh"
 source "$dotfiles_dir/functions.sh"
 
+# Parse YAML file
+parse_yaml() {
+    local yaml_file="$1"
+    python3 -c "
+import yaml
+with open('$yaml_file', 'r') as f:
+    print(yaml.safe_load(f))
+    "
+}
+
 # Install a single package using specified package manager
 install_single_package() {
     local package_manager="$1"
@@ -16,10 +26,8 @@ install_single_package() {
     log_message "Attempting to install single package: $package with $package_manager" "cyan"
 
     if [ "$package_manager" = "pacman" ]; then
-        log_message "Using pacman for $package" "yellow"
         sudo pacman -S --needed --noconfirm "$package" || log_message "Failed to install $package with pacman" "red"
     elif [ "$package_manager" = "yay" ]; then
-        log_message "Using yay for $package" "yellow"
         if ! command_exists yay; then
             log_message "yay is not installed. Installing yay..." "yellow"
             install_aur_helper
@@ -31,7 +39,7 @@ install_single_package() {
     fi
 
     # Check if installation was successful
-    if command -v "$package" >/dev/null 2>&1 || pacman -Qi "$package" >/dev/null 2>&1; then
+    if pacman -Qi "$package" &>/dev/null; then
         log_message "$package successfully installed" "green"
     else
         log_message "$package installation failed or package not found" "red"
@@ -46,22 +54,33 @@ install_packages() {
     log_message "Starting package installation. YAML file: $yaml_file" "yellow"
     log_message "Packages to install: ${packages[*]}" "yellow"
 
+    local yaml_content=$(parse_yaml "$yaml_file")
+
     for package in "${packages[@]}"; do
         log_message "Checking package: $package" "cyan"
         
-        local package_manager=$(yq e ".pacman[] | select(. == \"$package\")" "$yaml_file" 2>/dev/null)
-        if [ -z "$package_manager" ]; then
-            package_manager=$(yq e ".yay[] | select(. == \"$package\")" "$yaml_file" 2>/dev/null)
-            [ -n "$package_manager" ] && package_manager="yay"
-        else
-            package_manager="pacman"
-        fi
+        if echo "$yaml_content" | grep -q "\"$package\""; then
+            local package_manager=""
+            if echo "$yaml_content" | grep -q "pacman.*$package"; then
+                package_manager="pacman"
+            elif echo "$yaml_content" | grep -q "yay.*$package"; then
+                package_manager="yay"
+            fi
 
-        if [ -n "$package_manager" ]; then
-            log_message "Package $package found in YAML, will be installed with $package_manager" "yellow"
-            install_single_package "$package_manager" "$package"
+            if [ -n "$package_manager" ]; then
+                log_message "Package $package found in YAML, will be installed with $package_manager" "yellow"
+                install_single_package "$package_manager" "$package"
+            else
+                log_message "Package $package found in YAML, but no package manager specified" "red"
+            fi
+        elif echo "$yaml_content" | grep -q "^$package:"; then
+            log_message "Installing package group: $package" "yellow"
+            local group_packages=$(echo "$yaml_content" | sed -n "/^$package:/,/^[^ ]/p" | grep -E '^ +- ' | sed 's/^ *- //')
+            for group_package in $group_packages; do
+                install_single_package "pacman" "$group_package" || install_single_package "yay" "$group_package"
+            done
         else
-            log_message "Package not found in YAML: $package" "red"
+            log_message "Package or group not found in YAML: $package" "red"
         fi
     done
 }
