@@ -94,6 +94,12 @@ main() {
     # Try to install packages
     install_packages $setup_install_packages
     
+    # Run Timeshift setup
+    if [ "$os" = "arch" ]; then  # Assuming this is for Arch Linux only
+        log_message "Setting up Timeshift..." "yellow"
+        sudo "$dotfiles_dir/scripts/timeshift_setup.sh"
+    fi
+
     log_message "Setup completed successfully!" "green"
     log_message "Please restart your shell or source your .bashrc for changes to take effect." "yellow"
     log_message "Your original dotfiles have been backed up to $dotfiles_backup_dir" "cyan"
