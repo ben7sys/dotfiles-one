@@ -2,8 +2,11 @@
 
 # common_functions.sh: Arch-specific reusable functions for dotfiles management scripts
 
-# Log file
-LOG_FILE="$HOME/dotfiles_setup.log"
+# Determine the directory of the script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the config file
+source "$SCRIPT_DIR/config.sh"
 
 # Function for color formatting
 color_text() {
@@ -37,7 +40,7 @@ log_message() {
     local message="$1"
     local color="${2:-normal}"
     color_text "$color" "$message"
-    echo "$(date): $message" >> "$LOG_FILE"
+    echo "$(date): $message" >> "$dotfiles_log_file"
 }
 
 # Function to check system requirements
@@ -47,31 +50,57 @@ check_requirements() {
     command -v stow >/dev/null 2>&1 || sudo pacman -S --noconfirm stow
 }
 
-# Improved function to backup existing dotfiles
+# Backup existing dotfiles
 backup_dotfiles() {
-    local dotfiles_dir="$1"
-    local backup_dir="$2"
+    local source_dir="$stow_source_dir"
+    local files_backed_up=0
     
     log_message "Backing up existing dotfiles..." "yellow"
-    mkdir -p "$backup_dir"
     
-    # First, handle hidden files and directories
-    for file in "$dotfiles_dir"/home/.*; do
-        base_name=$(basename "$file")
-        if [ -e "$HOME/$base_name" ] && [ ! -L "$HOME/$base_name" ]; then
-            mv "$HOME/$base_name" "$backup_dir/"
-            log_message "Backed up $base_name" "cyan"
+    # Check if source directory exists
+    if [ ! -d "$source_dir" ]; then
+        log_message "Error: Source directory $source_dir does not exist." "red"
+        return 1
+    fi
+    
+    # Ensure backup directory exists
+    ensure_dir_exists "$dotfiles_backup_dir"
+    
+    # Function to handle backup of a single file
+    backup_file() {
+        local file="$1"
+        local base_name=$(basename "$file")
+        
+        # Skip . and .. directories
+        if [[ "$base_name" == "." || "$base_name" == ".." ]]; then
+            return
         fi
+        
+        if [ -e "$stow_target_dir/$base_name" ] && [ ! -L "$stow_target_dir/$base_name" ]; then
+            if mv "$stow_target_dir/$base_name" "$dotfiles_backup_dir/"; then
+                log_message "Backed up $base_name" "cyan"
+                ((files_backed_up++))
+            else
+                log_message "Failed to backup $base_name" "red"
+            fi
+        fi
+    }
+    
+    # Handle hidden files and directories
+    for file in "$source_dir"/.*; do
+        backup_file "$file"
     done
     
-    # Then, handle non-hidden files and directories
-    for file in "$dotfiles_dir"/home/*; do
-        base_name=$(basename "$file")
-        if [ -e "$HOME/$base_name" ] && [ ! -L "$HOME/$base_name" ]; then
-            mv "$HOME/$base_name" "$backup_dir/"
-            log_message "Backed up $base_name" "cyan"
-        fi
+    # Handle non-hidden files and directories
+    for file in "$source_dir"/*; do
+        backup_file "$file"
     done
+    
+    if [ $files_backed_up -eq 0 ]; then
+        log_message "No files needed backup." "green"
+    else
+        log_message "Backed up $files_backed_up files to $dotfiles_backup_dir" "green"
+    fi
 }
 
 # Function to check if running as root
