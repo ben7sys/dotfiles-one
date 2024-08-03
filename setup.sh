@@ -64,7 +64,6 @@ main() {
     
     "$dotfiles_dir/scripts/stow.sh"
     #"$dotfiles_dir/scripts/configure_system.sh"
-    setup_user_env
     
     log_message "Setup completed successfully!" "green"
     log_message "Please restart your shell or source your .bashrc for changes to take effect." "yellow"
