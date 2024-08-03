@@ -71,21 +71,15 @@ main() {
     check_not_root
     check_requirements
     
+    log_message "Trying to backup the existing dotfiles" "yellow"
     # Backup existing dotfiles before proceeding
     backup_dotfiles
 
-    local packages_file="$dotfiles_dir/packages_$os.yaml"
-    if [ ! -f "$packages_file" ]; then
-        log_message "Error: Package file $packages_file not found." "red"
-        exit 1
-    fi
-
-    if ! "$dotfiles_dir/scripts/install_packages.sh" "$packages_file" $setup_install_packages; then
-        log_message "Failed to install packages. Exiting." "red"
-        exit 1
-    fi
-    
+    log_message "Trying to stow the dotfiles" "yellow"
+    # Stow the dotfiles   
     "$dotfiles_dir/scripts/stow.sh"
+
+    # Execute system-specific configuration script
     #"$dotfiles_dir/scripts/configure_system.sh"
     
     log_message "Setup completed successfully!" "green"
