@@ -29,22 +29,18 @@ if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     exit 0
 fi
 
-# Determine the directory of the current script
+# Determine the script directory and check for config.sh in the current or parent directory.
+# If found, check if it has already been sourced, and source it if not.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Check if config.sh exists in the current directory
-if [ -f "$SCRIPT_DIR/config.sh" ]; then
-    CONFIG_PATH="$SCRIPT_DIR/config.sh"
-# Check if config.sh exists in the parent directory
-elif [ -f "$SCRIPT_DIR/../config.sh" ]; then
-    CONFIG_PATH="$SCRIPT_DIR/../config.sh"
-else
-    echo "Error: config.sh not found in $SCRIPT_DIR or its parent directory." >&2
-    exit 1
-fi
-
-# Source the config file to load environment variables
-source "$CONFIG_PATH"
+for config in "$SCRIPT_DIR/config.sh" "$SCRIPT_DIR/../config.sh"; do
+    if [ -f "$config" ]; then
+        [ "$(readlink -f "${BASH_SOURCE[0]}")" != "$(readlink -f "$config")" ] && source "$config"
+        echo "Found and sourced: $config"
+        exit 0
+    fi
+done
+echo "Error: config.sh not found." >&2
+exit 1
 
 # Ensure required packages are installed
 if ! command_exists "timeshift" || ! command_exists "grub-btrfs" || ! command_exists "snapd"; then
