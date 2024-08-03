@@ -74,22 +74,6 @@ backup_dotfiles() {
     done
 }
 
-# Updated stow_dotfiles function
-stow_dotfiles() {
-    local dotfiles_dir="$1"
-    local target_dir="$2"
-    local stow_dir="$3"
-    local backup_dir="$4"
-    
-    log_message "Stowing $stow_dir to $target_dir" "yellow"
-    
-    # Backup existing dotfiles before stowing
-    backup_dotfiles "$dotfiles_dir" "$backup_dir"
-    
-    # Now stow the files
-    stow -v -R -t "$target_dir" -d "$dotfiles_dir" "$stow_dir"
-}
-
 # Function to check if running as root
 check_root() {
     if [ "$EUID" -eq 0 ]; then

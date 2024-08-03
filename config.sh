@@ -2,7 +2,7 @@
 
 # Main directories and files
 dotfiles_dir="$HOME/.dotfiles"
-dotfiles_backup_dir="$HOME/.dotfiles_backup"
+dotfiles_backup_dir="$HOME/dotfiles_backup"
 dotfiles_log_file="$HOME/dotfiles_setup.log"
 
 # Packages to be installed
