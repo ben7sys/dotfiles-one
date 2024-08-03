@@ -53,7 +53,7 @@ ensure_correct_location() {
         
         log_message "Recommended: Clone to the correct location, delete the existing one, and navigate to it:" "green"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo "   git clone $repository_url \"$dotfiles_dir\" && rm -rf \"$current_dir\" && cd \"$dotfiles_dir\" && ls"
+        echo "   git clone $repository_url \"$dotfiles_dir\" && rm -rf \"$current_dir\" && cd \"$dotfiles_dir\" && pwd && ls"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
