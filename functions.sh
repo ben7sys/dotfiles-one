@@ -18,6 +18,28 @@ for key, value in data.items():
 ' < "$1"
 }
 
+create_systemd_service() {
+    local service_name="$1"
+    local exec_start="$2"
+    local service_file="/etc/systemd/system/${service_name}.service"
+
+    cat << EOF > "$service_file"
+[Unit]
+Description=Create snapshot after boot
+After=default.target
+
+[Service]
+Type=oneshot
+ExecStart=$exec_start
+
+[Install]
+WantedBy=default.target
+EOF
+
+    systemctl daemon-reload
+    systemctl enable "${service_name}.service"
+}
+
 # Function for color formatting
 color_text() {
   local color_code=""
