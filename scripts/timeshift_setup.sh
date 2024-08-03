@@ -42,17 +42,85 @@ else
     exit 1
 fi
 
-# Source the config file and functions
-source "$dotfiles_dir/config.sh" || { echo "Error: Failed to source config.sh"; exit 1; }
-source "$dotfiles_dir/functions.sh" || { echo "Error: Failed to source functions.sh"; exit 1; }
-
-check_root || { log_message "This script must be run as root" "red"; exit 1; }
-
-# Check BTRFS filesystem
-if ! mount | grep -q "type btrfs"; then
-    log_message "BTRFS filesystem not detected. Timeshift requires BTRFS for snapshots." "red"
+# Verify that dotfiles_dir exists and is a directory
+if [ ! -d "$dotfiles_dir" ]; then
+    echo "Error: $dotfiles_dir is not a valid directory." >&2
     exit 1
 fi
+
+# Source the config file and functions
+if [ -f "$dotfiles_dir/config.sh" ]; then
+    source "$dotfiles_dir/config.sh"
+else
+    echo "Error: config.sh not found in $dotfiles_dir" >&2
+    exit 1
+fi
+
+if [ -f "$dotfiles_dir/functions.sh" ]; then
+    source "$dotfiles_dir/functions.sh"
+else
+    echo "Error: functions.sh not found in $dotfiles_dir" >&2
+    exit 1
+fi
+
+# Check if we're running as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root. Please use sudo or run as root." >&2
+    exit 1
+fi
+
+# Function to check Timeshift-specific requirements
+check_timeshift_requirements() {
+    log_message "Checking Timeshift-specific requirements..." "yellow"
+    local requirements_met=true
+
+    # Check for BTRFS filesystem
+    if ! mount | grep -q "type btrfs"; then
+        log_message "BTRFS filesystem not detected. Timeshift requires BTRFS for snapshots." "red"
+        requirements_met=false
+    fi
+
+    # Check available disk space (example: 5GB free space required)
+    local free_space=$(df -BG / | awk 'NR==2 {print $4}' | sed 's/G//')
+    if [ "$free_space" -lt 5 ]; then
+        log_message "Less than 5GB free space available. This might not be enough for snapshots." "yellow"
+        requirements_met=false
+    fi
+
+    # Check if required commands are available
+    local required_commands=(timeshift snapper grub-mkconfig)
+    local missing_commands=()
+
+    for cmd in "${required_commands[@]}"; do
+        if ! command_exists "$cmd"; then
+            missing_commands+=("$cmd")
+            requirements_met=false
+        fi
+    done
+
+    if [ ${#missing_commands[@]} -ne 0 ]; then
+        log_message "The following required commands are missing: ${missing_commands[*]}" "red"
+        log_message "Please install the missing packages before proceeding." "yellow"
+    fi
+
+    if [ "$requirements_met" = false ]; then
+        log_message "Timeshift-specific requirements not fully met. Please address the issues above before proceeding." "red"
+        if ! confirm_action "Do you want to continue anyway?" "N"; then
+            log_message "Exiting due to unmet Timeshift requirements." "yellow"
+            return 1
+        fi
+    else
+        log_message "All Timeshift-specific requirements are met." "green"
+    fi
+
+    return 0
+}
+
+# Check general requirements
+check_requirements || { log_message "Failed to meet general system requirements. Exiting." "red"; exit 1; }
+
+# Check Timeshift-specific requirements
+check_timeshift_requirements || { log_message "Failed to meet Timeshift-specific requirements. Exiting." "red"; exit 1; }
 
 # Inform user about potential changes
 log_message "This script will perform the following actions:" "yellow"
@@ -70,8 +138,6 @@ if ! confirm_action "Do you want to proceed with these changes?"; then
     log_message "Operation cancelled by user." "yellow"
     exit 0
 fi
-
-# Rest of the script remains the same...
 
 # Install necessary packages if not already installed
 install_if_not_exists() {
