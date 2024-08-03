@@ -30,32 +30,37 @@ ensure_correct_location() {
     if [[ "$current_dir" != "$dotfiles_dir" ]]; then
         log_message "Error: This script must be run from the correct dotfiles directory: $dotfiles_dir" "red"
         log_message "Current location: $current_dir" "yellow"
-        log_message "You have three options:" "cyan"
+        log_message "You have four options:" "cyan"
         
         echo ""
         log_message "1. Clone the repository to the correct location:" "cyan"
-        echo "   ───────────────────────────────────────────────────────"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo "   git clone $repository_url \"$dotfiles_dir\""
-        echo "   ───────────────────────────────────────────────────────"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
-        log_message "2. If you've already cloned it elsewhere, update 'dotfiles_dir' in config.sh:" "cyan"
-        echo "   ─────────────────────────────────────────────────────────────────"
-        echo "   sed -i 's|^dotfiles_dir=.*|dotfiles_dir=\"$current_dir\"|' \"$SCRIPT_DIR/config.sh\""
-        echo "   ─────────────────────────────────────────────────────────────────"
-        echo ""
-        
-        log_message "3. If you want to re-clone to the correct location and delete the existing one:" "cyan"
-        echo "   ─────────────────────────────────────────────────────────────────────────────────────────"
+        log_message "2. Delete the existing one and re-clone to the correct location:" "cyan"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo "   rm -rf \"$current_dir\" && git clone $repository_url \"$dotfiles_dir\""
-        echo "   ─────────────────────────────────────────────────────────────────────────────────────────"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo ""
+        
+        log_message "3. Update 'dotfiles_dir' in config.sh to match your current location:" "cyan"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo "   sed -i 's|^dotfiles_dir=.*|dotfiles_dir=\"$current_dir\"|' \"$SCRIPT_DIR/config.sh\""
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo ""
+        
+        log_message "Recommended: Clone to the correct location and delete the existing one:" "green"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo "   git clone $repository_url \"$dotfiles_dir\" && rm -rf \"$current_dir\""
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
         log_message "After taking one of these actions, navigate to $dotfiles_dir and re-run this script." "green"
         exit 1
     fi
 }
-
 
 # Main function to orchestrate the setup
 main() {
