@@ -42,22 +42,21 @@ check_requirements() {
 # Function to backup existing dotfiles
 backup_dotfiles() {
     log_message "Backing up existing dotfiles..." "yellow"
-    
+
     # Ensure backup directory exists
     mkdir -p "$dotfiles_backup_dir"
-    
-    # Backup each dotfile if it exists and is not a symlink
-    for file in "$stow_source_dir"/.* "$stow_source_dir"/*; do
-        local base_name=$(basename "$file")
+
+    # Iterate over all files and directories in stow source directory
+    find "$stow_source_dir" -type f | while read -r file; do
+        relative_path="${file#$stow_source_dir/}"
+        target_file="$stow_target_dir/$relative_path"
+        backup_file="$dotfiles_backup_dir/$relative_path"
         
-        # Skip if it's . or ..
-        if [[ "$base_name" == "." || "$base_name" == ".." ]]; then
-            continue
-        fi
-        
-        if [ -e "$stow_target_dir/$base_name" ] && [ ! -L "$stow_target_dir/$base_name" ]; then
-            mv "$stow_target_dir/$base_name" "$dotfiles_backup_dir/"
-            log_message "Backed up $base_name to $dotfiles_backup_dir" "cyan"
+        # Backup the file if it exists in target directory and is not a symlink
+        if [ -e "$target_file" ] && [ ! -L "$target_file" ]; then
+            mkdir -p "$(dirname "$backup_file")"
+            mv "$target_file" "$backup_file"
+            log_message "Backed up $relative_path to $backup_file" "cyan"
         fi
     done
     
