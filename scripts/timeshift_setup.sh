@@ -9,14 +9,25 @@ show_usage() {
     echo "  or:  DOTFILES_DIR=/path/to/dotfiles $0"
     echo ""
     echo "This script configures Timeshift for BTRFS snapshots."
-    echo "It can be run either through setup.sh or manually with the dotfiles directory specified."
     echo ""
-    echo "If run manually, you must either:"
-    echo "  1. Provide the path to your dotfiles directory as an argument, or"
-    echo "  2. Set the DOTFILES_DIR environment variable before running the script."
+    echo "Options:"
+    echo "  -h, --help           Display this help message and exit"
+    echo ""
+    echo "Environment Variables:"
+    echo "  DOTFILES_DIR         Path to the dotfiles directory (default: \$HOME/.dotfiles)"
+    echo ""
+    echo "Examples:"
+    echo "  $0 \$HOME/.dotfiles"
+    echo "  DOTFILES_DIR=\$HOME/.dotfiles $0"
     echo ""
     echo "Note: This script requires root privileges to run certain actions."
 }
+
+# Check for help argument
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    show_usage
+    exit 0
+fi
 
 # Determine the directory of the current script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -38,12 +49,11 @@ source "$CONFIG_PATH"
 # Ensure required packages are installed
 if ! command_exists "timeshift" || ! command_exists "grub-btrfs" || ! command_exists "snapd"; then
     echo "Required packages not found. Installing timeshift, snapd, and grub-btrfs..."
-    sudo bash "$dotfiles_dir/scripts/install_packages.sh" timeshift snapd grub-btrfs
+    sudo bash "$DOTFILES_DIR/scripts/install_packages.sh" timeshift snapd grub-btrfs
 fi
 
 # Install AUR helper (yay) if not installed
 install_aur_helper
-
 
 # Backup and modify GRUB configuration
 backup_grub_config() {
@@ -70,7 +80,6 @@ modify_grub_config() {
     # Generate new GRUB configuration
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
-
 
 # Create and enable a systemd service for Timeshift snapshots
 create_systemd_service() {
