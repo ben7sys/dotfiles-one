@@ -12,7 +12,7 @@ dotfiles_log_file="$HOME/dotfiles_setup.log"
 
 # Packages to be installed
 # Packages available to install: 
-setup_install_packages="core desktop"
+setup_install_packages="core desktop work"
 
 # Stow configuration
 stow_source_dir="$dotfiles_dir/home"
