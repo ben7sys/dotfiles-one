@@ -1,125 +1,80 @@
-admin:
-  pacman:
-    - tmux
-    - nmap
-    - tcpdump
-    - wireshark-qt
-  yay: []
+pacman:
+  - alacritty
+  - base-devel
+  - bat
+  - dmenu
+  - docker
+  - docker-compose
+  - exa
+  - fastfetch
+  - fd
+  - firefox
+  - firewalld
+  - fzf
+  - gimp
+  - git
+  - git-lfs
+  - go
+  - haruna
+  - htop
+  - i3-wm
+  - i3status
+  - jq
+  - kcalc
+  - keepassxc
+  - libvirt
+  - meld
+  - nmap
+  - nodejs
+  - npm
+  - nvidia
+  - nvidia-settings
+  - nvidia-utils
+  - okular
+  - openssh
+  - python
+  - python-pip
+  - qemu
+  - ranger
+  - remmina
+  - ripgrep
+  - signal-desktop
+  - spectacle
+  - steam
+  - stow
+  - tcpdump
+  - telegram-desktop
+  - thunderbird
+  - tmux
+  - vim
+  - virt-manager
+  - wireshark-qt
+  - xorg-server
+  - xorg-xinit
+  - zoxide
+  - zsh
 
-core:
-  pacman:
-    - base-devel
-    - git
-    - stow
-    - vim
-    - zsh
-    - htop
-    - fastfetch
-    - firewalld
-    - python
-    - python-pip
-    - nodejs
-    - npm
-    - fzf
-    - jq
-    - go
-    - kcalc
-    - filelight
-    - firefox
-  yay: []
-
-desktop:
-  pacman:
-    - keepassxc
-    - thunderbird
-    - signal-desktop
-    - telegram-desktop
-    - okular
-    - openssh
-    - spectacle
-    - haruna
-    - meld
-  yay:
-    - obsidian
-    - cryptomator
-    - bitwarden
-    - onlyoffice-bin
-    - whatsapp-nativefier
-    - discord
-    - teamspeak3
-    - spotify
-    - visual-studio-code-bin
-
-developer:
-  pacman:
-    - docker
-    - docker-compose
-    - git-lfs
-  yay:
-    - postman-bin
-
-gaming:
-  pacman:
-    - steam
-  yay:
-    - lutris-git
-
-gui:
-  pacman:
-    - xorg-server
-    - xorg-xinit
-    - i3-wm
-    - i3status
-    - dmenu
-    - alacritty
-  yay:
-    - polybar
-
-multimedia:
-  pacman:
-    - gimp
-  yay:
-    - picard
-
-nvidia:
-  pacman:
-    - nvidia
-    - nvidia-utils
-    - nvidia-settings
-  yay: []
-
-productivity:
-  pacman: []
-  yay: []
-
-staging:
-  pacman:
-    - ranger
-    - ripgrep
-    - bat
-    - exa
-    - fd
-    - zoxide
-  yay:
-    - strawberry-qt5
-    - hardinfo
-    - adriconf
-    - czkawka-gui
-    - grsync
-    - timeshift
-    - brave-bin
-    - vivaldi
-
-virtualization:
-  pacman:
-    - qemu
-    - virt-manager
-    - libvirt
-  yay: []
-
-work:
-  pacman:
-    - remmina
-  yay:
-    - citrix-workspace
-    - anydesk-bin
+yay:
+  - adriconf
+  - anydesk-bin
+  - bitwarden
+  - brave-bin
+  - citrix-workspace
+  - cryptomator
+  - czkawka-gui
+  - discord
+  - grsync
+  - hardinfo
+  - lutris-git
+  - obsidian
+  - onlyoffice-bin
+  - picard
+  - polybar
+  - postman-bin
+  - spotify
+  - strawberry-qt5
+  - teamspeak3
+  - timeshift
+  - visual-studio-code-bin
+  - vivaldi
+  - whatsapp-nativefier
