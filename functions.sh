@@ -2,18 +2,22 @@
 
 # common_functions.sh: Arch-specific reusable functions for dotfiles management scripts
 
-# Determine the directory of the script
+# Determine the directory of the current script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Source the config file
-source "$SCRIPT_DIR/config.sh"
-
-if [ -f "$HOME/.dotfiles/config.sh" ]; then
-    source "$HOME/.dotfiles/config.sh"
+# Check if config.sh exists in the current directory
+if [ -f "$SCRIPT_DIR/config.sh" ]; then
+    CONFIG_PATH="$SCRIPT_DIR/config.sh"
+# Check if config.sh exists in the parent directory
+elif [ -f "$SCRIPT_DIR/../config.sh" ]; then
+    CONFIG_PATH="$SCRIPT_DIR/../config.sh"
 else
-    echo "Error: config.sh not found in $HOME/.dotfiles" >&2
+    echo "Error: config.sh not found in $SCRIPT_DIR or its parent directory." >&2
     exit 1
 fi
+
+# Source the config file to load environment variables
+source "$CONFIG_PATH"
 
 # Function to ask for user confirmation
 confirm_action() {

@@ -4,34 +4,22 @@
 
 set -euo pipefail
 
-# Determine the directory of the setup script
+# Determine the directory of the current script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Source the config file
+# Check if config.sh exists in the current directory
 if [ -f "$SCRIPT_DIR/config.sh" ]; then
-    source "$SCRIPT_DIR/config.sh"
+    CONFIG_PATH="$SCRIPT_DIR/config.sh"
+# Check if config.sh exists in the parent directory
+elif [ -f "$SCRIPT_DIR/../config.sh" ]; then
+    CONFIG_PATH="$SCRIPT_DIR/../config.sh"
 else
-    echo "Error: config.sh not found in $SCRIPT_DIR" >&2
+    echo "Error: config.sh not found in $SCRIPT_DIR or its parent directory." >&2
     exit 1
 fi
 
-# Source functions.sh statically from the script directory
-if [ -f "$SCRIPT_DIR/functions.sh" ]; then
-    source "$SCRIPT_DIR/functions.sh"
-else
-    echo "Error: functions.sh not found in $SCRIPT_DIR" >&2
-    exit 1
-fi
-
-# Source dotfiles_dir/scripts/install_packages.sh
-if [ -f "$dotfiles_dir/scripts/install_packages.sh" ]; then
-    source "$dotfiles_dir/scripts/install_packages.sh"
-else
-    echo "Error: install_packages.sh not found in $dotfiles_dir/scripts" >&2
-    exit 1
-fi
-
-export DOTFILES_DIR="$HOME/.dotfiles"
+# Source the config file to load environment variables
+source "$CONFIG_PATH"
 
 # Ensure the script is in the coreect location
 ensure_correct_location() {
