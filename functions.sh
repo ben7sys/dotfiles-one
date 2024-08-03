@@ -39,57 +39,29 @@ check_requirements() {
     command -v stow >/dev/null 2>&1 || sudo pacman -S --noconfirm stow
 }
 
-# Backup existing dotfiles
+# Function to backup existing dotfiles
 backup_dotfiles() {
-    local source_dir="$stow_source_dir"
-    local files_backed_up=0
-    
     log_message "Backing up existing dotfiles..." "yellow"
     
-    # Check if source directory exists
-    if [ ! -d "$source_dir" ]; then
-        log_message "Error: Source directory $source_dir does not exist." "red"
-        return 1
-    fi
-    
     # Ensure backup directory exists
-    ensure_dir_exists "$dotfiles_backup_dir"
+    mkdir -p "$dotfiles_backup_dir"
     
-    # Function to handle backup of a single file
-    backup_file() {
-        local file="$1"
+    # Backup each dotfile if it exists and is not a symlink
+    for file in "$stow_source_dir"/.* "$stow_source_dir"/*; do
         local base_name=$(basename "$file")
         
-        # Skip . and .. directories
+        # Skip if it's . or ..
         if [[ "$base_name" == "." || "$base_name" == ".." ]]; then
-            return
+            continue
         fi
         
         if [ -e "$stow_target_dir/$base_name" ] && [ ! -L "$stow_target_dir/$base_name" ]; then
-            if mv "$stow_target_dir/$base_name" "$dotfiles_backup_dir/"; then
-                log_message "Backed up $base_name" "cyan"
-                ((files_backed_up++))
-            else
-                log_message "Failed to backup $base_name" "red"
-            fi
+            mv "$stow_target_dir/$base_name" "$dotfiles_backup_dir/"
+            log_message "Backed up $base_name to $dotfiles_backup_dir" "cyan"
         fi
-    }
-    
-    # Handle hidden files and directories
-    for file in "$source_dir"/.*; do
-        backup_file "$file"
     done
     
-    # Handle non-hidden files and directories
-    for file in "$source_dir"/*; do
-        backup_file "$file"
-    done
-    
-    if [ $files_backed_up -eq 0 ]; then
-        log_message "No files needed backup." "green"
-    else
-        log_message "Backed up $files_backed_up files to $dotfiles_backup_dir" "green"
-    fi
+    log_message "Dotfiles backup completed." "green"
 }
 
 # Function to check if running as root

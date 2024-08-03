@@ -48,6 +48,9 @@ main() {
     check_not_root
     check_requirements
     
+    # Backup existing dotfiles before proceeding
+    backup_dotfiles
+
     local packages_file="$dotfiles_dir/packages_$os.yaml"
     if [ ! -f "$packages_file" ]; then
         log_message "Error: Package file $packages_file not found." "red"
