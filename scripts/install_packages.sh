@@ -8,15 +8,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../config.sh"
 source "$dotfiles_dir/functions.sh"
 
-# Parse YAML file
-parse_yaml() {
-    local yaml_file="$1"
-    python3 -c "
-import yaml, json
-with open('$yaml_file', 'r') as f:
-    print(json.dumps(yaml.safe_load(f)))
-    "
-}
+# Check requirements before proceeding
+check_requirements
 
 # Install a single package using specified package manager
 install_single_package() {
@@ -79,6 +72,7 @@ install_packages() {
 # Main function
 main() {
     log_message "install_packages.sh main function called with arguments: $@" "cyan"
+    
     if [ "$#" -eq 0 ]; then
         log_message "No packages specified. Using default setup_install_packages." "yellow"
         install_packages $setup_install_packages
