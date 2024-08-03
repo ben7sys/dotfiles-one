@@ -23,17 +23,19 @@ else
     exit 1
 fi
 
-# Ensure the script is run from the correct dotfiles directory
 ensure_correct_location() {
     local current_dir=$(pwd)
 
     if [[ "$current_dir" != "$dotfiles_dir" ]]; then
-        log_message "Error: This script must be run from the dotfiles directory: $dotfiles_dir" "red"
+        log_message "Error: This script must be run from the correct dotfiles directory: $dotfiles_dir" "red"
         log_message "Current location: $current_dir" "yellow"
-        log_message "You have two options:" "cyan"
+        log_message "You have three options:" "cyan"
         echo "1. Clone the repository to the correct location:"
-        echo "   git clone <repository_url> \"$dotfiles_dir\""
-        echo "2. If you've already cloned it elsewhere, update 'dotfiles_dir' in config.sh"
+        echo "   git clone $repository_url \"$dotfiles_dir\""
+        echo "2. If you've already cloned it elsewhere, update 'dotfiles_dir' in config.sh:"
+        echo "   sed -i 's|^dotfiles_dir=.*|dotfiles_dir=\"$current_dir\"|' \"$SCRIPT_DIR/config.sh\""
+        echo "3. If you want to re-clone to the correct location and delete the existing one:"
+        echo "   rm -rf \"$current_dir\" && git clone $repository_url \"$dotfiles_dir\""
         log_message "After taking one of these actions, navigate to $dotfiles_dir and re-run this script." "green"
         exit 1
     fi

@@ -1,4 +1,9 @@
 #!/bin/bash
+## config.sh - Configuration file for setup.sh
+## setup.sh: Automate system setup and dotfiles installation for multiple operating systems
+
+## Repository URL
+repository_url=https://github.com/ben7sys/dotfiles.git
 
 # Main directories and files
 dotfiles_dir="$HOME/.dotfiles"
