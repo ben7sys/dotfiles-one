@@ -15,6 +15,14 @@ else
     exit 1
 fi
 
+# Source functions.sh statically from the script directory
+if [ -f "$SCRIPT_DIR/functions.sh" ]; then
+    source "$SCRIPT_DIR/functions.sh"
+else
+    echo "Error: functions.sh not found in $SCRIPT_DIR" >&2
+    exit 1
+fi
+
 # Ensure the script is run from the correct dotfiles directory
 ensure_correct_location() {
     local current_dir=$(pwd)
@@ -33,19 +41,10 @@ ensure_correct_location() {
 
 # Main function to orchestrate the setup
 main() {
-    ensure_correct_location
-
-    # Source functions.sh
-    if [ -f "$dotfiles_dir/functions.sh" ]; then
-        source "$dotfiles_dir/functions.sh"
-    else
-        echo "Error: functions.sh not found in $dotfiles_dir" >&2
-        exit 1
-    fi
-
     local os=$(check_os)
     log_message "Starting setup process for $os..." "green"
     
+    ensure_correct_location
     check_not_root
     check_requirements
     
