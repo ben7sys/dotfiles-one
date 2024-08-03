@@ -15,11 +15,18 @@ export DOTFILES_FUNCTIONS="$DOTFILES_DIR/functions.sh"
 export DOTFILES_CONFIG="$DOTFILES_DIR/config.sh"
 export DOTFILES_INSTALL_PACKAGES="$DOTFILES_DIR/scripts/install_packages.sh"
 
-# Function to source a file if it exists
+# Function to source a file if it exists and hasn't been sourced yet
 source_file_if_exists() {
     local file_path="$1"
+    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
+    
     if [ -f "$file_path" ]; then
-        source "$file_path"
+        # Check if the file has already been sourced
+        if [ -z "${!file_var_name}" ]; then
+            source "$file_path"
+            # Mark the file as sourced
+            export "$file_var_name"=1
+        fi
     else
         echo "Error: $file_path not found." >&2
         exit 1
