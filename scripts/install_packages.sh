@@ -13,6 +13,8 @@ install_single_package() {
     local package_manager="$1"
     local package="$2"
 
+    log_message "Attempting to install single package: $package with $package_manager" "cyan"
+
     if [ "$package_manager" = "pacman" ]; then
         if check_root; then
             pacman -S --needed --noconfirm "$package" || log_message "Failed to install $package with pacman" "yellow"
@@ -33,15 +35,21 @@ install_single_package() {
 
 # Install packages from a specific set or individual package
 install_packages() {
+    log_message "install_packages function called with arguments: $@" "cyan"
     local yaml_file="$available_packages"
     local packages=("$@")
 
+    log_message "Starting package installation. YAML file: $yaml_file" "yellow"
+    log_message "Packages to install: ${packages[*]}" "yellow"
+
     for package in "${packages[@]}"; do
+        log_message "Processing package: $package" "cyan"
+        
+        # Check if it's a package set
         if [[ "$package" == packages_* ]]; then
-            # Install package set
+            log_message "Detected as package set: $package" "cyan"
             local set_var="set_of_$package"
             if [ -n "${!set_var}" ]; then
-                log_message "Installing package set: $package" "cyan"
                 install_packages ${!set_var}
             else
                 log_message "Package set not found: $package" "red"
@@ -58,11 +66,7 @@ install_packages() {
 
             if [ -n "$package_manager" ]; then
                 log_message "Installing package: $package with $package_manager" "cyan"
-                if confirm "Do you want to install $package?"; then
-                    install_single_package "$package_manager" "$package"
-                else
-                    log_message "Skipping installation of $package" "yellow"
-                fi
+                install_single_package "$package_manager" "$package"
             else
                 log_message "Package not found in YAML: $package" "red"
             fi
@@ -72,6 +76,7 @@ install_packages() {
 
 # Main function
 main() {
+    log_message "install_packages.sh main function called with arguments: $@" "cyan"
     if [ "$#" -eq 0 ]; then
         log_message "No packages specified. Using default setup_install_packages." "yellow"
         install_packages $setup_install_packages
