@@ -62,7 +62,7 @@ fi
 # Ensure required packages are installed
 if ! command_exists "timeshift" || ! command_exists "grub-btrfs" || ! command_exists "snapd"; then
     echo "Required packages not found. Installing timeshift, snapd, and grub-btrfs..."
-    sudo bash "$dotfiles_dir/install_packages.sh" timeshift snapd grub-btrfs
+    sudo bash "$dotfiles_dir/scripts/install_packages.sh" timeshift snapd grub-btrfs
 fi
 
 # Install AUR helper (yay) if not installed
