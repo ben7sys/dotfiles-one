@@ -10,37 +10,26 @@ source "$SCRIPT_DIR/config.sh"
 
 # Function for color formatting
 color_text() {
+  local color_code=""
   case $1 in
-    green)
-      echo -e "\e[32m$2\e[0m"
-      ;;
-    yellow)
-      echo -e "\e[33m$2\e[0m"
-      ;;
-    red)
-      echo -e "\e[31m$2\e[0m"
-      ;;
-    blue)
-      echo -e "\e[34m$2\e[0m"
-      ;;
-    cyan)
-      echo -e "\e[36m$2\e[0m"
-      ;;
-    magenta)
-      echo -e "\e[35m$2\e[0m"
-      ;;
-    *)
-      echo "$2"
-      ;;
+    green) color_code="\e[32m";;
+    yellow) color_code="\e[33m";;
+    red) color_code="\e[31m";;
+    blue) color_code="\e[34m";;
+    cyan) color_code="\e[36m";;
+    magenta) color_code="\e[35m";;
+    *) color_code="";;
   esac
+  echo -e "${color_code}$2\e[0m"
 }
 
 # Function to log messages
 log_message() {
     local message="$1"
     local color="${2:-normal}"
-    color_text "$color" "$message"
-    echo "$(date): $message" >> "$dotfiles_log_file"
+    local level="${3:-INFO}"
+    color_text "$color" "[$level] $message"
+    echo "$(date): [$level] $message" >> "$dotfiles_log_file"
 }
 
 # Function to check system requirements

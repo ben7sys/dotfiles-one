@@ -8,11 +8,20 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Source the config file
-source "$SCRIPT_DIR/config.sh"
+if [ -f "$SCRIPT_DIR/config.sh" ]; then
+    source "$SCRIPT_DIR/config.sh"
+else
+    echo "Error: config.sh not found in $SCRIPT_DIR" >&2
+    exit 1
+fi
 
-# Source other files
-source "$dotfiles_dir/functions.sh"
-
+# Source functions.sh
+if [ -f "$dotfiles_dir/functions.sh" ]; then
+    source "$dotfiles_dir/functions.sh"
+else
+    echo "Error: functions.sh not found in $dotfiles_dir" >&2
+    exit 1
+fi
 
 # Ensure the script is run from the correct dotfiles directory
 ensure_correct_location() {
