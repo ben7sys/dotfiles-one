@@ -1,23 +1,19 @@
 #!/bin/bash
 
-# timeshift_setup.sh: Configure Timeshift and Snapper for BTRFS snapshots
+# timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
+# This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
 # Function to display usage information
 show_usage() {
     echo "Usage: $0 [DOTFILES_DIR]"
     echo "  or:  DOTFILES_DIR=/path/to/dotfiles $0"
     echo ""
-    echo "This script configures Timeshift and Snapper for BTRFS snapshots."
+    echo "This script configures Timeshift for BTRFS snapshots."
     echo "It can be run either through setup.sh or manually with the dotfiles directory specified."
     echo ""
     echo "If run manually, you must either:"
     echo "  1. Provide the path to your dotfiles directory as an argument, or"
     echo "  2. Set the DOTFILES_DIR environment variable before running the script."
-    echo ""
-    echo "Example:"
-    echo "  $0 \$HOME/.dotfiles"
-    echo "  or"
-    echo "  DOTFILES_DIR=\$HOME/.dotfiles $0"
     echo ""
     echo "Note: This script requires root privileges to run certain actions."
 }
@@ -63,59 +59,48 @@ else
     exit 1
 fi
 
-# Install Timeshift and required packages
-install_packages "timeshift snapd"
-
-# Detect the BTRFS root partition
-btrfs_root=$(findmnt -n -o SOURCE / | grep "^/dev/")
-
-if [ -z "$btrfs_root" ]; then
-    echo "Error: BTRFS root partition not found."
-    exit 1
+# Ensure required packages are installed
+if ! command_exists "timeshift"; then
+    echo "Timeshift not found. Installing..."
+    sudo bash "$dotfiles_dir/install_packages.sh" timeshift snapd
 fi
 
-# Use detected BTRFS root partition
-timeshift --snapshot-device "$btrfs_root" --schedule daily --target /mnt/timeshift --create
+# Backup and modify GRUB configuration
+backup_grub_config() {
+    echo "Backing up current GRUB configuration..."
+    sudo cp /etc/default/grub /etc/default/grub.bak
+}
 
-# Create and enable Systemd service to run Timeshift 1 minute after boot
+modify_grub_config() {
+    echo "Modifying GRUB configuration to include BTRFS snapshots..."
+    sudo sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=10/' /etc/default/grub
+    sudo sed -i 's/^#GRUB_SAVEDEFAULT=true$/GRUB_SAVEDEFAULT=true/' /etc/default/grub
+    sudo update-grub
+}
+
+# Create and enable a systemd service for Timeshift snapshots
 create_systemd_service() {
-    service_name="timeshift-snapshot"
-    service_file="/etc/systemd/system/$service_name.service"
-
-    echo "[Unit]
-Description=Create Timeshift Snapshot after Boot
-After=network.target
+    echo "Creating systemd service for Timeshift snapshots..."
+    sudo bash -c 'cat <<EOF > /etc/systemd/system/timeshift-autosnap.service
+[Unit]
+Description=Timeshift snapshot on boot
+DefaultDependencies=no
+Before=grub-initrd-fallback.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/timeshift --create --comments \"Auto snapshot after boot\"
-RemainAfterExit=yes
+ExecStart=/usr/bin/timeshift --create --comments "Snapshot on boot"
 
 [Install]
-WantedBy=multi-user.target" > "$service_file"
-
-    # Enable the service
-    systemctl daemon-reload
-    systemctl enable "$service_name"
+WantedBy=default.target
+EOF'
+    sudo systemctl daemon-reload
+    sudo systemctl enable timeshift-autosnap.service
 }
 
+# Main setup tasks
+backup_grub_config
+modify_grub_config
 create_systemd_service
 
-# Backup and update GRUB configuration
-backup_and_update_grub() {
-    grub_cfg="/etc/default/grub"
-    backup_cfg="/etc/default/grub.bak"
-
-    # Backup existing GRUB configuration
-    cp "$grub_cfg" "$backup_cfg"
-
-    # Update GRUB configuration to include BTRFS snapshots
-    sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 btrfs"/' "$grub_cfg"
-
-    # Apply new GRUB configuration
-    update-grub
-}
-
-backup_and_update_grub
-
-echo "Timeshift setup and configuration completed successfully."
+echo "Timeshift setup complete. Please reboot to apply the new configuration."
