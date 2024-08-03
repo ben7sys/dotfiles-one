@@ -97,7 +97,12 @@ main() {
     # Run Timeshift setup
     if [ "$os" = "arch" ]; then  # Assuming this is for Arch Linux only
         log_message "Setting up Timeshift..." "yellow"
-        sudo "$dotfiles_dir/scripts/timeshift_setup.sh"
+        if check_root; then
+            "$dotfiles_dir/scripts/timeshift_setup.sh"
+        else
+            log_message "Root privileges required for Timeshift setup. Please run the script with sudo." "red"
+            log_message "You can run it manually later with: sudo $dotfiles_dir/scripts/timeshift_setup.sh" "yellow"
+        fi
     fi
 
     log_message "Setup completed successfully!" "green"

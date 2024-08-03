@@ -8,6 +8,32 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source the config file
 source "$SCRIPT_DIR/config.sh"
 
+# Function to ask for user confirmation
+confirm_action() {
+    local prompt="$1"
+    local default="${2:-N}"
+
+    if [[ "$default" =~ ^[Yy]$ ]]; then
+        prompt+=" [Y/n] "
+    else
+        prompt+=" [y/N] "
+    fi
+
+    read -p "$prompt" response
+    case "$response" in
+        [Yy][Ee][Ss]|[Yy]) return 0 ;;
+        [Nn][Oo]|[Nn]) return 1 ;;
+        *) 
+            if [[ "$default" =~ ^[Yy]$ ]]; then
+                return 0
+            else
+                return 1
+            fi
+            ;;
+    esac
+}
+
+# Function to parse YAML file
 parse_yaml() {
     python3 -c '
 import yaml, sys
@@ -18,6 +44,7 @@ for key, value in data.items():
 ' < "$1"
 }
 
+# Function to create systemd service file
 create_systemd_service() {
     local service_name="$1"
     local exec_start="$2"
