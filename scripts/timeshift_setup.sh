@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 # timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
 # This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
