@@ -63,6 +63,14 @@ else
     exit 1
 fi
 
+# Near the top of the file, after sourcing config.sh and functions.sh
+if [ -f "$dotfiles_dir/scripts/install_packages.sh" ]; then
+    source "$dotfiles_dir/scripts/install_packages.sh"
+else
+    log_message "Error: install_packages.sh not found in $dotfiles_dir/scripts" "red"
+    exit 1
+fi
+
 # Function to check Timeshift-specific requirements
 check_timeshift_requirements() {
     log_message "Checking Timeshift-specific requirements..." "yellow"
@@ -149,7 +157,7 @@ install_if_not_exists() {
     if ! command_exists "$package"; then
         if confirm_action "Package $package is not installed. Do you want to install it?"; then
             log_message "Installing $package..." "yellow"
-            sudo pacman -S --noconfirm "$package" || { log_message "Failed to install $package" "red"; exit 1; }
+            install_packages "$package" || { log_message "Failed to install $package" "red"; exit 1; }
         else
             log_message "Skipping installation of $package. This may affect the script's functionality." "yellow"
         fi
