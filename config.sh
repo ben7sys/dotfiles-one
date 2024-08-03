@@ -30,4 +30,4 @@ stow_source_dir="$dotfiles_dir/home"
 stow_target_dir="$HOME"
 
 # Additional configuration options can be added here
-
+            
