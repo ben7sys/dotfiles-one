@@ -23,7 +23,7 @@ stow_target_dir="$HOME"
 
 # Package categories by software type
 packages_system="base-devel git stow vim zsh htop firewalld python python-pip tmux"
-packages_utilities="filelight ranger ripgrep bat exa fd zoxide kcalc keepassxc bitwarden cryptomator timeshift grsync hardinfo adriconf"
+packages_utilities="filelight ranger ripgrep bat exa fd zoxide kcalc keepassxc bitwarden cryptomator timeshift grub-btrfs grsync hardinfo adriconf"
 packages_network="nmap tcpdump wireshark-qt remmina openssh"
 packages_multimedia="gimp picard vlc haruna spectacle strawberry-qt5"
 packages_productivity="obsidian onlyoffice-bin thunderbird"

@@ -64,6 +64,7 @@ yay:
   - czkawka-gui
   - discord
   - grsync
+  - grub-btrfs
   - hardinfo
   - lutris-git
   - obsidian
