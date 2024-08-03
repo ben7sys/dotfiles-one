@@ -59,4 +59,4 @@ packages_fullwork="$packages_fullhome $packages_dev $packages_virtualization rem
 packages_fullgaming="$packages_fullhome $packages_gaming $packages_nvidia"
 
 # Packages to be installed (space-separated list of package sets or individual packages)
-setup_install_packages="$packages_core $packages_desktop $packages_utilities $packages_network"
+setup_install_packages="$packages_core $packages_desktop"
