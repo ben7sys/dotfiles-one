@@ -33,6 +33,8 @@ ensure_correct_location() {
 
 # Main function to orchestrate the setup
 main() {
+    ensure_correct_location
+
     # Source functions.sh
     if [ -f "$dotfiles_dir/functions.sh" ]; then
         source "$dotfiles_dir/functions.sh"
@@ -43,8 +45,7 @@ main() {
 
     local os=$(check_os)
     log_message "Starting setup process for $os..." "green"
-
-    ensure_correct_location
+    
     check_not_root
     check_requirements
     
