@@ -31,20 +31,32 @@ ensure_correct_location() {
         log_message "Error: This script must be run from the correct dotfiles directory: $dotfiles_dir" "red"
         log_message "Current location: $current_dir" "yellow"
         log_message "You have three options:" "cyan"
+        
         echo ""
-        echo "1. Clone the repository to the correct location:"
+        log_message "1. Clone the repository to the correct location:" "cyan"
+        echo "   ───────────────────────────────────────────────────────"
         echo "   git clone $repository_url \"$dotfiles_dir\""
+        echo "   ───────────────────────────────────────────────────────"
         echo ""
-        echo "2. If you've already cloned it elsewhere, update 'dotfiles_dir' in config.sh:"
+        
+        log_message "2. If you've already cloned it elsewhere, update 'dotfiles_dir' in config.sh:" "cyan"
+        echo "   ─────────────────────────────────────────────────────────────────"
         echo "   sed -i 's|^dotfiles_dir=.*|dotfiles_dir=\"$current_dir\"|' \"$SCRIPT_DIR/config.sh\""
+        echo "   ─────────────────────────────────────────────────────────────────"
         echo ""
-        echo "3. If you want to re-clone to the correct location and delete the existing one:"
+        
+        log_message "3. If you want to re-clone to the correct location and delete the existing one:" "cyan"
+        echo "   ─────────────────────────────────────────────────────────────────────────────────────────"
         echo "   rm -rf \"$current_dir\" && git clone $repository_url \"$dotfiles_dir\""
+        echo "   ─────────────────────────────────────────────────────────────────────────────────────────"
         echo ""
+        
         log_message "After taking one of these actions, navigate to $dotfiles_dir and re-run this script." "green"
         exit 1
     fi
 }
+
+
 # Main function to orchestrate the setup
 main() {
     local os=$(check_os)
