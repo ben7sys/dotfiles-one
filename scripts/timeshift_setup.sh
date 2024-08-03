@@ -64,10 +64,7 @@ else
 fi
 
 # Check if we're running as root
-if [ "$(id -u)" -ne 0 ]; then
-    echo "This script must be run as root. Please use sudo or run as root." >&2
-    exit 1
-fi
+check_root || { log_message "This script must be run as root. Please use sudo or run as root." "red"; exit 1; }
 
 # Function to check Timeshift-specific requirements
 check_timeshift_requirements() {
@@ -121,6 +118,16 @@ check_requirements || { log_message "Failed to meet general system requirements.
 
 # Check Timeshift-specific requirements
 check_timeshift_requirements || { log_message "Failed to meet Timeshift-specific requirements. Exiting." "red"; exit 1; }
+
+# Backup GRUB configuration before modifying
+backup_grub_config() {
+    if [ -f /etc/default/grub ]; then
+        cp /etc/default/grub /etc/default/grub.bak
+        log_message "Backup of GRUB configuration created at /etc/default/grub.bak" "green"
+    else
+        log_message "No GRUB configuration file found to backup." "yellow"
+    fi
+}
 
 # Inform user about potential changes
 log_message "This script will perform the following actions:" "yellow"
@@ -194,6 +201,7 @@ fi
 # Configure GRUB to show snapshots
 if ! grep -q "GRUB_DISABLE_SUBMENU=n" /etc/default/grub; then
     if confirm_action "Modify GRUB configuration to show snapshots in boot menu?"; then
+        backup_grub_config
         log_message "Configuring GRUB to show snapshots..." "yellow"
         sed -i 's/GRUB_DISABLE_SUBMENU=y/GRUB_DISABLE_SUBMENU=n/' /etc/default/grub
         grub-mkconfig -o /boot/grub/grub.cfg || { log_message "Failed to update GRUB configuration" "red"; exit 1; }
