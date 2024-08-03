@@ -8,6 +8,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source the config file
 source "$SCRIPT_DIR/config.sh"
 
+# Parse YAML file
+parse_yaml() {
+    local yaml_file="$1"
+    python3 -c "
+import yaml, json
+with open('$yaml_file', 'r') as f:
+    print(json.dumps(yaml.safe_load(f)))
+    "
+}
+
 # Function for color formatting
 color_text() {
   local color_code=""
@@ -35,8 +45,28 @@ log_message() {
 # Function to check system requirements
 check_requirements() {
     log_message "Checking system requirements..." "yellow"
-    command -v git >/dev/null 2>&1 || sudo pacman -S --noconfirm git
-    command -v stow >/dev/null 2>&1 || sudo pacman -S --noconfirm stow
+    local required_commands=(git stow jq python)
+    local missing_commands=()
+
+    for cmd in "${required_commands[@]}"; do
+        if ! command -v "$cmd" &> /dev/null; then
+            missing_commands+=("$cmd")
+        fi
+    done
+
+    if [ ${#missing_commands[@]} -ne 0 ]; then
+        log_message "The following required commands are missing: ${missing_commands[*]}" "red"
+        log_message "Installing missing packages..." "yellow"
+        sudo pacman -S --needed --noconfirm "${missing_commands[@]}"
+    fi
+
+    # Check for PyYAML
+    if ! python -c "import yaml" &> /dev/null; then
+        log_message "PyYAML is not installed. Installing..." "yellow"
+        sudo pacman -S --needed --noconfirm python-yaml
+    fi
+
+    log_message "All system requirements are met." "green"
 }
 
 # Function to backup existing dotfiles
