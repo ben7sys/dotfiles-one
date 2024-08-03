@@ -1,9 +1,5 @@
 #!/bin/bash
 ## config.sh - Configuration file for setup.sh
-## setup.sh: Automate system setup and dotfiles installation for multiple operating systems
-
-## Repository URL
-repository_url=https://github.com/ben7sys/dotfiles.git
 
 # Check if the script is running with sudo and set the correct home directory to the original user
 if [ -n "$SUDO_USER" ]; then
@@ -12,21 +8,35 @@ if [ -n "$SUDO_USER" ]; then
 fi
 
 # Export and set the main directories and files as environment variables
-export DOTFILES_DIR="$HOME/.dotfiles"
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
 export DOTFILES_BACKUP_DIR="$HOME/dotfiles_backup"
 export DOTFILES_LOG_FILE="$HOME/dotfiles_setup.log"
 export DOTFILES_FUNCTIONS="$DOTFILES_DIR/functions.sh"
 export DOTFILES_CONFIG="$DOTFILES_DIR/config.sh"
+export DOTFILES_INSTALL_PACKAGES="$DOTFILES_DIR/scripts/install_packages.sh"
+
+# Function to source a file if it exists
+source_file_if_exists() {
+    local file_path="$1"
+    if [ -f "$file_path" ]; then
+        source "$file_path"
+    else
+        echo "Error: $file_path not found." >&2
+        exit 1
+    fi
+}
+
+# Source ALL defined .sh files
+source_file_if_exists "$DOTFILES_FUNCTIONS"
+source_file_if_exists "$DOTFILES_INSTALL_PACKAGES"
+
+# Additional configurations and variables
 
 # Easy package installation
-# for setup.sh
-# usable as alias: "install [package]"
-
-# Packages available to install: 
-available_packages="$dotfiles_dir/packages.yaml"
+available_packages="$DOTFILES_DIR/packages.yaml"
 
 # Stow configuration
-stow_source_dir="$dotfiles_dir/home"
+stow_source_dir="$DOTFILES_DIR/home"
 stow_target_dir="$HOME"
 
 # Package categories by software type
@@ -51,18 +61,6 @@ packages_core="git vim zsh python firefox kcalc fastfetch"
 packages_desktop="obsidian visual-studio-code-bin keepassxc cryptomator kcalc signal-desktop okular spectacle meld thunderbird"
 packages_dev="$packages_development $packages_virtualization git python python-pip"
 packages_fullhome="$packages_core $packages_desktop $packages_utilities $packages_network $packages_multimedia $packages_productivity $packages_communication $packages_browsers $packages_office $packages_system_utils $packages_gui"
-packages_fullwork="$packages_fullhome $packages_dev $packages_virtualization remmina citrix-workspace anydesk-bin"
-packages_fullgaming="$packages_fullhome $packages_gaming $packages_nvidia"
-
-# Packages to be installed (space-separated list of package sets or individual packages)
-setup_install_packages="$packages_core"
-
-
-# User-defined categories
-packages_core="firefox kcalc python base-devel git stow vim zsh htop fastfetch firewalld python-pip fzf jq"
-packages_desktop="obsidian visual-studio-code-bin keepassxc cryptomator kcalc thunderbird signal-desktop telegram-desktop okular openssh spectacle haruna meld"
-packages_dev="$packages_development $packages_virtualization git python python-pip nodejs npm docker docker-compose"
-packages_fullhome="$packages_core $packages_desktop $packages_utilities $packages_network $packages_multimedia $packages_productivity $packages_communication $packages_browsers $packages_office $packages_extras"
 packages_fullwork="$packages_fullhome $packages_dev $packages_virtualization remmina citrix-workspace anydesk-bin"
 packages_fullgaming="$packages_fullhome $packages_gaming $packages_nvidia"
 
