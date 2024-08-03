@@ -12,9 +12,9 @@ source "$dotfiles_dir/functions.sh"
 parse_yaml() {
     local yaml_file="$1"
     python3 -c "
-import yaml
+import yaml, json
 with open('$yaml_file', 'r') as f:
-    print(yaml.safe_load(f))
+    print(json.dumps(yaml.safe_load(f)))
     "
 }
 
@@ -38,7 +38,6 @@ install_single_package() {
         return 1
     fi
 
-    # Check if installation was successful
     if pacman -Qi "$package" &>/dev/null; then
         log_message "$package successfully installed" "green"
     else
@@ -48,7 +47,7 @@ install_single_package() {
 
 # Install packages from a specific set or individual package
 install_packages() {
-    local yaml_file="$available_packages"
+    local yaml_file="${available_packages:-$dotfiles_dir/packages.yaml}"
     local packages=("$@")
 
     log_message "Starting package installation. YAML file: $yaml_file" "yellow"
@@ -59,23 +58,15 @@ install_packages() {
     for package in "${packages[@]}"; do
         log_message "Checking package: $package" "cyan"
         
-        if echo "$yaml_content" | grep -q "\"$package\""; then
-            local package_manager=""
-            if echo "$yaml_content" | grep -q "pacman.*$package"; then
-                package_manager="pacman"
-            elif echo "$yaml_content" | grep -q "yay.*$package"; then
-                package_manager="yay"
+        if echo "$yaml_content" | jq -e ".[] | select(.[\"pacman\"] + .[\"yay\"] | index(\"$package\") != null)" > /dev/null; then
+            if echo "$yaml_content" | jq -e ".[] | select(.pacman | index(\"$package\") != null)" > /dev/null; then
+                install_single_package "pacman" "$package"
+            elif echo "$yaml_content" | jq -e ".[] | select(.yay | index(\"$package\") != null)" > /dev/null; then
+                install_single_package "yay" "$package"
             fi
-
-            if [ -n "$package_manager" ]; then
-                log_message "Package $package found in YAML, will be installed with $package_manager" "yellow"
-                install_single_package "$package_manager" "$package"
-            else
-                log_message "Package $package found in YAML, but no package manager specified" "red"
-            fi
-        elif echo "$yaml_content" | grep -q "^$package:"; then
+        elif echo "$yaml_content" | jq -e ".$package" > /dev/null; then
             log_message "Installing package group: $package" "yellow"
-            local group_packages=$(echo "$yaml_content" | sed -n "/^$package:/,/^[^ ]/p" | grep -E '^ +- ' | sed 's/^ *- //')
+            local group_packages=$(echo "$yaml_content" | jq -r ".$package.pacman[], .$package.yay[]")
             for group_package in $group_packages; do
                 install_single_package "pacman" "$group_package" || install_single_package "yay" "$group_package"
             done
