@@ -8,14 +8,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source the config file
 source "$SCRIPT_DIR/config.sh"
 
-# Parse YAML file
 parse_yaml() {
-    local yaml_file="$1"
-    python3 -c "
-import yaml, json
-with open('$yaml_file', 'r') as f:
-    print(json.dumps(yaml.safe_load(f)))
-    "
+    python3 -c '
+import yaml, sys
+data = yaml.safe_load(sys.stdin)
+for key, value in data.items():
+    for package in value:
+        print(f"{key}:{package}")
+' < "$1"
 }
 
 # Function for color formatting

@@ -47,21 +47,28 @@ install_packages() {
     log_message "Packages to install: ${packages[*]}" "yellow"
 
     local yaml_content=$(parse_yaml "$yaml_file")
+    log_message "YAML content after parsing: $yaml_content" "cyan"
 
     for package in "${packages[@]}"; do
         log_message "Checking package: $package" "cyan"
         
-        if echo "$yaml_content" | jq -e ".[] | select(.[\"pacman\"] + .[\"yay\"] | index(\"$package\") != null)" > /dev/null; then
-            if echo "$yaml_content" | jq -e ".[] | select(.pacman | index(\"$package\") != null)" > /dev/null; then
-                install_single_package "pacman" "$package"
-            elif echo "$yaml_content" | jq -e ".[] | select(.yay | index(\"$package\") != null)" > /dev/null; then
-                install_single_package "yay" "$package"
-            fi
-        elif echo "$yaml_content" | jq -e ".$package" > /dev/null; then
+        if echo "$yaml_content" | grep -q "^pacman:$package$"; then
+            log_message "$package found in pacman list" "green"
+            install_single_package "pacman" "$package"
+        elif echo "$yaml_content" | grep -q "^yay:$package$"; then
+            log_message "$package found in yay list" "green"
+            install_single_package "yay" "$package"
+        elif echo "$yaml_content" | grep -q "^$package:"; then
             log_message "Installing package group: $package" "yellow"
-            local group_packages=$(echo "$yaml_content" | jq -r ".$package.pacman[], .$package.yay[]")
+            local group_packages=$(echo "$yaml_content" | grep "^$package:" | cut -d':' -f2)
             for group_package in $group_packages; do
-                install_single_package "pacman" "$group_package" || install_single_package "yay" "$group_package"
+                if echo "$yaml_content" | grep -q "^pacman:$group_package$"; then
+                    install_single_package "pacman" "$group_package"
+                elif echo "$yaml_content" | grep -q "^yay:$group_package$"; then
+                    install_single_package "yay" "$group_package"
+                else
+                    log_message "Package $group_package not found in pacman or yay lists" "red"
+                fi
             done
         else
             log_message "Package or group not found in YAML: $package" "red"
