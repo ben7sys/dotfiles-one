@@ -23,11 +23,11 @@ packages_desktop="obsidian crytomator spotify"
 packages_developer="code"
 
 # Packages to be installed (space-separated list of package sets or individual packages)
-setup_install_packages="$packages_core $packages_desktop $packages_developer" 
+setup_install_packages="$packages_core remmina" 
 
 # Stow configuration
 stow_source_dir="$dotfiles_dir/home"
 stow_target_dir="$HOME"
 
 # Additional configuration options can be added here
-            
+

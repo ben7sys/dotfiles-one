@@ -23,6 +23,15 @@ else
     exit 1
 fi
 
+# Source dotfiles_dir/scripts/install_packages.sh
+if [ -f "$dotfiles_dir/scripts/install_packages.sh" ]; then
+    source "$dotfiles_dir/scripts/install_packages.sh"
+else
+    echo "Error: install_packages.sh not found in $dotfiles_dir/scripts" >&2
+    exit 1
+fi
+
+
 # Ensure the script is in the coreect location
 ensure_correct_location() {
     local current_dir=$(pwd)
@@ -81,6 +90,9 @@ main() {
 
     # Execute system-specific configuration script
     #"$dotfiles_dir/scripts/configure_system.sh"
+
+    # Try to install packages
+    install_packages $setup_install_packages
     
     log_message "Setup completed successfully!" "green"
     log_message "Please restart your shell or source your .bashrc for changes to take effect." "yellow"
