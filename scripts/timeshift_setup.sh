@@ -72,11 +72,25 @@ backup_grub_config() {
 }
 
 modify_grub_config() {
-    echo "Modifying GRUB configuration to include BTRFS snapshots..."
+    echo "Modifying GRUB configuration to include BTRFS snapshots and detect other operating systems..."
+
+    # Set GRUB timeout to 10 seconds
     sudo sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=10/' /etc/default/grub
-    sudo sed -i 's/^#GRUB_SAVEDEFAULT=true$/GRUB_SAVEDEFAULT=true/' /etc/default/grub
+
+    # Disable GRUB_SAVEDEFAULT to prevent sparse file errors
+    sudo sed -i 's/^GRUB_SAVEDEFAULT=true$/#GRUB_SAVEDEFAULT=true/' /etc/default/grub
+
+    # Enable OS Prober to detect other operating systems
+    if grep -q "^#GRUB_DISABLE_OS_PROBER=true" /etc/default/grub; then
+        sudo sed -i 's/^#GRUB_DISABLE_OS_PROBER=true/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+    else
+        echo "GRUB_DISABLE_OS_PROBER=false" | sudo tee -a /etc/default/grub
+    fi
+
+    # Generate new GRUB configuration
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
+
 
 # Create and enable a systemd service for Timeshift snapshots
 create_systemd_service() {
