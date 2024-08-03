@@ -31,6 +31,7 @@ else
     exit 1
 fi
 
+export DOTFILES_DIR="$HOME/.dotfiles"
 
 # Ensure the script is in the coreect location
 ensure_correct_location() {

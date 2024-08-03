@@ -8,6 +8,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source the config file
 source "$SCRIPT_DIR/config.sh"
 
+if [ -f "$HOME/.dotfiles/config.sh" ]; then
+    source "$HOME/.dotfiles/config.sh"
+else
+    echo "Error: config.sh not found in $HOME/.dotfiles" >&2
+    exit 1
+fi
+
 # Function to ask for user confirmation
 confirm_action() {
     local prompt="$1"

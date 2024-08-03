@@ -5,10 +5,18 @@
 ## Repository URL
 repository_url=https://github.com/ben7sys/dotfiles.git
 
-# Main directories and files
-dotfiles_dir="$HOME/.dotfiles"
-dotfiles_backup_dir="$HOME/dotfiles_backup"
-dotfiles_log_file="$HOME/dotfiles_setup.log"
+# Check if the script is running with sudo and set the correct home directory to the original user
+if [ -n "$SUDO_USER" ]; then
+    export ORIGINAL_HOME=$(eval echo ~$SUDO_USER)
+    export HOME="$ORIGINAL_HOME"
+fi
+
+# Export and set the main directories and files as environment variables
+export DOTFILES_DIR="$HOME/.dotfiles"
+export DOTFILES_BACKUP_DIR="$HOME/dotfiles_backup"
+export DOTFILES_LOG_FILE="$HOME/dotfiles_setup.log"
+export DOTFILES_FUNCTIONS="$DOTFILES_DIR/functions.sh"
+export DOTFILES_CONFIG="$DOTFILES_DIR/config.sh"
 
 # Easy package installation
 # for setup.sh

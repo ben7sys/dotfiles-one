@@ -18,46 +18,22 @@ show_usage() {
     echo "Note: This script requires root privileges to run certain actions."
 }
 
-# Check for help argument
-if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    show_usage
-    exit 0
-fi
+# Determine the directory of the current script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Determine dotfiles directory
-if [ -n "$DOTFILES_DIR" ]; then
-    dotfiles_dir="$DOTFILES_DIR"
-    echo "Using DOTFILES_DIR from environment variable: $dotfiles_dir"
-elif [ -n "$1" ]; then
-    dotfiles_dir="$1"
-    echo "Using DOTFILES_DIR from command line argument: $dotfiles_dir"
+# Check if config.sh exists in the current directory
+if [ -f "$SCRIPT_DIR/config.sh" ]; then
+    CONFIG_PATH="$SCRIPT_DIR/config.sh"
+# Check if config.sh exists in the parent directory
+elif [ -f "$SCRIPT_DIR/../config.sh" ]; then
+    CONFIG_PATH="$SCRIPT_DIR/../config.sh"
 else
-    echo "Error: DOTFILES_DIR not set and no argument provided." >&2
-    echo ""
-    show_usage
+    echo "Error: config.sh not found in $SCRIPT_DIR or its parent directory." >&2
     exit 1
 fi
 
-# Verify that dotfiles_dir exists and is a directory
-if [ ! -d "$dotfiles_dir" ]; then
-    echo "Error: $dotfiles_dir is not a valid directory." >&2
-    exit 1
-fi
-
-# Source the config file and functions
-if [ -f "$dotfiles_dir/config.sh" ]; then
-    source "$dotfiles_dir/config.sh"
-else
-    echo "Error: config.sh not found in $dotfiles_dir" >&2
-    exit 1
-fi
-
-if [ -f "$dotfiles_dir/functions.sh" ]; then
-    source "$dotfiles_dir/functions.sh"
-else
-    echo "Error: functions.sh not found in $dotfiles_dir" >&2
-    exit 1
-fi
+# Source the config file to load environment variables
+source "$CONFIG_PATH"
 
 # Ensure required packages are installed
 if ! command_exists "timeshift" || ! command_exists "grub-btrfs" || ! command_exists "snapd"; then
