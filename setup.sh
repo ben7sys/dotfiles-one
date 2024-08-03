@@ -39,9 +39,9 @@ ensure_correct_location() {
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
-        log_message "2. Delete the existing one and re-clone to the correct location:" "cyan"
+        log_message "2. (Optional) Delete the existing one:" "cyan"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo "   rm -rf \"$current_dir\" && git clone $repository_url \"$dotfiles_dir\""
+        echo "   rm -rf \"$current_dir\""
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
@@ -51,9 +51,9 @@ ensure_correct_location() {
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
-        log_message "Recommended: Clone to the correct location and delete the existing one:" "green"
+        log_message "Recommended: Clone to the correct location, delete the existing one, and navigate to it:" "green"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo "   git clone $repository_url \"$dotfiles_dir\" && rm -rf \"$current_dir\""
+        echo "   git clone $repository_url \"$dotfiles_dir\" && rm -rf \"$current_dir\" && cd \"$dotfiles_dir\" && ls"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
