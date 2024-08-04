@@ -4,10 +4,14 @@
 echo "Arguments passed to main: $@"
 
 ## Enable debug mode
-#set -x
+set -x
 
 ## Enable strict mode
-set -eo pipefail
+#set -eo pipefail
+
+# Determine the script's directory and the parent directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
@@ -28,13 +32,10 @@ source_file_if_not_sourced() {
     fi
 }
 
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-
 # Source the config.sh file from the same directory or a parent directory
 source_file_if_not_sourced "$PARENT_DIR/config.sh"
 source_file_if_not_sourced "$PARENT_DIR/functions.sh"
+#log_message "config and functions sourced" "yellow"
 
 # Check requirements before proceeding
 check_requirements
