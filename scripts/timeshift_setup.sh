@@ -14,10 +14,13 @@ set -eo pipefail
 source_file_if_not_sourced() {
     local file_path="$1"
     local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
+    
     if [ -f "$file_path" ]; then
-        if [ -z "${!file_var_name}" ]; then
+        # Verwenden von `declare -n` für die indirekte Variablenreferenz
+        declare -n file_var_ref="$file_var_name"
+        if [ -z "$file_var_ref" ]; then
             source "$file_path"
-            export "$file_var_name"=1
+            file_var_ref=1
         fi
     else
         echo "Error: $file_path not found." >&2
@@ -25,13 +28,11 @@ source_file_if_not_sourced() {
     fi
 }
 
-# Determine the script's directory and the parent directory
+# Determine the script's directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Source the config.sh file from the parent directory
+# Use SCRIPT_DIR to source the config.sh file from the same directory or a parent directory
 source_file_if_not_sourced "$PARENT_DIR/config.sh"
-
 
 ## --- Functions ---
 # Function to display usage information
