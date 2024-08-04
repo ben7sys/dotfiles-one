@@ -1,8 +1,9 @@
 #!/bin/bash
 ## config.sh - Configuration file for setup.sh
 
-# Check if the script is running with sudo and set the correct home directory to the original user
+# Check if this script is running with sudo
 if [ -n "$SUDO_USER" ]; then
+    # Set the correct home directory to the original user
     export ORIGINAL_HOME=$(eval echo ~$SUDO_USER)
     export HOME="$ORIGINAL_HOME"
 fi
