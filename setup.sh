@@ -26,7 +26,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Source the config.sh file from the parent directory
-source_file_if_not_sourced "$PARENT_DIR/config.sh"
+source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
 
 # Ensure the script is in the coreect location
 ensure_correct_location() {
