@@ -25,6 +25,7 @@ PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Use SCRIPT_DIR to source the config.sh file from the same directory or a parent directory
 source_file_if_not_sourced "$PARENT_DIR/config.sh"
+log_message "config.sh sourced successfully! $PARENT_DIR/config.sh " "green"
 source_file_if_not_sourced "$PARENT_DIR/functions.sh"
 log_message "DOTFILES_DIR: $DOTFILES_DIR" "cyan"
 
