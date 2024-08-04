@@ -3,16 +3,26 @@
 ## timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
 ## This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
-set -eo pipefail
+## Enable debug mode
+set -x
 
-# Prevent duplicate sourcing for any file
+## Enable strict mode
+#set -eo pipefail
+
+# Determine the script's directory and the parent directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+## --- Source files ---
+## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
     local file_path="$1"
     local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
     
     if [ -f "$file_path" ]; then
+        # Verwenden von `declare -n` für die indirekte Variablenreferenz
         declare -n file_var_ref="$file_var_name"
-        if [ -z "${file_var_ref:-}" ]; then
+        if [ -z "$file_var_ref" ]; then
             source "$file_path"
             file_var_ref=1
         fi
@@ -22,13 +32,10 @@ source_file_if_not_sourced() {
     fi
 }
 
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-
-# Source the necessary files
+# Source the config.sh file from the same directory or a parent directory
 source_file_if_not_sourced "$PARENT_DIR/config.sh"
 source_file_if_not_sourced "$PARENT_DIR/functions.sh"
+#log_message "config and functions sourced" "yellow"
 
 # Function to check Timeshift-specific requirements
 check_timeshift_requirements() {
