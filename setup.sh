@@ -9,8 +9,9 @@ set -euo pipefail
 source_file_if_not_sourced() {
     local file_path="$1"
     local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
+    # eval is used to access the value of a dynamically named variable
     if [ -f "$file_path" ]; then
-        if [ -z "${!file_var_name}" ]; then
+        if [ -z "$(eval echo \${$file_var_name})" ]; then
             source "$file_path"
             export "$file_var_name"=1
         fi
@@ -25,7 +26,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Source the config.sh file from the parent directory
-source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
+source_file_if_not_sourced "$PARENT_DIR/config.sh"
 
 # Ensure the script is in the coreect location
 ensure_correct_location() {
