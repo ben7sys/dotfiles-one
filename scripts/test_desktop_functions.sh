@@ -16,7 +16,7 @@ source "$(dirname "$0")/config.sh"
 
 # Test wallpaper function
 echo "Testing set_wallpaper function..."
-set_wallpaper "$HOME/Pictures/wallpaper.jpg"
+set_wallpaper "$DOTFILES_DIR/user/wallpaper_default.jpg"
 
 # Test theme function
 echo "Testing set_theme function..."
