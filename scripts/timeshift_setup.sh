@@ -55,10 +55,11 @@ show_usage() {
     echo "Examples:"
     echo "  $0 \$HOME/.dotfiles"
     echo "  DOTFILES_DIR=\$HOME/.dotfiles $0"
-    echo "  $DOTFILES_DIR
+    echo "  $DOTFILES_DIR"
     echo ""
     echo "Note: This script requires root privileges to run certain actions."
 }
+
 
 # Check for help argument
 if [[ "$1" == "--help" || "$1" == "-h" ]]; then
