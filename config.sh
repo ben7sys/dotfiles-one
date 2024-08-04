@@ -38,8 +38,9 @@ source_file_if_not_sourced() {
     fi
 }
 
-# Determine the script's directory
+# Determine the script's directory and the parent directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Source the config.sh file from the parent directory
 source_file_if_not_sourced "$DOTFILES_CONFIG"
