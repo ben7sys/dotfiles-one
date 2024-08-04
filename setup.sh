@@ -4,7 +4,14 @@
 
 set -euo pipefail
 
-# Prevent duplicate sourcing for any file
+# Check if the config.sh file is already sourced
+if [ -z "${SOURCED_CONFIG_SH}" ]; then
+    source "$SCRIPT_DIR/config.sh"
+    export SOURCED_CONFIG_SH=1
+fi
+
+## --- Source files ---
+## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
     local file_path="$1"
     local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"

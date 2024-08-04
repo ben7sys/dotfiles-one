@@ -4,10 +4,10 @@
 echo "Arguments passed to main: $@"
 
 ## Enable debug mode
-set -x
+#set -x
 
 ## Enable strict mode
-# set -eo pipefail
+set -eo pipefail
 
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file

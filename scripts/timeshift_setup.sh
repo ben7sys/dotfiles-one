@@ -4,7 +4,10 @@
 ## This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
 ## Enable debug mode
-set -x
+#set -x
+
+## Enable strict mode
+set -eo pipefail
 
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
