@@ -25,7 +25,7 @@ source_file_if_not_sourced() {
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Use SCRIPT_DIR to source the config.sh file from the same directory or a parent directory
-source_file_if_not_sourced "$SCRIPT_DIR/../config.sh"
+source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
 
 # Ensure the script is in the coreect location
 ensure_correct_location() {
