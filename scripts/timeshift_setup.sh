@@ -13,11 +13,6 @@ set -x
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Source the config.sh file from the same directory or a parent directory
-source_file_if_not_sourced "$PARENT_DIR/config.sh"
-source_file_if_not_sourced "$PARENT_DIR/functions.sh"
-log_message "config and functions sourced" "yellow"
-
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
@@ -36,6 +31,12 @@ source_file_if_not_sourced() {
         exit 1
     fi
 }
+
+# Source the config.sh file from the same directory or a parent directory
+source_file_if_not_sourced "$PARENT_DIR/config.sh"
+source_file_if_not_sourced "$PARENT_DIR/functions.sh"
+log_message "config and functions sourced" "yellow"
+
 
 ## --- Functions ---
 # Function to display usage information
