@@ -29,16 +29,24 @@ if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     exit 0
 fi
 
-# Determine the script directory and check for config.sh in the current or parent directory.
-# If found, check if it has already been sourced, and source it if not.
+# Enable debug mode
+set -x
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 for config in "$SCRIPT_DIR/config.sh" "$SCRIPT_DIR/../config.sh"; do
     if [ -f "$config" ]; then
-        [ "$(readlink -f "${BASH_SOURCE[0]}")" != "$(readlink -f "$config")" ] && source "$config"
-        echo "Found and sourced: $config"
+        # Source the config.sh only if it hasn't been sourced yet
+        if ! (return 2>/dev/null); then
+            source "$config"
+            echo "Found and sourced: $config"
+        else
+            echo "config.sh already sourced: $config"
+        fi
         exit 0
     fi
 done
+
+# If no config.sh is found, output an error and exit
 echo "Error: config.sh not found." >&2
 exit 1
 
