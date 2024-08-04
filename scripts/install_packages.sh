@@ -57,7 +57,7 @@ install_single_package() {
 
 # Install packages from a specific set or individual package
 install_packages() {
-    local yaml_file="${available_packages:-$dotfiles_dir/packages.yaml}"
+    local yaml_file="${available_packages:-$DOTFILES_DIR/packages.yaml}"
     local packages=("$@")
 
     log_message "Starting package installation. YAML file: $yaml_file" "yellow"
