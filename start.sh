@@ -10,6 +10,7 @@ set -eo pipefail
 
 # Source the config file
 #source "$(dirname "$0")/scripts/config.sh"
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
 
 # Ensure the script is in the coreect location
 ensure_correct_location() {
@@ -139,7 +140,7 @@ main() {
         
     # Run Timeshift setup
     log_message "Starting $DOTFILES_DIR/scripts/ultimate_system.sh" "yellow"
-    "$DOTFILES_DIR/setup.sh"
+    "$DOTFILES_DIR/scripts/setup.sh"
 }
 
 # Run the main function if the script is executed directly
