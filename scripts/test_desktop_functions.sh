@@ -52,6 +52,24 @@ set_wallpaper() {
 echo "Testing set_wallpaper function..."
 set_wallpaper "$DOTFILES_DIR/user/wallpaper_default.png"
 
+# Ensure Kvantum is installed using the install_packages function
+install_packages "kvantum-qt5"
+
+# Function to set Kvantum theme
+set_kvantum_theme() {
+    local theme_name="$1"
+
+    if command_exists kvantummanager; then
+        kvantummanager --set "$theme_name"
+        log_message "Kvantum theme set to $theme_name" "green"
+    else
+        log_message "kvantummanager not found. Unable to set Kvantum theme." "red"
+    fi
+}
+
+# Test Kvantum theme function
+echo "Testing set_kvantum_theme function..."
+set_kvantum_theme "Ocean"
 
 # Function to set system theme
 set_theme() {
