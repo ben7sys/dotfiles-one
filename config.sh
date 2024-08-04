@@ -1,6 +1,10 @@
 #!/bin/bash
 ## config.sh - Configuration file for setup.sh
 
+# Avoid double sourcing by checking if DOTFILES_CONFIG is already sourced
+[ -z "$DOTFILES_CONFIG_SOURCED" ] || return
+export DOTFILES_CONFIG_SOURCED=1
+
 # Check if the script is running with sudo and set the correct home directory to the original user
 if [ -n "$SUDO_USER" ]; then
     export ORIGINAL_HOME=$(eval echo ~$SUDO_USER)
