@@ -29,6 +29,7 @@ source_file_if_not_sourced() {
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 source_file_if_not_sourced "$DOTFILES_ROOT_DIR/config.sh"
+source_file_if_not_sourced "$DOTFILES_ROOT_DIR/functions.sh"
 
 # Check requirements before proceeding
 check_requirements
