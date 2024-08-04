@@ -6,6 +6,11 @@ if [ -n "$SUDO_USER" ]; then
     # Set the correct home directory to the original user
     export ORIGINAL_HOME=$(eval echo ~$SUDO_USER)
     export HOME="$ORIGINAL_HOME"
+else
+    # SUDO_USER is not set, display a message but continue with the script
+    echo "SUDO_USER is not set. Running as the current user: $(whoami)"
+    export ORIGINAL_HOME=$(eval echo ~$USER)
+    export HOME="$ORIGINAL_HOME"
 fi
 
 # Determine the script's directory and the parent directory
