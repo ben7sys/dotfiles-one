@@ -74,6 +74,42 @@ color_text() {
   echo -e "${color_code}$2\e[0m"
 }
 
+# Function to check system requirements
+check_requirements() {
+    log_message "Checking system requirements..." "yellow"
+    local required_commands=(git stow jq python)
+    local missing_commands=()
+
+    for cmd in "${required_commands[@]}"; do
+        if ! command -v "$cmd" &> /dev/null; then
+            missing_commands+=("$cmd")
+        fi
+    done
+
+    if [ ${#missing_commands[@]} -ne 0 ]; then
+        log_message "The following required commands are missing: ${missing_commands[*]}" "red"
+        log_message "Installing missing packages..." "yellow"
+        sudo pacman -S --needed --noconfirm "${missing_commands[@]}"
+    fi
+
+    # Check for PyYAML
+    if ! python -c "import yaml" &> /dev/null; then
+        log_message "PyYAML is not installed. Installing..." "yellow"
+        sudo pacman -S --needed --noconfirm python-yaml
+    fi
+
+    log_message "All system requirements are met." "green"
+}
+
+# Function to check if running as root
+check_root() {
+    if [ "$EUID" -eq 0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Main function to orchestrate the setup
 main() {
     log_message "Checking requirements for $os..." "yellow"
