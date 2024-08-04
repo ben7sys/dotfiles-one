@@ -1,21 +1,13 @@
 #!/bin/bash
 ## config.sh - Configuration file for setup.sh
 
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-
 # Export and set the main directories and files as environment variables
-export DOTFILES_DIR="/home/sieben/.dotfiles"
+export DOTFILES_DIR="$HOME/.dotfiles"
 export DOTFILES_BACKUP_DIR="$HOME/dotfiles_backup"
 export DOTFILES_LOG_FILE="$HOME/dotfiles_setup.log"
 export DOTFILES_FUNCTIONS="$DOTFILES_DIR/functions.sh"
 export DOTFILES_CONFIG="$DOTFILES_DIR/config.sh"
 export DOTFILES_INSTALL_PACKAGES="$DOTFILES_DIR/scripts/install_packages.sh"
-
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 ### --- Source files ---
 ## Prevent duplicate sourcing for any file
@@ -37,9 +29,9 @@ source_file_if_not_sourced() {
 }
 
 # Source the config.sh file from the parent directory
-source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
-source_file_if_not_sourced "$SCRIPT_DIR/functions.sh"
-source_file_if_not_sourced "$SCRIPT_DIR/scripts/install_packages.sh"
+source_file_if_not_sourced "$DOTFILES_DIR/config.sh"
+source_file_if_not_sourced "$DOTFILES_DIR/functions.sh"
+source_file_if_not_sourced "$DOTFILES_DIR/scripts/install_packages.sh"
 
 # Additional configurations and variables
 
