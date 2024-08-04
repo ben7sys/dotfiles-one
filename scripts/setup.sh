@@ -15,15 +15,15 @@ source "$(dirname "$0")/config.sh"
 ensure_correct_location() {
     local current_dir=$(pwd)
 
-    if [[ "$current_dir" != "$DOTFILES_DIR" ]]; then
-        log_message "Error: This script must be run from the correct dotfiles directory: $DOTFILES_DIR" "red"
+    if [[ "$current_dir" != "$SCRIPTS_DIR" ]]; then
+        log_message "Error: This script must be run from the correct dotfiles directory: $SCRIPTS_DIR" "red"
         log_message "Current location: $current_dir" "yellow"
         log_message "You have four options:" "cyan"
         
         echo ""
         log_message "1. Clone the repository to the correct location:" "cyan"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo "   git clone $repository_url \"$DOTFILES_DIR\""
+        echo "   git clone $repository_url \"$SCRIPTS_DIR\""
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
@@ -33,19 +33,19 @@ ensure_correct_location() {
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
-        log_message "3. Update 'DOTFILES_DIR' in config.sh to match your current location:" "cyan"
+        log_message "3. Update 'SCRIPTS_DIR' in config.sh to match your current location:" "cyan"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo "   sed -i 's|^DOTFILES_DIR=.*|DOTFILES_DIR=\"$current_dir\"|' \"$SCRIPT_DIR/config.sh\""
+        echo "   sed -i 's|^SCRIPTS_DIR=.*|SCRIPTS_DIR=\"$current_dir\"|' \"$SCRIPT_DIR/config.sh\""
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
         log_message "Recommended: Clone to the correct location, delete the existing one, and navigate to it:" "green"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo "   git clone $repository_url \"$DOTFILES_DIR\" && rm -rf \"$current_dir\" && cd \"$DOTFILES_DIR\" && pwd && ls"
+        echo "   git clone $repository_url \"$SCRIPTS_DIR\" && rm -rf \"$current_dir\" && cd \"$SCRIPTS_DIR\" && pwd && ls"
         echo "   ──────────────────────────────────────────────────────────────────────────────"
         echo ""
         
-        log_message "After taking one of these actions, navigate to $DOTFILES_DIR and re-run this script." "green"
+        log_message "After taking one of these actions, navigate to $SCRIPTS_DIR and re-run this script." "green"
         exit 1
     fi
 }
@@ -65,17 +65,17 @@ main() {
 
     log_message "Trying to stow the dotfiles" "yellow"
     # Stow the dotfiles   
-    "$DOTFILES_DIR/scripts/stow.sh"
+    "$SCRIPTS_DIR/stow.sh"
 
     # Execute system-specific configuration script
-    #"$DOTFILES_DIR/scripts/configure_system.sh"
+    #"$SCRIPTS_DIR/scripts/configure_system.sh"
 
     # Try to install packages
     install_packages $setup_install_packages
     
     # Run Timeshift setup
-    log_message "Starting $DOTFILES_DIR/scripts/timeshift_setup.sh" "yellow"
-    "$DOTFILES_DIR/scripts/timeshift_setup.sh"
+    log_message "Starting $SCRIPTS_DIR/timeshift_setup.sh" "yellow"
+    "$SCRIPTS_DIR/timeshift_setup.sh"
 
     log_message "Setup completed successfully!" "green"
     log_message "Please restart your shell or source your .bashrc for changes to take effect." "yellow"
