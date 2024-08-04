@@ -2,8 +2,6 @@
 
 # setup.sh: Automate system setup and dotfiles installation for multiple operating systems
 
-set -euo pipefail
-
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
@@ -11,9 +9,11 @@ source_file_if_not_sourced() {
     local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
     
     if [ -f "$file_path" ]; then
-        if [ -z "${!file_var_name}" ]; then
+        # Verwenden von `declare -n` für die indirekte Variablenreferenz
+        declare -n file_var_ref="$file_var_name"
+        if [ -z "$file_var_ref" ]; then
             source "$file_path"
-            export "$file_var_name"=1
+            file_var_ref=1
         fi
     else
         echo "Error: $file_path not found." >&2
