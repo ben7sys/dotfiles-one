@@ -53,7 +53,7 @@ source_file_if_not_sourced "$DOTFILES_INSTALL_PACKAGES"
 available_packages="$DOTFILES_DIR/packages.yaml"
 
 # Stow configuration
-stow_source_dir="$DOTFILES_DIR/home"
+export stow_source_dir="$DOTFILES_DIR/home"
 stow_target_dir="$HOME"
 
 # Package categories by software type
