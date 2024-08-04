@@ -110,6 +110,16 @@ check_root() {
     fi
 }
 
+# Function to check if not running as root
+check_not_root() {
+    if [ "$EUID" -ne 0 ]; then
+        return 0
+    else
+        log_message "This script should not be run as root" "red"
+        return 1
+    fi
+}
+
 # Main function to orchestrate the setup
 main() {
     log_message "Checking requirements for $os..." "yellow"
