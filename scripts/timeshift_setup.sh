@@ -56,9 +56,19 @@ if [[ "$1" == "--help" || "$1" == "-h" ]]; then
 fi
 
 # Ensure required packages are installed
-if ! command_exists "timeshift" || ! command_exists "grub-btrfs" || ! command_exists "snapd"; then
-    echo "Required packages not found. Installing timeshift, snapd, and grub-btrfs..."
-    sudo bash "$DOTFILES_DIR/scripts/install_packages.sh" timeshift snapd grub-btrfs
+missing_packages=()
+
+# Check each required package
+for pkg in "timeshift" "grub-btrfs" "snapd"; do
+    if ! command_exists "$pkg"; then
+        missing_packages+=("$pkg")
+    fi
+done
+
+# Install missing packages if any
+if [ ${#missing_packages[@]} -ne 0 ]; then
+    echo "Required packages not found. Installing ${missing_packages[*]}..."
+    sudo bash "$DOTFILES_DIR/scripts/install_packages.sh" "${missing_packages[@]}"
 fi
 
 # Install AUR helper (yay) if not installed
