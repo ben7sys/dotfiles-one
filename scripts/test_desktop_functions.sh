@@ -60,27 +60,25 @@ set_theme() {
     local theme_dir_global="/usr/share/plasma/look-and-feel/$theme_name"
 
     if command_exists lookandfeeltool; then
-        if [ -d "$theme_dir_local" ]; then
+        if [ -d "$theme_dir_local" ] || [ -d "$theme_dir_global" ]; then
             lookandfeeltool -a "$theme_name"
-            log_message "Theme set to $theme_name from local directory" "green"
-        elif [ -d "$theme_dir_global" ]; then
-            lookandfeeltool -a "$theme_name"
-            log_message "Theme set to $theme_name from global directory" "green"
+            log_message "Theme set to $theme_name" "green"
         else
-            log_message "Theme $theme_name not found in local or global directories." "red"
+            log_message "Theme $theme_name not found in local or global directories. Available themes:" "yellow"
+            lookandfeeltool -l
         fi
     else
         log_message "lookandfeeltool not found. Unable to set theme." "red"
     fi
 }
 
-# Test theme function with Breeze and Ocean
-echo "Testing set_theme function with Breeze..."
-set_theme "org.kde.breeze.desktop"
-
+# Test theme function with Ocean theme
 echo "Testing set_theme function with Ocean..."
 set_theme "ocean"
 
+# Test theme function with Breeze theme
+echo "Testing set_theme function with Breeze..."
+set_theme "org.kde.breeze.desktop"
 
 # Function to set color scheme
 set_color_scheme() {
