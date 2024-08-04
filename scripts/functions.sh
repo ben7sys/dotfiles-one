@@ -7,54 +7,6 @@
 DOTFILES_FUNCTIONS_SOURCED=1
 
 
-# Function to set wallpaper
-set_wallpaper() {
-    local wallpaper_path="$1"
-    if [ -f "$wallpaper_path" ]; then
-        if command_exists plasma-apply-wallpaperimage; then
-            plasma-apply-wallpaperimage "$wallpaper_path"
-            log_message "Wallpaper set to $wallpaper_path" "green"
-        else
-            log_message "plasma-apply-wallpaperimage not found. Unable to set wallpaper." "red"
-        fi
-    else
-        log_message "Wallpaper file not found: $wallpaper_path" "red"
-    fi
-}
-
-# Function to set system theme
-set_theme() {
-    local theme_name="$1"
-    if command_exists lookandfeeltool; then
-        lookandfeeltool -a "$theme_name"
-        log_message "Theme set to $theme_name" "green"
-    else
-        log_message "lookandfeeltool not found. Unable to set theme." "red"
-    fi
-}
-
-# Function to set icon theme
-set_icon_theme() {
-    local icon_theme="$1"
-    if command_exists plasma-apply-icons; then
-        plasma-apply-icons "$icon_theme"
-        log_message "Icon theme set to $icon_theme" "green"
-    else
-        log_message "plasma-apply-icons not found. Unable to set icon theme." "red"
-    fi
-}
-
-# Function to reload Plasma settings
-reload_plasma_settings() {
-    if pgrep plasmashell > /dev/null; then
-        killall plasmashell
-        kstart5 plasmashell
-        log_message "Plasma settings reloaded" "green"
-    else
-        log_message "Plasmashell not running. No need to reload." "yellow"
-    fi
-}
-
 # Function to ask for user confirmation
 confirm_action() {
     local prompt="$1"

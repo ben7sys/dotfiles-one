@@ -14,6 +14,9 @@ export DOTFILES_FUNCTIONS="$SCRIPTS_DIR/functions.sh"
 export DOTFILES_CONFIG="$SCRIPTS_DIR/config.sh"
 export DOTFILES_INSTALL_PACKAGES="$SCRIPTS_DIR/install_packages.sh"
 
+# Default theme (Breeze Dark)
+DEFAULT_THEME="org.kde.breezedark.desktop"
+
 # Source functions
 source "$DOTFILES_FUNCTIONS"
 source "$DOTFILES_INSTALL_PACKAGES"
