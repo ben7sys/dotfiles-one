@@ -1,13 +1,6 @@
 #!/bin/bash
 ## config.sh - Configuration file for setup.sh
 
-# Check if this script is running with sudo
-if [ -n "$SUDO_USER" ]; then
-    # Set the correct home directory to the original user
-    export ORIGINAL_HOME=$(eval echo ~$SUDO_USER)
-    export HOME="$ORIGINAL_HOME"
-fi
-
 # Determine the script's directory and the parent directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
