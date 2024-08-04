@@ -4,10 +4,10 @@
 echo "Arguments passed to main: $@"
 
 ## Enable debug mode
-set -x
+#set -x
 
 ## Enable strict mode
-#set -eo pipefail
+set -eo pipefail
 
 # Determine the script's directory and the parent directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
