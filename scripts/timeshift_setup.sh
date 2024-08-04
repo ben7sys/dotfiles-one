@@ -3,7 +3,7 @@
 ## timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
 ## This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
-set -euo pipefail
+set -eo pipefail
 
 # Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
