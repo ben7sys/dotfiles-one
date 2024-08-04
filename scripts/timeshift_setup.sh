@@ -1,5 +1,5 @@
 #!/bin/bash
-log_message "timeshift_setup.sh script started" "yellow"
+
 ## timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
 ## This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
@@ -8,6 +8,15 @@ log_message "timeshift_setup.sh script started" "yellow"
 
 ## Enable strict mode
 set -eo pipefail
+
+# Determine the script's directory and the parent directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Source the config.sh file from the same directory or a parent directory
+source_file_if_not_sourced "$PARENT_DIR/config.sh"
+source_file_if_not_sourced "$PARENT_DIR/functions.sh"
+log_message "config and functions sourced" "yellow"
 
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
@@ -27,15 +36,6 @@ source_file_if_not_sourced() {
         exit 1
     fi
 }
-
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-
-# Source the config.sh file from the same directory or a parent directory
-source_file_if_not_sourced "$PARENT_DIR/config.sh"
-source_file_if_not_sourced "$PARENT_DIR/functions.sh"
-
 
 ## --- Functions ---
 # Function to display usage information
