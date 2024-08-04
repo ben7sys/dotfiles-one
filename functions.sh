@@ -18,8 +18,11 @@ source_file_if_not_sourced() {
     fi
 }
 
-# Source necessary files
+# Determine the script's directory and the parent directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Source the config.sh file from the parent directory
 source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
 
 # Function to ask for user confirmation

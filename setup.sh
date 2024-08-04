@@ -4,12 +4,6 @@
 
 set -euo pipefail
 
-# Check if the config.sh file is already sourced
-if [ -z "${SOURCED_CONFIG_SH}" ]; then
-    source "$SCRIPT_DIR/config.sh"
-    export SOURCED_CONFIG_SH=1
-fi
-
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
@@ -26,8 +20,11 @@ source_file_if_not_sourced() {
     fi
 }
 
-# Source necessary files
+# Determine the script's directory and the parent directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Source the config.sh file from the parent directory
 source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
 
 # Ensure the script is in the coreect location

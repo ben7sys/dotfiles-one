@@ -9,7 +9,7 @@ echo "Arguments passed to main: $@"
 ## Enable strict mode
 set -eo pipefail
 
-## --- Source files ---
+### --- Source files ---
 ## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
     local file_path="$1"
@@ -25,11 +25,13 @@ source_file_if_not_sourced() {
     fi
 }
 
-## Source necessary files
+# Determine the script's directory and the parent directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOTFILES_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-source_file_if_not_sourced "$DOTFILES_ROOT_DIR/config.sh"
-source_file_if_not_sourced "$DOTFILES_ROOT_DIR/functions.sh"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Source the config.sh file from the parent directory
+source_file_if_not_sourced "$PARENT_DIR/config.sh"
+source_file_if_not_sourced "$PARENT_DIR/functions.sh"
 
 # Check requirements before proceeding
 check_requirements
