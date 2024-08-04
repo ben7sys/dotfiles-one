@@ -1,33 +1,11 @@
 #!/bin/bash
 
-# common_functions.sh: Arch-specific reusable functions for dotfiles management scripts
+# common_functions.sh: Reusable functions for dotfiles management scripts
 
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+# Prevent double sourcing
+[ -n "$DOTFILES_FUNCTIONS_SOURCED" ] && return
+DOTFILES_FUNCTIONS_SOURCED=1
 
-## --- Source files ---
-## Prevent duplicate sourcing for any file
-source_file_if_not_sourced() {
-    local file_path="$1"
-    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
-    
-    if [ -f "$file_path" ]; then
-        # Verwenden von `declare -n` für die indirekte Variablenreferenz
-        declare -n file_var_ref="$file_var_name"
-        if [ -z "$file_var_ref" ]; then
-            source "$file_path"
-            file_var_ref=1
-        fi
-    else
-        echo "Error: $file_path not found." >&2
-        exit 1
-    fi
-}
-
-
-# Use SCRIPT_DIR to source the config.sh file from the same directory or a parent directory
-source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
 
 # Function to ask for user confirmation
 confirm_action() {

@@ -1,41 +1,15 @@
 #!/bin/bash
 
 # install_packages.sh: Install packages from YAML config for multiple package managers
-echo "Arguments passed to main: $@"
 
-## Enable debug mode
-#set -x
+## Enable debug mode if needed
+# set -x
 
 ## Enable strict mode
-#set -eo pipefail
+set -eo pipefail
 
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-
-## --- Source files ---
-## Prevent duplicate sourcing for any file
-source_file_if_not_sourced() {
-    local file_path="$1"
-    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
-    
-    if [ -f "$file_path" ]; then
-        # Verwenden von `declare -n` für die indirekte Variablenreferenz
-        declare -n file_var_ref="$file_var_name"
-        if [ -z "$file_var_ref" ]; then
-            source "$file_path"
-            file_var_ref=1
-        fi
-    else
-        echo "Error: $file_path not found." >&2
-        exit 1
-    fi
-}
-
-# Source the config.sh file from the same directory or a parent directory
-source_file_if_not_sourced "$PARENT_DIR/config.sh"
-source_file_if_not_sourced "$PARENT_DIR/functions.sh"
-#log_message "config and functions sourced" "yellow"
+# Source the config file
+source "$(dirname "$0")/config.sh"
 
 # Check requirements before proceeding
 check_requirements
