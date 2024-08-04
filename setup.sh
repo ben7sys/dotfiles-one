@@ -68,7 +68,7 @@ main() {
     fi
         
     # Run Timeshift setup
-    log_message "Starting $DOTFILES_DIR/ultimate_system.sh" "yellow"
+    log_message "Starting $DOTFILES_DIR/scripts/ultimate_system.sh" "yellow"
     "$DOTFILES_DIR/ultimate_system.sh"
 }
 
