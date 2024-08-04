@@ -56,22 +56,31 @@ set_wallpaper "$DOTFILES_DIR/user/wallpaper_default.png"
 # Function to set system theme
 set_theme() {
     local theme_name="$1"
+    local theme_dir_local="$HOME/.local/share/plasma/look-and-feel/$theme_name"
+    local theme_dir_global="/usr/share/plasma/look-and-feel/$theme_name"
+
     if command_exists lookandfeeltool; then
-        if lookandfeeltool -l | grep -q "$theme_name"; then
+        if [ -d "$theme_dir_local" ]; then
             lookandfeeltool -a "$theme_name"
-            log_message "Theme set to $theme_name" "green"
+            log_message "Theme set to $theme_name from local directory" "green"
+        elif [ -d "$theme_dir_global" ]; then
+            lookandfeeltool -a "$theme_name"
+            log_message "Theme set to $theme_name from global directory" "green"
         else
-            log_message "Theme $theme_name not found. Available themes:" "yellow"
-            lookandfeeltool -l
+            log_message "Theme $theme_name not found in local or global directories." "red"
         fi
     else
         log_message "lookandfeeltool not found. Unable to set theme." "red"
     fi
 }
 
-# Test theme function
-echo "Testing set_theme function (Breeze Dark)..."
-set_theme "$DEFAULT_THEME"
+# Test theme function with Breeze and Ocean
+echo "Testing set_theme function with Breeze..."
+set_theme "org.kde.breeze.desktop"
+
+echo "Testing set_theme function with Ocean..."
+set_theme "ocean"
+
 
 # Function to set color scheme
 set_color_scheme() {
