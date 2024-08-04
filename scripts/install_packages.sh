@@ -1,8 +1,13 @@
 #!/bin/bash
 
 # install_packages.sh: Install packages from YAML config for multiple package managers
+echo "Arguments passed to main: $@"
 
-set -eo pipefail
+## Enable debug mode
+set -x
+
+## Enable strict mode
+# set -eo pipefail
 
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
