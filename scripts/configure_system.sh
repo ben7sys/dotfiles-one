@@ -2,6 +2,10 @@
 
 # configure_system.sh: System-specific configurations
 
+# Determine the script's directory and the parent directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 ## --- Source files ---
 ## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
@@ -20,10 +24,6 @@ source_file_if_not_sourced() {
         exit 1
     fi
 }
-
-# Determine the script's directory and the parent directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Use SCRIPT_DIR to source the config.sh file from the same directory or a parent directory
 source_file_if_not_sourced "$PARENT_DIR/config.sh"
