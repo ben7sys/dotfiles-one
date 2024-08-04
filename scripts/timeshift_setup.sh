@@ -35,6 +35,7 @@ source_file_if_not_sourced() {
 # Source the config.sh file from the same directory or a parent directory
 source_file_if_not_sourced "$PARENT_DIR/config.sh"
 source_file_if_not_sourced "$PARENT_DIR/functions.sh"
+source_file_if_not_sourced "$DOTFILES_DIR/scripts/install_packages.sh"
 #log_message "config and functions sourced" "yellow"
 
 # Function to check Timeshift-specific requirements
