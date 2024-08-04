@@ -93,7 +93,7 @@ main() {
     install_packages $setup_install_packages
     
     # Run Timeshift setup
-    "$DOTFILES_DIR/scripts/timeshift_setup.sh"
+    "$DOTFILES_DIR/scripts/timeshift_setup.sh $DOTFILES_DIR"
 
     log_message "Setup completed successfully!" "green"
     log_message "Please restart your shell or source your .bashrc for changes to take effect." "yellow"
