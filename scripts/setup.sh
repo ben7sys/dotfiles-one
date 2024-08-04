@@ -58,7 +58,7 @@ main() {
     local os=$(check_os)
     log_message "Starting setup process for $os..." "green"
     
-    ensure_correct_location
+    #ensure_correct_location
     check_not_root
     check_requirements
     
