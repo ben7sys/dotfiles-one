@@ -1,13 +1,24 @@
 #!/bin/bash
 
-# Determine the directory of the setup script
+# Prevent duplicate sourcing for any file
+source_file_if_not_sourced() {
+    local file_path="$1"
+    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
+    if [ -f "$file_path" ]; then
+        if [ -z "${!file_var_name}" ]; then
+            source "$file_path"
+            export "$file_var_name"=1
+        fi
+    else
+        echo "Error: $file_path not found." >&2
+        exit 1
+    fi
+}
+
+# Source necessary files
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Source the config file
-source "$SCRIPT_DIR/../config.sh"
-
-# Source other files
-source "$dotfiles_dir/functions.sh"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source_file_if_not_sourced "$ROOT_DIR/config.sh"
 
 # Function to stow files
 stow_files() {

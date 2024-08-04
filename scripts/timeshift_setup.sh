@@ -3,10 +3,6 @@ set -x
 # timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
 # This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
-# Avoid double sourcing by checking if DOTFILES_CONFIG is already sourced
-[ -z "$DOTFILES_CONFIG_SOURCED" ] || return
-export DOTFILES_CONFIG_SOURCED=1
-
 # Function to display usage information
 show_usage() {
     echo "Usage: $0 [DOTFILES_DIR]"
@@ -36,23 +32,25 @@ fi
 # Enable debug mode
 set -x
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-for config in "$SCRIPT_DIR/config.sh" "$SCRIPT_DIR/../config.sh"; do
-    if [ -f "$config" ]; then
-        # Source the config.sh only if it hasn't been sourced yet
-        if ! (return 2>/dev/null); then
-            source "$config"
-            echo "Found and sourced: $config"
-        else
-            echo "config.sh already sourced: $config"
+# Prevent duplicate sourcing for any file
+source_file_if_not_sourced() {
+    local file_path="$1"
+    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
+    if [ -f "$file_path" ]; then
+        if [ -z "${!file_var_name}" ]; then
+            source "$file_path"
+            export "$file_var_name"=1
         fi
-        exit 0
+    else
+        echo "Error: $file_path not found." >&2
+        exit 1
     fi
-done
+}
 
-# If no config.sh is found, output an error and exit
-echo "Error: config.sh not found." >&2
-exit 1
+# Source necessary files
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source_file_if_not_sourced "$DOTFILES_ROOT_DIR/config.sh"
 
 # Ensure required packages are installed
 if ! command_exists "timeshift" || ! command_exists "grub-btrfs" || ! command_exists "snapd"; then

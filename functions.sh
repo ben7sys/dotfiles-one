@@ -2,22 +2,24 @@
 
 # common_functions.sh: Arch-specific reusable functions for dotfiles management scripts
 
-# Determine the directory of the current script
+# Prevent duplicate sourcing for any file
+source_file_if_not_sourced() {
+    local file_path="$1"
+    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
+    if [ -f "$file_path" ]; then
+        if [ -z "${!file_var_name}" ]; then
+            source "$file_path"
+            export "$file_var_name"=1
+        fi
+    else
+        echo "Error: $file_path not found." >&2
+        exit 1
+    fi
+}
+
+# Source necessary files
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Check if config.sh exists in the current directory
-if [ -f "$SCRIPT_DIR/config.sh" ]; then
-    CONFIG_PATH="$SCRIPT_DIR/config.sh"
-# Check if config.sh exists in the parent directory
-elif [ -f "$SCRIPT_DIR/../config.sh" ]; then
-    CONFIG_PATH="$SCRIPT_DIR/../config.sh"
-else
-    echo "Error: config.sh not found in $SCRIPT_DIR or its parent directory." >&2
-    exit 1
-fi
-
-# Source the config file to load environment variables
-source "$CONFIG_PATH"
+source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
 
 # Function to ask for user confirmation
 confirm_action() {
