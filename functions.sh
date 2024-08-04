@@ -2,7 +2,8 @@
 
 # common_functions.sh: Arch-specific reusable functions for dotfiles management scripts
 
-# Prevent duplicate sourcing for any file
+## --- Source files ---
+## Prevent duplicate sourcing for any file
 source_file_if_not_sourced() {
     local file_path="$1"
     local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"

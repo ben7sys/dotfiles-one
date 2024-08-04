@@ -19,16 +19,14 @@ export DOTFILES_FUNCTIONS="$DOTFILES_DIR/functions.sh"
 export DOTFILES_CONFIG="$DOTFILES_DIR/config.sh"
 export DOTFILES_INSTALL_PACKAGES="$DOTFILES_DIR/scripts/install_packages.sh"
 
-# Function to source a file if it exists and hasn't been sourced yet
-source_file_if_exists() {
+## --- Source files ---
+## Prevent duplicate sourcing for any file
+source_file_if_not_sourced() {
     local file_path="$1"
     local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
-    
     if [ -f "$file_path" ]; then
-        # Check if the file has already been sourced
         if [ -z "${!file_var_name}" ]; then
             source "$file_path"
-            # Mark the file as sourced
             export "$file_var_name"=1
         fi
     else
@@ -37,9 +35,10 @@ source_file_if_exists() {
     fi
 }
 
-# Source ALL defined .sh files
-source_file_if_exists "$DOTFILES_FUNCTIONS"
-source_file_if_exists "$DOTFILES_INSTALL_PACKAGES"
+## Source necessary files
+source_file_if_not_sourced "$DOTFILES_CONFIG"
+source_file_if_not_sourced "$DOTFILES_DIR/functions.sh"
+source_file_if_not_sourced "$DOTFILES_INSTALL_PACKAGES"
 
 # Additional configurations and variables
 

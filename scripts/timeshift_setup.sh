@@ -1,8 +1,34 @@
 #!/bin/bash
-set -x
-# timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
-# This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
+## timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
+## This script should be run as a normal user. It will elevate privileges only for commands that require root.
+
+## Enable debug mode
+set -x
+
+## --- Source files ---
+## Prevent duplicate sourcing for any file
+source_file_if_not_sourced() {
+    local file_path="$1"
+    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
+    if [ -f "$file_path" ]; then
+        if [ -z "${!file_var_name}" ]; then
+            source "$file_path"
+            export "$file_var_name"=1
+        fi
+    else
+        echo "Error: $file_path not found." >&2
+        exit 1
+    fi
+}
+
+## Source necessary files
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source_file_if_not_sourced "$DOTFILES_ROOT_DIR/config.sh"
+
+
+## --- Functions ---
 # Function to display usage information
 show_usage() {
     echo "Usage: $0 [DOTFILES_DIR]"
@@ -28,29 +54,6 @@ if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     show_usage
     exit 0
 fi
-
-# Enable debug mode
-set -x
-
-# Prevent duplicate sourcing for any file
-source_file_if_not_sourced() {
-    local file_path="$1"
-    local file_var_name="SOURCED_${file_path//[^a-zA-Z0-9_]/_}"
-    if [ -f "$file_path" ]; then
-        if [ -z "${!file_var_name}" ]; then
-            source "$file_path"
-            export "$file_var_name"=1
-        fi
-    else
-        echo "Error: $file_path not found." >&2
-        exit 1
-    fi
-}
-
-# Source necessary files
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOTFILES_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-source_file_if_not_sourced "$DOTFILES_ROOT_DIR/config.sh"
 
 # Ensure required packages are installed
 if ! command_exists "timeshift" || ! command_exists "grub-btrfs" || ! command_exists "snapd"; then
