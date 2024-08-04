@@ -59,6 +59,21 @@ log_message() {
     echo "$(date): [$level] $message" >> "$DOTFILES_LOG_FILE"
 }
 
+# Function for color formatting
+color_text() {
+  local color_code=""
+  case $1 in
+    green) color_code="\e[32m";;
+    yellow) color_code="\e[33m";;
+    red) color_code="\e[31m";;
+    blue) color_code="\e[34m";;
+    cyan) color_code="\e[36m";;
+    magenta) color_code="\e[35m";;
+    *) color_code="";;
+  esac
+  echo -e "${color_code}$2\e[0m"
+}
+
 # Main function to orchestrate the setup
 main() {
     log_message "Checking requirements for $os..." "yellow"
