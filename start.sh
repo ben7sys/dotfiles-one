@@ -50,6 +50,15 @@ ensure_correct_location() {
     fi
 }
 
+# Function to log messages
+log_message() {
+    local message="$1"
+    local color="${2:-normal}"
+    local level="${3:-INFO}"
+    color_text "$color" "[$level] $message"
+    echo "$(date): [$level] $message" >> "$DOTFILES_LOG_FILE"
+}
+
 # Main function to orchestrate the setup
 main() {
     log_message "Checking requirements for $os..." "yellow"
