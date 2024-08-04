@@ -97,12 +97,12 @@ set_color_scheme "BreezeDark"
 set_icon_theme() {
     local icon_theme="$1"
     if command_exists plasma-apply-desktoptheme; then
-        if plasma-apply-desktoptheme -l | grep -q "$icon_theme"; then
-            plasma-apply-desktoptheme "$icon_theme"
+        echo "Executing: plasma-apply-desktoptheme $icon_theme"
+        if plasma-apply-desktoptheme "$icon_theme"; then
             log_message "Icon theme set to $icon_theme" "green"
         else
-            log_message "Icon theme $icon_theme not found. Available themes:" "yellow"
-            plasma-apply-desktoptheme -l
+            log_message "Failed to set icon theme $icon_theme. Available themes:" "yellow"
+            plasma-apply-desktoptheme --list-themes
         fi
     else
         log_message "plasma-apply-desktoptheme not found. Unable to set icon theme." "red"
