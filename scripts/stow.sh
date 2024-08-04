@@ -42,7 +42,8 @@ main() {
         log_message "Error: stow is not installed. Please install it first." "red"
         exit 1
     fi
-
+echo "stow.sh: DOTFILES_DIR: $DOTFILES_DIR"
+echo "stow.sh: stow_source_dir: $stow_source_dir"
     # Check if source directory exists
     if [ ! -d "$stow_source_dir" ]; then
         log_message "Error: Source directory $stow_source_dir does not exist." "red"
