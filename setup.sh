@@ -26,6 +26,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Use SCRIPT_DIR to source the config.sh file from the same directory or a parent directory
+log_message "Trying to source $SCRIPT_DIR/config.sh" "yellow"
 source_file_if_not_sourced "$SCRIPT_DIR/config.sh"
 echo "setup.sh: DOTFILES_DIR: $DOTFILES_DIR"
 echo "setup.sh: stow_source_dir: $stow_source_dir"
@@ -93,6 +94,7 @@ main() {
     install_packages $setup_install_packages
     
     # Run Timeshift setup
+    log_message "Starting $DOTFILES_DIR/scripts/timeshift_setup.sh" "yellow"
     "$DOTFILES_DIR/scripts/timeshift_setup.sh"
 
     log_message "Setup completed successfully!" "green"
