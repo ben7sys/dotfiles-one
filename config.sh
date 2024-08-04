@@ -29,9 +29,9 @@ source_file_if_not_sourced() {
 }
 
 # Source the config.sh file from the parent directory
-source_file_if_not_sourced "$DOTFILES_DIR/config.sh"
-source_file_if_not_sourced "$DOTFILES_DIR/functions.sh"
-source_file_if_not_sourced "$DOTFILES_DIR/scripts/install_packages.sh"
+#source_file_if_not_sourced "$DOTFILES_DIR/config.sh"
+#source_file_if_not_sourced "$DOTFILES_DIR/functions.sh"
+#source_file_if_not_sourced "$DOTFILES_DIR/scripts/install_packages.sh"
 
 # Additional configurations and variables
 
