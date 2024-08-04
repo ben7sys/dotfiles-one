@@ -9,7 +9,7 @@
 set -eo pipefail
 
 # Source the config file
-source "$(dirname "$0")/scripts/config.sh"
+#source "$(dirname "$0")/scripts/config.sh"
 
 # Ensure the script is in the coreect location
 ensure_correct_location() {
@@ -54,7 +54,7 @@ ensure_correct_location() {
 main() {
     log_message "Checking requirements for $os..." "yellow"
     
-    ensure_correct_location
+    #ensure_correct_location
     check_not_root
     check_requirements
     
