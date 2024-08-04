@@ -10,8 +10,8 @@ export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
 export SCRIPTS_DIR="$DOTFILES_DIR/scripts"
 export DOTFILES_BACKUP_DIR="$HOME/dotfiles_backup"
 export DOTFILES_LOG_FILE="$HOME/dotfiles_setup.log"
-export DOTFILES_FUNCTIONS="$DOTFILES_DIR/functions.sh"
-export DOTFILES_CONFIG="$DOTFILES_DIR/config.sh"
+export DOTFILES_FUNCTIONS="$SCRIPTS_DIR/functions.sh"
+export DOTFILES_CONFIG="$SCRIPTS_DIR/config.sh"
 export DOTFILES_INSTALL_PACKAGES="$SCRIPTS_DIR/install_packages.sh"
 
 # Source functions
