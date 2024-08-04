@@ -16,7 +16,7 @@ export DOTFILES_INSTALL_PACKAGES="$SCRIPTS_DIR/install_packages.sh"
 
 # Source functions
 source "$DOTFILES_FUNCTIONS"
-source "$DOTFILES_INSTALL_PACKAGES
+source "$DOTFILES_INSTALL_PACKAGES"
 
 # Additional configurations and variables
 
