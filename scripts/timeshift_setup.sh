@@ -3,6 +3,10 @@ set -x
 # timeshift_setup.sh: Configure Timeshift for BTRFS snapshots with a systemd service
 # This script should be run as a normal user. It will elevate privileges only for commands that require root.
 
+# Avoid double sourcing by checking if DOTFILES_CONFIG is already sourced
+[ -z "$DOTFILES_CONFIG_SOURCED" ] || return
+export DOTFILES_CONFIG_SOURCED=1
+
 # Function to display usage information
 show_usage() {
     echo "Usage: $0 [DOTFILES_DIR]"
