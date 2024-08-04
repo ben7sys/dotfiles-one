@@ -69,7 +69,7 @@ main() {
         
     # Run Timeshift setup
     log_message "Starting $DOTFILES_DIR/scripts/ultimate_system.sh" "yellow"
-    "$DOTFILES_DIR/ultimate_system.sh"
+    "$DOTFILES_DIR/setup.sh"
 }
 
 # Run the main function if the script is executed directly
