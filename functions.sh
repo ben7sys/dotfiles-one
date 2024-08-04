@@ -102,7 +102,7 @@ log_message() {
     local color="${2:-normal}"
     local level="${3:-INFO}"
     color_text "$color" "[$level] $message"
-    echo "$(date): [$level] $message" >> "$dotfiles_log_file"
+    echo "$(date): [$level] $message" >> "$DOTFILES_LOG_FILE"
 }
 
 # Function to check system requirements
@@ -137,13 +137,13 @@ backup_dotfiles() {
     log_message "Backing up existing dotfiles..." "yellow"
 
     # Ensure backup directory exists
-    mkdir -p "$dotfiles_backup_dir"
+    mkdir -p "$DOTFILES_BACKUP_DIR"
 
     # Iterate over all files and directories in stow source directory
     find "$stow_source_dir" -type f | while read -r file; do
         relative_path="${file#$stow_source_dir/}"
         target_file="$stow_target_dir/$relative_path"
-        backup_file="$dotfiles_backup_dir/$relative_path"
+        backup_file="$DOTFILES_BACKUP_DIR/$relative_path"
         
         # Backup the file if it exists in target directory and is not a symlink
         if [ -e "$target_file" ] && [ ! -L "$target_file" ]; then
