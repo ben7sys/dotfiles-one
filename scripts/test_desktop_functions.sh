@@ -31,7 +31,7 @@ set_profile_picture() {
 
 # Test profile picture function
 echo "Testing set_profile_picture function..."
-set_profile_picture "$DOTFILES_DIR/user/profilepicture.png"
+set_profile_picture "$DOTFILES_DIR/user/ben7sys.png"
 
 # Function to set wallpaper
 set_wallpaper() {
