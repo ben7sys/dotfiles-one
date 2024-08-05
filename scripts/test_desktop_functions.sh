@@ -58,12 +58,13 @@ install_packages "kvantum-qt5"
 # Function to set Kvantum theme
 set_kvantum_theme() {
     local theme_name="$1"
+    local config_file="$HOME/.config/Kvantum/kvantum.kvconfig"
 
-    if command_exists kvantummanager; then
-        kvantummanager --set "$theme_name"
-        log_message "Kvantum theme set to $theme_name" "green"
+    if [ -f "$config_file" ]; then
+        sed -i "s/^theme=.*$/theme=$theme_name/" "$config_file"
+        log_message "Kvantum theme set to $theme_name via config file" "green"
     else
-        log_message "kvantummanager not found. Unable to set Kvantum theme." "red"
+        log_message "Kvantum config file not found. Unable to set Kvantum theme." "red"
     fi
 }
 
