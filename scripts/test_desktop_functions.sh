@@ -68,36 +68,30 @@ set_kvantum_theme() {
     fi
 }
 
+# Function to set Kvantum theme
+set_kvantum_theme() {
+    local theme_name="$1"
+    local config_file="$HOME/.config/Kvantum/kvantum.kvconfig"
+
+    # Update the Kvantum theme in the configuration file
+    if [ -f "$config_file" ]; then
+        sed -i "s/^theme=.*$/theme=$theme_name/" "$config_file"
+        log_message "Kvantum theme set to $theme_name via config file" "green"
+    else
+        log_message "Kvantum config file not found. Creating a new one." "yellow"
+        echo "[General]" > "$config_file"
+        echo "theme=$theme_name" >> "$config_file"
+        log_message "Kvantum theme set to $theme_name via new config file" "green"
+    fi
+}
+
 # Test Kvantum theme function
 echo "Testing set_kvantum_theme function..."
 set_kvantum_theme "Ocean"
 
-# Function to set system theme
-set_theme() {
-    local theme_name="$1"
-    local theme_dir_local="$HOME/.local/share/plasma/look-and-feel/$theme_name"
-    local theme_dir_global="/usr/share/plasma/look-and-feel/$theme_name"
-
-    if command_exists lookandfeeltool; then
-        if [ -d "$theme_dir_local" ] || [ -d "$theme_dir_global" ]; then
-            lookandfeeltool -a "$theme_name"
-            log_message "Theme set to $theme_name" "green"
-        else
-            log_message "Theme $theme_name not found in local or global directories. Available themes:" "yellow"
-            lookandfeeltool -l
-        fi
-    else
-        log_message "lookandfeeltool not found. Unable to set theme." "red"
-    fi
-}
-
-# Test theme function with Ocean theme
-echo "Testing set_theme function with Ocean..."
-set_theme "ocean"
-
 # Test theme function with Breeze theme
-echo "Testing set_theme function with Breeze..."
-set_theme "org.kde.breeze.desktop"
+#echo "Testing set_theme function with Breeze..."
+#set_theme "org.kde.breeze.desktop"
 
 # Function to set color scheme
 set_color_scheme() {
