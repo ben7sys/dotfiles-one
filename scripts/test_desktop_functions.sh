@@ -53,7 +53,7 @@ echo "Testing set_wallpaper function..."
 set_wallpaper "$DOTFILES_DIR/user/wallpaper_default.png"
 
 # Ensure Kvantum is installed using the install_packages function
-install_packages "kvantum-qt5"
+install_packages "kvantum-qt5 kvantum-qt6 kvantum-manager kvantum-theme"
 
 # Function to set Kvantum theme
 set_kvantum_theme() {

@@ -36,6 +36,9 @@ pacman:
   - python-pip
   - qemu
   - kvantum-qt5
+  - kvantum-qt6
+  - kvantum-theme
+  - kvantum-manager
   - ranger
   - remmina
   - ripgrep
