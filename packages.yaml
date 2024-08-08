@@ -59,6 +59,7 @@ pacman:
   - zsh
 
 yay:
+  - gscan2pdf
   - adriconf
   - anydesk-bin
   - bitwarden
