@@ -68,7 +68,7 @@ set_wallpaper "$DOTFILES_DIR/user/wallpaper_default.png"
 install_packages "kvantum"
 install_packages "kvantum-qt5"
 #install_packages "kvantum-qt6"
-install_packages "kvantum-theme"
+#install_packages "kvantum-theme"
 
 # Function to set Kvantum theme
 set_kvantum_theme() {
@@ -102,7 +102,7 @@ set_kvantum_theme() {
 
 # Test Kvantum theme function
 echo "Testing set_kvantum_theme function..."
-set_kvantum_theme "Ocean"
+#set_kvantum_theme "Ocean"
 
 # Test theme function with Breeze theme
 #echo "Testing set_theme function with Breeze..."
@@ -126,7 +126,7 @@ set_color_scheme() {
 
 # Test color scheme function
 echo "Testing set_color_scheme function (Breeze Dark)..."
-set_color_scheme "BreezeDark"
+#set_color_scheme "BreezeDark"
 
 # Function to set icon theme
 set_icon_theme() {
@@ -146,7 +146,7 @@ set_icon_theme() {
 
 # Test icon theme function
 echo "Testing set_icon_theme function..."
-set_icon_theme "breeze-dark"
+#set_icon_theme "breeze-dark"
 
 
 echo "All tests completed. Please check the output for any errors."

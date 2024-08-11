@@ -143,6 +143,11 @@ main() {
     "$DOTFILES_DIR/scripts/setup.sh"
 }
 
+## feature request: log_message with date and time to have a better log file
+## example: log_message "Dotfiles: start.sh DATE: TIME: " "yellow"
+log_message "Running Dotfiles: start.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
+
+
 # Run the main function if the script is executed directly
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main
