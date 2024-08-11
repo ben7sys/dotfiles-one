@@ -17,19 +17,31 @@ source "$(dirname "$0")/config.sh"
 # Function to set profile picture
 set_profile_picture() {
     local picture_path="$1"
+    
+    # Check if the profile picture file exists
     if [ -f "$picture_path" ]; then
-        if command_exists plasma-apply-userpicture; then
-            plasma-apply-userpicture "$picture_path"
-            log_message "Profile picture set to $picture_path" "green"
+        log_message "Setting profile picture..." "green"
+        # Copy the profile picture to the default location (redundant in this case, can be omitted)
+        cp "$picture_path" ~/.face.icon
+        
+        # Edit the kdeglobals file to set the user profile picture
+        if grep -q "User=" ~/.config/kdeglobals; then
+            # If the User entry already exists, replace it with the new picture path
+            sed -i "s|^User=.*|User=$picture_path|" ~/.config/kdeglobals
+            log_message "Profile picture path updated in kdeglobals." "green"
         else
-            log_message "plasma-apply-userpicture not found. Unable to set profile picture." "red"
+            # If the User entry does not exist, add the necessary section and entry
+            echo "[Icons]" >> ~/.config/kdeglobals
+            echo "User=$picture_path" >> ~/.config/kdeglobals
+            log_message "Profile picture path added to kdeglobals." "green"
         fi
+        log_message "Profile picture successfully set." "green"
     else
         log_message "Profile picture file not found: $picture_path" "red"
     fi
 }
 
-# Test profile picture function
+# Test the set_profile_picture function
 echo "Testing set_profile_picture function..."
 set_profile_picture "$DOTFILES_DIR/user/ben7sys.png"
 
