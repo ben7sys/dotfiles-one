@@ -55,7 +55,7 @@ set_wallpaper "$DOTFILES_DIR/user/wallpaper_default.png"
 # Ensure Kvantum is installed using the install_packages function
 install_packages "kvantum-qt5"
 install_packages "kvantum-qt6"
-install_packages "kvantum-manager"
+install_packages "kvantum"
 install_packages "kvantum-theme"
 
 # Function to set Kvantum theme

@@ -35,6 +35,7 @@ pacman:
   - python
   - python-pip
   - qemu
+  - kvantum
   - kvantum-qt5
   - kvantum-qt6
   - kvantum-theme

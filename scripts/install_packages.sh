@@ -50,7 +50,7 @@ install_packages() {
     log_message "Packages to install: ${packages[*]}" "yellow"
 
     local yaml_content=$(parse_yaml "$yaml_file")
-    log_message "YAML content after parsing: $yaml_content" "cyan"
+    #log_message "YAML content after parsing: $yaml_content" "cyan"
 
     for package in "${packages[@]}"; do
         log_message "Checking package: $package" "cyan"
