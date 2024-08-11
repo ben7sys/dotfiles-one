@@ -1,0 +1,20 @@
+context.modules = [
+    {
+        name = "libpipewire-module-alsa-device",
+        args = {
+            node.name = "alsa_card.hw_1",
+            node.name = "alsa_card.hw_2",
+            node.name = "alsa_card.hw_3",
+            udev.rules = [
+                {
+                    action = "remove",
+                    matches = [
+                        { "device.bus": "pci" },
+                        { "device.subsystem": "sound" },
+                        { "device.vendor.id": "0x10de" }  # NVIDIA Vendor ID
+                    ]
+                }
+            ]
+        }
+    }
+]

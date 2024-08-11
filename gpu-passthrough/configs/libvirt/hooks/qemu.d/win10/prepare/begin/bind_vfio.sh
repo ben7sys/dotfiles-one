@@ -19,6 +19,16 @@ if systemctl is-active --quiet ollama; then
     sudo systemctl stop ollama
 fi
 
+# Stop pipewire if it's running
+if systemctl --user is-active --quiet pipewire; then
+    systemctl --user stop pipewire
+fi
+
+# Stop pipewire-pulse if it's running
+if systemctl --user is-active --quiet pipewire-pulse; then
+    systemctl --user stop pipewire-pulse
+fi
+
 # Function to safely remove a module
 remove_module() {
     if lsmod | grep "$1" &> /dev/null; then
@@ -48,6 +58,9 @@ else
     echo "Failed to detach $VIRSH_GPU_AUDIO"
     exit 1
 fi
+
+# Restart pipewire and pipewire-pulse
+systemctl --user restart pipewire pipewire-pulse
 
 ## Unbind gpu from nvidia and bind to vfio
 #virsh nodedev-detach $VIRSH_GPU_VIDEO
