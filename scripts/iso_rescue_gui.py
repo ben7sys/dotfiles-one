@@ -8,6 +8,7 @@ import signal
 import threading
 from datetime import datetime
 import tempfile
+import logging
 
 """
 This script provides a graphical user interface for creating ISO images from various optical media types.
@@ -106,6 +107,7 @@ def prompt_insert_disc():
     return messagebox.askretrycancel("No media detected", "No media detected in the drive. Please insert a disc and try again.")
 
 def create_iso():
+    logging.debug("create_iso called")
     global process, stop_event
     stop_event.clear()
     
@@ -163,8 +165,13 @@ def create_iso():
     log_text.delete(1.0, tk.END)  # Clear log before starting a new operation
     log_text.insert(tk.END, f"Executing command: {command}\n")
 
-    threading.Thread(target=run_command, args=(command, output_path, media_type, dvd_device), daemon=True).start()
+    app.after(0, disable_gui_elements)
+    app.after(0, lambda: stop_button.config(state=tk.NORMAL, bg='red'))
+    app.after(0, lambda: log_text.delete(1.0, tk.END))
+    app.after(0, lambda: log_text.insert(tk.END, f"Executing command: {command}\n"))
 
+    threading.Thread(target=run_command, args=(command, output_path, media_type, dvd_device), daemon=True).start()
+    
 def check_media_present(device):
     try:
         subprocess.run(['dd', 'if=' + device, 'of=/dev/null', 'count=1'], 
@@ -238,33 +245,36 @@ def run_command(command, output_path, media_type, dvd_device):
     try:
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, preexec_fn=os.setsid)
         
-        while process.poll() is None and not stop_event.is_set():
+        def read_output():
             output = process.stdout.readline()
             if output:
-                log_text.insert(tk.END, output)
-                log_text.see(tk.END)
-                app.update_idletasks()
-
-        if stop_event.is_set():
-            os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-            log_text.insert(tk.END, "Process stopped.\n")
-        else:
-            stderr_output = process.stderr.read().strip()
-            if stderr_output:
-                log_text.insert(tk.END, f"Error output: {stderr_output}\n")
-
-            if process.returncode == 0:
-                handle_successful_extraction(media_type, output_path, dvd_device)
+                app.after(0, lambda o=output: log_text.insert(tk.END, o))
+                app.after(0, lambda: log_text.see(tk.END))
+            if process.poll() is None:
+                app.after(100, read_output)
             else:
-                raise subprocess.CalledProcessError(process.returncode, command)
+                handle_process_completion()
 
-    except subprocess.CalledProcessError as e:
-        handle_command_error(e)
+        app.after(0, read_output)
+
     except Exception as e:
-        log_text.insert(tk.END, f"Unexpected error: {e}\n")
-        messagebox.showerror("Error", "An unexpected error occurred. See log for details.")
+        app.after(0, lambda: log_text.insert(tk.END, f"Unexpected error: {e}\n"))
+        app.after(0, lambda: messagebox.showerror("Error", "An unexpected error occurred. See log for details."))
     finally:
         app.after(0, reset_gui_state)
+
+def handle_process_completion():
+    if stop_event.is_set():
+        app.after(0, lambda: log_text.insert(tk.END, "Process stopped.\n"))
+    else:
+        stderr_output = process.stderr.read().strip()
+        if stderr_output:
+            app.after(0, lambda s=stderr_output: log_text.insert(tk.END, f"Error output: {s}\n"))
+        
+        if process.returncode == 0:
+            app.after(0, lambda: handle_successful_extraction(media_type, output_path, dvd_device))
+        else:
+            app.after(0, lambda: handle_command_error(subprocess.CalledProcessError(process.returncode, command)))      
 
 def handle_command_error(error):
     """Handle specific command errors."""
@@ -341,10 +351,14 @@ def attempt_iso_recovery(iso_path):
         messagebox.showerror("Error", "ISO recovery failed. See log for details.")
 
 def stop_process():
-    """Stop the current ISO creation process."""
-    global stop_event
-    stop_event.set()
-
+    logging.debug("stop_process called")
+    global process, stop_event
+    if process:
+        stop_event.set()
+        app.after(0, lambda: os.killpg(os.getpgid(process.pid), signal.SIGTERM))
+        process = None
+    app.after(0, reset_gui_state)
+    
 def disable_gui_elements():
     """Disable GUI elements during processing."""
     for widget in [dvd_device_combobox, media_type_combobox, method_combobox, 
