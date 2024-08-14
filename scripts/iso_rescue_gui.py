@@ -8,9 +8,27 @@ import signal
 import threading
 from datetime import datetime
 
+"""
+This script provides a graphical user interface for creating ISO images from various optical media types.
+It supports Data CD/DVD, Audio CD, and Video/Music DVD formats, offering different extraction methods for each.
+The script includes functionality for detecting media types, checking for installed tools, and managing the extraction process.
+"""
+
 # Global variables
 process = None
 stop_event = threading.Event()
+
+# Initialize GUI variables
+use_custom_filename_var = tk.BooleanVar(value=False)
+dvd_device_var = tk.StringVar(value="No DVD device found")
+output_path_var = tk.StringVar(value=os.path.expanduser("~"))
+media_type_var = tk.StringVar(value="Data CD/DVD")
+method_var = tk.StringVar(value="ddrescue")
+n_option_var = tk.BooleanVar()
+r3_option_var = tk.BooleanVar()
+b_option_var = tk.BooleanVar(value=True)
+d_option_var = tk.BooleanVar(value=True)
+c_option_var = tk.BooleanVar(value=False)
 
 def check_sudo():
     """Check if the script is run with sudo privileges and get the original user."""
@@ -417,7 +435,6 @@ frame = tk.Frame(app)
 frame.pack(pady=10, padx=10)
 
 # Media type selection
-media_type_var = tk.StringVar(value="Data CD/DVD")
 media_type_label = tk.Label(frame, text="Select Media Type:")
 media_type_label.pack(anchor=tk.W)
 
@@ -430,7 +447,6 @@ media_type_combobox.bind("<<ComboboxSelected>>", lambda _: update_gui_for_media_
 label = tk.Label(frame, text="Create ISO image from CD/DVD")
 label.pack(pady=10)
 
-dvd_device_var = tk.StringVar(value="No DVD device found")
 dvd_devices = detect_dvd_devices()
 dvd_device_label = tk.Label(frame, text="Select DVD drive:")
 dvd_device_label.pack(anchor=tk.W)
@@ -439,7 +455,6 @@ dvd_device_combobox = ttk.Combobox(frame, textvariable=dvd_device_var, values=dv
 dvd_device_combobox.pack(anchor=tk.W)
 dvd_device_combobox.current(0)
 
-method_var = tk.StringVar(value="ddrescue")
 method_label = tk.Label(frame, text="Select method for ISO creation:")
 method_label.pack(anchor=tk.W)
 
@@ -450,23 +465,18 @@ method_combobox.pack(anchor=tk.W)
 options_frame = tk.LabelFrame(frame, text="ddrescue Options")
 options_frame.pack(anchor=tk.W, fill="x", pady=5)
 
-n_option_var = tk.BooleanVar()
 n_option_checkbox = tk.Checkbutton(options_frame, text="Skip error correction pass (-n)", variable=n_option_var)
 n_option_checkbox.pack(anchor=tk.W)
 
-r3_option_var = tk.BooleanVar()
 r3_option_checkbox = tk.Checkbutton(options_frame, text="Retry bad sectors 3 times (-r3)", variable=r3_option_var)
 r3_option_checkbox.pack(anchor=tk.W)
 
-b_option_var = tk.BooleanVar(value=True)  # Default to True since DVDs typically use 2048 bytes sectors
 b_option_checkbox = tk.Checkbutton(options_frame, text="Set block size to 2048 bytes (-b 2048)", variable=b_option_var)
 b_option_checkbox.pack(anchor=tk.W)
 
-d_option_var = tk.BooleanVar(value=True)  # Option for using direct mode (-d)
 d_option_checkbox = tk.Checkbutton(options_frame, text="Use direct access mode (-d)", variable=d_option_var)
 d_option_checkbox.pack(anchor=tk.W)
 
-c_option_var = tk.BooleanVar(value=False)
 c_option_checkbox = tk.Checkbutton(options_frame, text="Reading from partial copy (-C)", variable=c_option_var)
 c_option_checkbox.pack(anchor=tk.W)
 
@@ -487,14 +497,12 @@ irrecoverable_button.pack(side=tk.LEFT, padx=5)
 output_frame = tk.LabelFrame(frame, text="Output Settings")
 output_frame.pack(anchor=tk.W, fill="x", pady=5)
 
-use_custom_filename_var = tk.BooleanVar(value=False)
 use_custom_filename_checkbox = tk.Checkbutton(output_frame, text="Use custom filename", variable=use_custom_filename_var, command=lambda: select_output_button.config(text="Browse for file..." if use_custom_filename_var.get() else "Browse for directory..."))
 use_custom_filename_checkbox.pack(anchor=tk.W)
 
 output_path_label = tk.Label(output_frame, text="Output path:")
 output_path_label.pack(anchor=tk.W)
 
-output_path_var = tk.StringVar(value=os.path.expanduser(f"~{original_user}"))
 output_path_entry = tk.Entry(output_frame, textvariable=output_path_var, width=50)
 output_path_entry.pack(anchor=tk.W)
 
