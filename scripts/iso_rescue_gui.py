@@ -18,18 +18,6 @@ The script includes functionality for detecting media types, checking for instal
 process = None
 stop_event = threading.Event()
 
-# Initialize GUI variables
-use_custom_filename_var = tk.BooleanVar(value=False)
-dvd_device_var = tk.StringVar(value="No DVD device found")
-output_path_var = tk.StringVar(value=os.path.expanduser("~"))
-media_type_var = tk.StringVar(value="Data CD/DVD")
-method_var = tk.StringVar(value="ddrescue")
-n_option_var = tk.BooleanVar()
-r3_option_var = tk.BooleanVar()
-b_option_var = tk.BooleanVar(value=True)
-d_option_var = tk.BooleanVar(value=True)
-c_option_var = tk.BooleanVar(value=False)
-
 def check_sudo():
     """Check if the script is run with sudo privileges and get the original user."""
     if os.geteuid() != 0:
@@ -421,12 +409,6 @@ def update_gui_for_media_type(*args):
     # Update the media type combobox
     media_type_combobox.set(media_type)
 
-# In der GUI-Setup-Sektion, nach der Definition der method_combobox:
-method_combobox.bind("<<ComboboxSelected>>", lambda _: update_gui_for_media_type())
-
-# Get the original user who ran sudo
-original_user = check_sudo()
-
 # Initialize the main application window
 app = tk.Tk()
 app.title("Extended ISO Rescue GUI")
@@ -531,6 +513,18 @@ log_text.pack(fill=tk.BOTH, expand=True)
 if not check_tool_installed("dvdisaster"):
     d_option_checkbox.config(state=tk.DISABLED)
     messagebox.showwarning("dvdisaster not installed", "dvdisaster is not installed. Some recovery options are disabled.")
+
+# Initialize GUI variables
+use_custom_filename_var = tk.BooleanVar(value=False)
+dvd_device_var = tk.StringVar(value="No DVD device found")
+output_path_var = tk.StringVar(value=os.path.expanduser("~"))
+media_type_var = tk.StringVar(value="Data CD/DVD")
+method_var = tk.StringVar(value="ddrescue")
+n_option_var = tk.BooleanVar()
+r3_option_var = tk.BooleanVar()
+b_option_var = tk.BooleanVar(value=True)
+d_option_var = tk.BooleanVar(value=True)
+c_option_var = tk.BooleanVar(value=False)
 
 # Update GUI for initial media type
 update_gui_for_media_type()
