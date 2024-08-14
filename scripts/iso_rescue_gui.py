@@ -6,6 +6,7 @@ import shutil
 import sys
 import signal
 import threading
+from datetime import datetime
 
 """
 This script provides a graphical user interface for creating ISO images from various optical media types.
@@ -34,6 +35,11 @@ def select_output_path():
     if output_path:
         output_path_var.set(output_path)
 
+def generate_filename():
+    """Generate a filename based on the current date and time."""
+    now = datetime.now()
+    return now.strftime("%Y%m%d%H%M%S_ddrescue.iso")
+
 def detect_media_type(device):
     """Detect the type of media in the drive."""
     try:
@@ -43,7 +49,7 @@ def detect_media_type(device):
         media_type = result.stdout.strip()
         
         if media_type == "udf":
-            return "DVD"
+            return "Data CD/DVD"
         elif media_type == "iso9660":
             # Additional check for audio CD
             if os.path.exists("/dev/cdrom"):
@@ -51,8 +57,13 @@ def detect_media_type(device):
                                              capture_output=True, text=True)
                 if "audio tracks" in audio_check.stderr:
                     return "Audio CD"
-            return "Data CD"
+            return "Data CD/DVD"
         else:
+            # Additional check for Video DVD
+            video_check = subprocess.run(['dvdbackup', '--info', '-i', device], 
+                                         capture_output=True, text=True)
+            if "DVD-Video information" in video_check.stdout:
+                return "Video/Music DVD"
             return "Unknown"
     except subprocess.CalledProcessError:
         return "Unknown"
@@ -80,13 +91,14 @@ def get_device_size(device):
     except Exception:
         return None
 
-def check_output_file(output_path):
+def check_output_file(output_directory, filename):
     """Check if the output file already exists and ask user for action."""
+    output_path = os.path.join(output_directory, filename)
     if os.path.exists(output_path) and not c_option_var.get():
         response = messagebox.askyesnocancel("File exists", 
             f"The file {output_path} already exists. Do you want to:\n"
             "Yes: Overwrite the existing file\n"
-            "No: Append to the existing file\n"
+            "No: Generate a new filename\n"
             "Cancel: Abort the operation")
         if response is True:
             try:
@@ -94,34 +106,64 @@ def check_output_file(output_path):
                 log_text.insert(tk.END, f"Existing file removed: {output_path}\n")
             except OSError as e:
                 log_text.insert(tk.END, f"Error removing existing file: {e}\n")
-                return False
-        elif response is None:
-            return False
-    return True
+                return None
+        elif response is False:
+            return generate_filename()
+        else:
+            return None
+    return filename
+
+def select_output_directory():
+    """Open a directory dialog for selecting the output directory."""
+    output_dir = filedialog.askdirectory(initialdir=output_path_var.get())
+    if output_dir:
+        output_path_var.set(output_dir)
+
+def prompt_insert_disc():
+    """Prompt the user to insert a disc and retry."""
+    response = messagebox.askretrycancel("No media detected", "No media detected in the drive. Please insert a disc and try again.")
+    return response
 
 def create_iso():
-    """Create an ISO image or extract audio/video content based on media type."""
     global process, stop_event
     stop_event.clear()
     
-    output_path = output_path_var.get()
-    if not output_path:
-        messagebox.showerror("Error", "Please specify an output path.")
+    output_directory = output_path_var.get()
+    if not output_directory:
+        messagebox.showerror("Error", "Please specify an output directory.")
         return
 
-    if not check_writable_directory(output_path):
+    if not os.path.isdir(output_directory):
+        try:
+            os.makedirs(output_directory)
+        except OSError:
+            messagebox.showerror("Error", "Failed to create output directory.")
+            return
+
+    if not check_writable_directory(output_directory):
         messagebox.showerror("Error", "The target directory is not writable. Please choose a different directory.")
         return
 
-    if not check_output_file(output_path):
+    filename = generate_filename()
+    filename = check_output_file(output_directory, filename)
+    if filename is None:
         return
+
+    output_path = os.path.join(output_directory, filename)
 
     dvd_device = dvd_device_var.get().split()[0]  # Extract device name
     if dvd_device == "No DVD device found":
         messagebox.showerror("Error", "No DVD drive detected. Please check your hardware.")
         return
 
-    media_type = media_type_var.get()
+    # Check if media is present in the drive
+    while not check_media_present(dvd_device):
+        if not prompt_insert_disc():
+            return
+
+    media_type = detect_media_type(dvd_device)
+    media_type_var.set(media_type)  # Update the GUI to reflect the detected media type
+    update_gui_for_media_type()
 
     # Prepare command based on media type
     if media_type == "Data CD/DVD":
@@ -131,64 +173,44 @@ def create_iso():
     elif media_type == "Video/Music DVD":
         command = prepare_video_music_dvd_command(dvd_device, output_path)
     else:
-        messagebox.showerror("Error", "Invalid media type selected.")
+        messagebox.showerror("Error", f"Unsupported media type: {media_type}")
         return
 
     if command is None:
         return  # Error occurred in command preparation
 
+    # Check for sufficient free space (assuming 8GB as max size for DVD)
+    if not check_free_space(output_directory, 8 * 1024 * 1024 * 1024):
+        messagebox.showerror("Error", "Insufficient free space in the output directory.")
+        return
+
+    handle_mapfile(output_path)  # Handle mapfile before starting the process
+
     disable_gui_elements()
     stop_button.config(state=tk.NORMAL, bg='red')
-    create_iso_button.config(state=tk.DISABLED)
 
     log_text.delete(1.0, tk.END)  # Clear log before starting a new operation
     log_text.insert(tk.END, f"Executing command: {command}\n")
 
-    def run_command():
-        global process
-        try:
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, preexec_fn=os.setsid)
-            
-            while process.poll() is None and not stop_event.is_set():
-                output = process.stdout.readline()
-                if output:
-                    log_text.insert(tk.END, output)
-                    log_text.see(tk.END)
-                    app.update_idletasks()
+    threading.Thread(target=run_command, args=(command, output_path, media_type, dvd_device), daemon=True).start()
 
-            if stop_event.is_set():
-                os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                log_text.insert(tk.END, "Process stopped.\n")
-            else:
-                stderr_output = process.stderr.read().strip()
-                if stderr_output:
-                    log_text.insert(tk.END, f"Error output: {stderr_output}\n")
 
-                if process.returncode == 0:
-                    handle_successful_extraction(media_type, output_path, dvd_device)
-                else:
-                    raise subprocess.CalledProcessError(process.returncode, command)
 
-        except subprocess.CalledProcessError as e:
-            log_text.insert(tk.END, f"Command failed with error: {e}\n")
-            messagebox.showerror("Error", f"Creation of ISO image or media extraction failed. See log for details.")
-        except Exception as e:
-            log_text.insert(tk.END, f"Unexpected error: {e}\n")
-            messagebox.showerror("Error", "An unexpected error occurred. See log for details.")
-        finally:
-            app.after(0, reset_gui_state)
-
-    threading.Thread(target=run_command, daemon=True).start()
-
+def check_media_present(device):
+    try:
+        subprocess.run(['dd', 'if=' + device, 'of=/dev/null', 'count=1'], 
+                       check=True, stderr=subprocess.DEVNULL)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+    
 def prepare_data_cd_dvd_command(dvd_device, output_path):
-    """Prepare command for Data CD/DVD extraction."""
     method = method_var.get()
     if method == "ddrescue":
         if not check_tool_installed("ddrescue"):
             messagebox.showerror("Error", "ddrescue is not installed. Please install it and try again.")
             return None
         
-        # Build ddrescue command
         ddrescue_options = ['--force']
         if n_option_var.get():
             ddrescue_options.append("-n")
@@ -202,14 +224,9 @@ def prepare_data_cd_dvd_command(dvd_device, output_path):
             ddrescue_options.append("-C")
         
         mapfile = f"{output_path}.map"
-        if not c_option_var.get() and os.path.exists(mapfile):
-            os.remove(mapfile)
-            log_text.insert(tk.END, f"Existing mapfile removed: {mapfile}\n")
-        
         return f"sudo ddrescue {' '.join(ddrescue_options)} {dvd_device} {output_path} {mapfile}"
     else:  # dd method
         return f"sudo dd if={dvd_device} of={output_path} bs=1M status=progress"
-
 
 def clear_mapfile(output_path):
     """Clear the existing mapfile if it exists."""
@@ -220,6 +237,15 @@ def clear_mapfile(output_path):
             log_text.insert(tk.END, f"Existing mapfile cleared: {mapfile}\n")
         except OSError as e:
             log_text.insert(tk.END, f"Error clearing mapfile: {e}\n")
+
+def handle_mapfile(output_path):
+    mapfile = f"{output_path}.map"
+    if not c_option_var.get() and os.path.exists(mapfile):
+        try:
+            os.remove(mapfile)
+            log_text.insert(tk.END, f"Existing mapfile removed: {mapfile}\n")
+        except OSError as e:
+            log_text.insert(tk.END, f"Error removing mapfile: {e}\n")
 
 def prepare_audio_cd_command(dvd_device, output_path):
     """Prepare command for Audio CD extraction."""
@@ -262,7 +288,12 @@ def run_command(command, output_path, media_type, dvd_device):
                 raise subprocess.CalledProcessError(process.returncode, command)
 
     except subprocess.CalledProcessError as e:
-        log_text.insert(tk.END, f"Command failed with error: {e}\n")
+        if "Input/output error" in str(e):
+            log_text.insert(tk.END, "Error reading from the disc. The disc may be damaged or dirty.\n")
+        elif "No medium found" in str(e):
+            log_text.insert(tk.END, "No disc found in the drive. Please insert a disc and try again.\n")
+        else:
+            log_text.insert(tk.END, f"Command failed with error: {e}\n")
         messagebox.showerror("Error", f"Creation of ISO image or media extraction failed. See log for details.")
     except Exception as e:
         log_text.insert(tk.END, f"Unexpected error: {e}\n")
@@ -270,17 +301,29 @@ def run_command(command, output_path, media_type, dvd_device):
     finally:
         app.after(0, reset_gui_state)
 
+def check_free_space(directory, required_space):
+    """Check if there's enough free space in the directory."""
+    total, used, free = shutil.disk_usage(directory)
+    return free > required_space
+
 def handle_successful_extraction(media_type, output_path, dvd_device):
     """Handle successful extraction based on media type."""
     if media_type == "Data CD/DVD":
         if os.path.getsize(output_path) > 0:
             messagebox.showinfo("Success", f"ISO image successfully created at {output_path}")
         else:
-            messagebox.showerror("Error", "The ISO file is 0 bytes. Please check the DVD and try again.")
+            messagebox.showerror("Error", "The ISO file is 0 bytes. Please check the disc and try again.")
     elif media_type == "Audio CD":
-        messagebox.showinfo("Success", f"Audio tracks extracted to {output_path}")
+        track_dir = os.path.dirname(output_path)
+        if any(file.startswith("track") for file in os.listdir(track_dir)):
+            messagebox.showinfo("Success", f"Audio tracks extracted to {track_dir}")
+        else:
+            messagebox.showerror("Error", "No audio tracks were extracted. Please check the disc and try again.")
     elif media_type == "Video/Music DVD":
-        messagebox.showinfo("Success", f"DVD content backed up to {output_path}")
+        if os.path.isdir(output_path) and len(os.listdir(output_path)) > 0:
+            messagebox.showinfo("Success", f"DVD content backed up to {output_path}")
+        else:
+            messagebox.showerror("Error", "No DVD content was backed up. Please check the disc and try again.")
     
     if messagebox.askyesno("Media extracted", "Media successfully extracted. Do you want to eject the disc?"):
         subprocess.run(["eject", dvd_device])
@@ -326,24 +369,27 @@ def stop_process():
     stop_event.set()
 
 def disable_gui_elements():
-    """Disable all GUI elements except the Stop button."""
-    for widget in [dvd_device_combobox, method_combobox, n_option_checkbox, r3_option_checkbox,
-                   b_option_checkbox, d_option_checkbox, output_path_entry, select_output_button,
-                   intact_button, damaged_button, irrecoverable_button, create_iso_button, c_option_checkbox]:
+    for widget in [dvd_device_combobox, media_type_combobox, method_combobox, 
+                   n_option_checkbox, r3_option_checkbox, b_option_checkbox, 
+                   d_option_checkbox, c_option_checkbox, output_path_entry, 
+                   select_output_button, intact_button, damaged_button, 
+                   irrecoverable_button, create_iso_button]:
         widget.config(state=tk.DISABLED)
 
 def reset_gui_state():
-    """Reset the GUI state after process completion or termination."""
     global process
     process = None
     stop_button.config(state=tk.DISABLED, bg='light gray')
     create_iso_button.config(state=tk.NORMAL)
-    # Re-enable all input fields and buttons
     dvd_device_combobox.config(state='readonly')
+    media_type_combobox.config(state='readonly')
     method_combobox.config(state='readonly')
-    for widget in [n_option_checkbox, r3_option_checkbox, b_option_checkbox, d_option_checkbox,
-                   output_path_entry, select_output_button, intact_button, damaged_button, irrecoverable_button]:
+    for widget in [n_option_checkbox, r3_option_checkbox, b_option_checkbox, 
+                   d_option_checkbox, c_option_checkbox, output_path_entry, 
+                   select_output_button, intact_button, damaged_button, 
+                   irrecoverable_button]:
         widget.config(state=tk.NORMAL)
+    update_gui_for_media_type()
     app.update_idletasks()
 
 def apply_preset(preset):
@@ -371,6 +417,9 @@ def update_gui_for_media_type():
         method_var.set("cdparanoia" if media_type == "Audio CD" else "dvdbackup")
         method_combobox.config(state='disabled')
         options_frame.pack_forget()
+    
+    # Update the media type combobox
+    media_type_combobox.set(media_type)
 
 # Get the original user who ran sudo
 original_user = check_sudo()
@@ -449,16 +498,17 @@ damaged_button.pack(side=tk.LEFT, padx=5)
 irrecoverable_button = tk.Button(presets_frame, text="Irrecoverable DVD", command=lambda: apply_preset("irrecoverable"))
 irrecoverable_button.pack(side=tk.LEFT, padx=5)
 
-# Set default output path to the original user's home directory
-default_output_path = os.path.expanduser(f"~{original_user}/ddrescue.iso")
-output_path_var = tk.StringVar(value=default_output_path)
-output_path_label = tk.Label(frame, text="Output path for ISO file:")
+# Set default output directory to the original user's home directory
+default_output_directory = os.path.expanduser(f"~{original_user}")
+output_path_var = tk.StringVar(value=default_output_directory)
+
+output_path_label = tk.Label(frame, text="Output directory for ISO files:")
 output_path_label.pack(anchor=tk.W)
 
 output_path_entry = tk.Entry(frame, textvariable=output_path_var, width=50)
 output_path_entry.pack(anchor=tk.W)
 
-select_output_button = tk.Button(frame, text="Browse...", command=select_output_path)
+select_output_button = tk.Button(frame, text="Browse...", command=select_output_directory)
 select_output_button.pack(anchor=tk.W, pady=5)
 
 # Create a frame for buttons
