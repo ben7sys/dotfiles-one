@@ -11,15 +11,15 @@ def check_sudo():
         messagebox.showerror("Error", "This script must be run as root. Please restart it with 'sudo'.")
         sys.exit(1)
 
+def check_tool_installed(tool_name):
+    """Check if a tool is installed on the system."""
+    return shutil.which(tool_name) is not None
+
 def select_output_path():
     """Open a file dialog for selecting the output path and update the entry widget."""
     iso_path = filedialog.asksaveasfilename(defaultextension=".iso", filetypes=[("ISO files", "*.iso")])
     if iso_path:
         output_path_var.set(iso_path)
-
-def check_ddrescue_installed():
-    """Check if ddrescue is installed on the system."""
-    return shutil.which("ddrescue") is not None
 
 def detect_dvd_devices():
     """Automatically detect available DVD drives, display their sizes, and populate the dropdown."""
@@ -64,8 +64,9 @@ def create_iso():
     use_n = n_option_var.get()
     use_r3 = r3_option_var.get()
     use_b = b_option_var.get()
+    use_d = d_option_var.get()
 
-    if method == "ddrescue" and not check_ddrescue_installed():
+    if method == "ddrescue" and not check_tool_installed("ddrescue"):
         messagebox.showerror("Error", "ddrescue is not installed on this system. Please install it and try again.")
         return
 
@@ -77,6 +78,8 @@ def create_iso():
         ddrescue_options.append("-r3")
     if use_b:
         ddrescue_options.append("-b 2048")
+    if use_d:
+        ddrescue_options.append("-d")
     
     ddrescue_command = f"sudo ddrescue {' '.join(ddrescue_options)} {dvd_device} {iso_path} {iso_path}.log"
     dd_command = f"sudo dd if={dvd_device} of={iso_path} bs=1M status=progress"
@@ -117,6 +120,37 @@ def create_iso():
     except Exception as e:
         log_text.insert(tk.END, f"Unexpected error: {e}\n")
         messagebox.showerror("Error", "An unexpected error occurred. See log for details.")
+
+    # If the ISO is unreadable, attempt to recover or analyze the image
+    if method == "ddrescue" and os.path.exists(iso_path) and os.path.getsize(iso_path) > 0:
+        if not try_mount_iso(iso_path):
+            messagebox.showerror("Error", "The ISO file seems to be corrupted or unreadable. Attempting recovery...")
+            attempt_iso_recovery(iso_path)
+
+def try_mount_iso(iso_path):
+    """Attempt to mount the ISO to verify its integrity."""
+    try:
+        subprocess.run(['sudo', 'mount', '-o', 'loop', iso_path, '/mnt/iso'], check=True)
+        subprocess.run(['sudo', 'umount', '/mnt/iso'], check=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+def attempt_iso_recovery(iso_path):
+    """Attempt to recover or analyze the ISO file."""
+    if check_tool_installed("dvdisaster"):
+        recovery_command = f"dvdisaster -r -i {iso_path} -o {iso_path.replace('.iso', '-recovered.iso')}"
+    else:
+        messagebox.showwarning("dvdisaster Not Installed", "dvdisaster is not installed. Attempting recovery with iso-read instead.")
+        recovery_command = f"iso-read -i {iso_path} -o {iso_path.replace('.iso', '-recovered.iso')}"
+    
+    try:
+        log_text.insert(tk.END, f"Attempting ISO recovery with command: {recovery_command}\n")
+        subprocess.run(recovery_command, shell=True, check=True)
+        messagebox.showinfo("Recovery", "ISO recovery completed. Check the recovered ISO.")
+    except subprocess.CalledProcessError as e:
+        log_text.insert(tk.END, f"ISO recovery failed with error: {e}\n")
+        messagebox.showerror("Error", "ISO recovery failed. See log for details.")
 
 # Initialize the main application window
 app = tk.Tk()
@@ -163,7 +197,11 @@ b_option_var = tk.BooleanVar(value=True)  # Default to True since DVDs typically
 b_option_checkbox = tk.Checkbutton(options_frame, text="Set block size to 2048 bytes (-b 2048)", variable=b_option_var)
 b_option_checkbox.pack(anchor=tk.W)
 
-output_path_var = tk.StringVar(value=os.path.expanduser("~/ddrescue.iso"))
+d_option_var = tk.BooleanVar(value=True)  # Option for using direct mode (-d)
+d_option_checkbox = tk.Checkbutton(options_frame, text="Use direct access mode (-d)", variable=d_option_var)
+d_option_checkbox.pack(anchor=tk.W)
+
+output_path_var = tk.StringVar(value=os.path.expanduser("/tmp/ddrescue.iso"))
 output_path_label = tk.Label(frame, text="Output File Path for ISO:")
 output_path_label.pack(anchor=tk.W)
 
@@ -184,5 +222,10 @@ log_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 log_font = font.Font(family="Courier", size=10)
 log_text = scrolledtext.ScrolledText(log_frame, wrap=tk.WORD, height=10, font=log_font)
 log_text.pack(fill=tk.BOTH, expand=True)
+
+# Disable dvdisaster options if not installed
+if not check_tool_installed("dvdisaster"):
+    d_option_checkbox.config(state=tk.DISABLED)
+    messagebox.showwarning("dvdisaster Not Installed", "dvdisaster is not installed. Some recovery options are disabled.")
 
 app.mainloop()
