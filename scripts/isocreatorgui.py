@@ -1,8 +1,8 @@
 import os
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext, ttk
+from tkinter import filedialog, messagebox, scrolledtext, ttk, font
 import subprocess
-import shutil  # For checking if ddrescue is installed
+import shutil
 
 def select_output_path():
     """Open a file dialog for selecting the output path and update the entry widget."""
@@ -15,41 +15,67 @@ def check_ddrescue_installed():
     return shutil.which("ddrescue") is not None
 
 def detect_dvd_devices():
-    """Automatically detect available DVD drives and populate the dropdown."""
+    """Automatically detect available DVD drives, display their sizes, and populate the dropdown."""
     dvd_devices = []
-    # Check common device paths
     for device in ["/dev/sr0", "/dev/sr1", "/dev/cdrom", "/dev/dvd"]:
         if os.path.exists(device):
-            dvd_devices.append(device)
+            size = get_device_size(device)
+            if size:
+                dvd_devices.append(f"{device} ({size} MB)")
+            else:
+                dvd_devices.append(device)
     return dvd_devices or ["No DVD device found"]
 
+def get_device_size(device):
+    """Get the size of the DVD device in MB."""
+    try:
+        result = subprocess.run(['blockdev', '--getsize64', device], capture_output=True, text=True, check=True)
+        size_bytes = int(result.stdout.strip())
+        return size_bytes // (1024 * 1024)  # Convert to MB
+    except Exception:
+        return None
+
 def create_iso():
-    """Create an ISO image using the selected method (dd or ddrescue)."""
+    """Create an ISO image using the selected method (dd or ddrescue) with selected options."""
     iso_path = output_path_var.get()
     if not iso_path:
-        messagebox.showerror("Error", "Please specify an output path.")
+        messagebox.showerror("Error", "Please specify an output path for the ISO file.")
         return
 
-    dvd_device = dvd_device_var.get()
+    if os.path.exists(iso_path):
+        if not messagebox.askyesno("Overwrite Confirmation", f"The file {iso_path} already exists. Overwrite?"):
+            return
+
+    dvd_device = dvd_device_var.get().split()[0]  # Extract device name
     if dvd_device == "No DVD device found":
         messagebox.showerror("Error", "No DVD device detected. Please check your hardware.")
         return
 
     method = method_var.get()
+    use_n = n_option_var.get()
+    use_r3 = r3_option_var.get()
+    use_b = b_option_var.get()
 
-    # Check if ddrescue is selected and available
     if method == "ddrescue" and not check_ddrescue_installed():
         messagebox.showerror("Error", "ddrescue is not installed on this system. Please install it and try again.")
         return
 
-    # Prepare the appropriate command
-    if method == "dd":
-        command = f"dd if={dvd_device} of={iso_path} bs=1M status=progress"
-    elif method == "ddrescue":
-        command = f"ddrescue {dvd_device} {iso_path} {iso_path}.log"
+    # Build the ddrescue command based on user selections
+    ddrescue_options = []
+    if use_n:
+        ddrescue_options.append("-n")
+    if use_r3:
+        ddrescue_options.append("-r3")
+    if use_b:
+        ddrescue_options.append("-b 2048")
+    
+    ddrescue_command = f"sudo ddrescue {' '.join(ddrescue_options)} {dvd_device} {iso_path} {iso_path}.log"
+    dd_command = f"sudo dd if={dvd_device} of={iso_path} bs=1M status=progress"
+    command = ddrescue_command if method == "ddrescue" else dd_command
 
     try:
-        # Run the command and capture the output
+        log_text.delete(1.0, tk.END)  # Clear log before starting a new operation
+        log_text.insert(tk.END, f"Running command: {command}\n")
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
         for line in process.stdout:
@@ -57,15 +83,24 @@ def create_iso():
             log_text.see(tk.END)
             app.update_idletasks()
 
-        process.wait()
+        stderr_output = process.stderr.read().strip()
+        if stderr_output:
+            log_text.insert(tk.END, f"Error output: {stderr_output}\n")
 
         if process.returncode == 0:
-            messagebox.showinfo("Success", f"ISO image created successfully at {iso_path}")
+            # Check if the ISO file has data
+            if os.path.getsize(iso_path) > 0:
+                messagebox.showinfo("Success", f"ISO image created successfully at {iso_path}")
+                # Option to open the directory or eject the DVD
+                if messagebox.askyesno("ISO Created", "ISO created successfully. Would you like to eject the DVD?"):
+                    subprocess.run(["eject", dvd_device])
+            else:
+                messagebox.showerror("Error", "The ISO file is 0 bytes. Please check the DVD and try again.")
         else:
             raise subprocess.CalledProcessError(process.returncode, command)
 
     except subprocess.CalledProcessError as e:
-        log_text.insert(tk.END, f"Error: {e}\n")
+        log_text.insert(tk.END, f"Command failed with error: {e}\n")
         messagebox.showerror("Error", f"Failed to create ISO image. See log for details.")
 
     except Exception as e:
@@ -76,15 +111,12 @@ def create_iso():
 app = tk.Tk()
 app.title("ISO Image Creator")
 
-# Set up the main frame of the GUI
 frame = tk.Frame(app)
 frame.pack(pady=10, padx=10)
 
-# Add a label to guide the user
-label = tk.Label(frame, text="Click the button below to create an ISO image from the CD/DVD.")
+label = tk.Label(frame, text="Create an ISO Image from a CD/DVD")
 label.pack(pady=10)
 
-# Dropdown to select DVD device
 dvd_device_var = tk.StringVar(value="No DVD device found")
 dvd_devices = detect_dvd_devices()
 dvd_device_label = tk.Label(frame, text="Select DVD Device:")
@@ -92,38 +124,51 @@ dvd_device_label.pack(anchor=tk.W)
 
 dvd_device_combobox = ttk.Combobox(frame, textvariable=dvd_device_var, values=dvd_devices)
 dvd_device_combobox.pack(anchor=tk.W)
-dvd_device_combobox.current(0)  # Set the default selection
+dvd_device_combobox.current(0)
 
-# Add a dropdown (combobox) for selecting the method (dd or ddrescue)
-method_var = tk.StringVar(value="ddrescue")  # Default to 'ddrescue'
-method_label = tk.Label(frame, text="Select Method:")
+method_var = tk.StringVar(value="ddrescue")
+method_label = tk.Label(frame, text="Select Method for ISO Creation:")
 method_label.pack(anchor=tk.W)
 
 method_combobox = ttk.Combobox(frame, textvariable=method_var, values=["dd", "ddrescue"])
 method_combobox.pack(anchor=tk.W)
 
-# Add a label and entry for showing the current output path
+# Options for ddrescue
+options_frame = tk.LabelFrame(frame, text="ddrescue Options")
+options_frame.pack(anchor=tk.W, fill="x", pady=5)
+
+n_option_var = tk.BooleanVar()
+n_option_checkbox = tk.Checkbutton(options_frame, text="Skip error correction pass (-n)", variable=n_option_var)
+n_option_checkbox.pack(anchor=tk.W)
+
+r3_option_var = tk.BooleanVar()
+r3_option_checkbox = tk.Checkbutton(options_frame, text="Retry reading bad sectors 3 times (-r3)", variable=r3_option_var)
+r3_option_checkbox.pack(anchor=tk.W)
+
+b_option_var = tk.BooleanVar(value=True)  # Default to True since DVDs typically use 2048 bytes sectors
+b_option_checkbox = tk.Checkbutton(options_frame, text="Set block size to 2048 bytes (-b 2048)", variable=b_option_var)
+b_option_checkbox.pack(anchor=tk.W)
+
 output_path_var = tk.StringVar(value=os.path.expanduser("~/ddrescue.iso"))
-output_path_label = tk.Label(frame, text="Output Path:")
+output_path_label = tk.Label(frame, text="Output File Path for ISO:")
 output_path_label.pack(anchor=tk.W)
 
 output_path_entry = tk.Entry(frame, textvariable=output_path_var, width=50)
 output_path_entry.pack(anchor=tk.W)
+output_path_entry.insert(0, "")
 
-# Add a button to allow the user to select a different output path
-select_output_button = tk.Button(frame, text="Select Output Path", command=select_output_path)
+select_output_button = tk.Button(frame, text="Browse...", command=select_output_path)
 select_output_button.pack(anchor=tk.W, pady=5)
 
-# Add a button that triggers the ISO creation process
 create_iso_button = tk.Button(frame, text="Create ISO", command=create_iso)
 create_iso_button.pack(pady=10)
 
-# Add a scrolled text widget to display the log output
 log_frame = tk.Frame(app)
 log_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-log_text = scrolledtext.ScrolledText(log_frame, wrap=tk.WORD, height=10)
+# Set a monospaced font for the log output
+log_font = font.Font(family="Courier", size=10)
+log_text = scrolledtext.ScrolledText(log_frame, wrap=tk.WORD, height=10, font=log_font)
 log_text.pack(fill=tk.BOTH, expand=True)
 
-# Start the Tkinter main loop to run the application
 app.mainloop()
