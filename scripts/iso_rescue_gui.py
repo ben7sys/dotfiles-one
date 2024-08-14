@@ -7,6 +7,7 @@ import sys
 import signal
 import threading
 from datetime import datetime
+import tempfile
 
 """
 This script provides a graphical user interface for creating ISO images from various optical media types.
@@ -39,15 +40,15 @@ def select_output():
     if output_path:
         output_path_var.set(output_path)
 
+# Generate a filename based on the current date and time
+# Format: YYYYMMDDHHMMSS_ddrescue.iso
 def generate_filename():
-    """Generate a filename based on the current date and time."""
     now = datetime.now()
     return now.strftime("%Y%m%d%H%M%S_ddrescue.iso")
 
+# Detect media type using blkid and additional checks
 def detect_media_type(device):
-    """Detect the type of media in the drive."""
     try:
-        # Use blkid to get media type
         result = subprocess.run(['blkid', '-p', '-o', 'value', '-s', 'TYPE', device], 
                                 capture_output=True, text=True, check=True)
         media_type = result.stdout.strip()
@@ -55,15 +56,14 @@ def detect_media_type(device):
         if media_type == "udf":
             return "Data CD/DVD"
         elif media_type == "iso9660":
-            # Additional check for audio CD
-            if os.path.exists("/dev/cdrom"):
-                audio_check = subprocess.run(['cdparanoia', '-d', device, '-Q'], 
-                                             capture_output=True, text=True)
-                if "audio tracks" in audio_check.stderr:
-                    return "Audio CD"
+            # Check for audio CD regardless of /dev/cdrom existence
+            audio_check = subprocess.run(['cdparanoia', '-d', device, '-Q'], 
+                                         capture_output=True, text=True)
+            if "audio tracks" in audio_check.stderr:
+                return "Audio CD"
             return "Data CD/DVD"
         else:
-            # Additional check for Video DVD
+            # Check for Video DVD
             video_check = subprocess.run(['dvdbackup', '--info', '-i', device], 
                                          capture_output=True, text=True)
             if "DVD-Video information" in video_check.stdout:
@@ -173,8 +173,8 @@ def check_media_present(device):
     except subprocess.CalledProcessError:
         return False
 
+# Prepare command based on media type and selected options
 def prepare_command(media_type, dvd_device, output_path):
-    """Prepare command based on media type."""
     if media_type == "Data CD/DVD":
         return prepare_data_cd_dvd_command(dvd_device, output_path)
     elif media_type == "Audio CD":
@@ -313,11 +313,13 @@ def check_writable_directory(path):
             return False
     return os.access(directory, os.W_OK)
 
+# Attempt to mount the ISO to verify its integrity
 def try_mount_iso(iso_path):
-    """Attempt to mount the ISO to verify its integrity."""
     try:
-        subprocess.run(['sudo', 'mount', '-o', 'loop', iso_path, '/mnt/iso'], check=True)
-        subprocess.run(['sudo', 'umount', '/mnt/iso'], check=True)
+        # Create a temporary mount point
+        with tempfile.TemporaryDirectory() as temp_mount:
+            subprocess.run(['sudo', 'mount', '-o', 'loop', iso_path, temp_mount], check=True)
+            subprocess.run(['sudo', 'umount', temp_mount], check=True)
         return True
     except subprocess.CalledProcessError:
         return False
@@ -369,8 +371,8 @@ def reset_gui_state():
     update_gui_for_media_type()
     app.update_idletasks()
 
+# Apply preset configurations for different DVD conditions
 def apply_preset(preset):
-    """Apply preset configurations for different DVD conditions."""
     presets = {
         "intact": {"method": "dd", "n": False, "r3": False, "b": True, "d": True},
         "damaged": {"method": "ddrescue", "n": False, "r3": True, "b": True, "d": True},
@@ -409,7 +411,7 @@ def update_gui_for_media_type(*args):
     # Update the media type combobox
     media_type_combobox.set(media_type)
 
-
+original_user = check_sudo()
 
 # Initialize the main application window
 app = tk.Tk()
@@ -418,7 +420,7 @@ app.title("Extended ISO Rescue GUI")
 # Initialize GUI variables
 use_custom_filename_var = tk.BooleanVar(value=False)
 dvd_device_var = tk.StringVar(value="No DVD device found")
-output_path_var = tk.StringVar(value=os.path.expanduser("~"))
+output_path_var = tk.StringVar(value=os.path.expanduser(f"~{original_user}"))
 media_type_var = tk.StringVar(value="Data CD/DVD")
 method_var = tk.StringVar(value="ddrescue")
 n_option_var = tk.BooleanVar()
