@@ -3,6 +3,13 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, ttk, font
 import subprocess
 import shutil
+import sys
+
+def check_sudo():
+    """Check if the script is run with sudo privileges."""
+    if os.geteuid() != 0:
+        messagebox.showerror("Error", "This script must be run as root. Please restart it with 'sudo'.")
+        sys.exit(1)
 
 def select_output_path():
     """Open a file dialog for selecting the output path and update the entry widget."""
@@ -24,7 +31,9 @@ def detect_dvd_devices():
                 dvd_devices.append(f"{device} ({size} MB)")
             else:
                 dvd_devices.append(device)
-    return dvd_devices or ["No DVD device found"]
+    if not dvd_devices:
+        dvd_devices.append("No DVD device found")
+    return dvd_devices
 
 def get_device_size(device):
     """Get the size of the DVD device in MB."""
@@ -87,6 +96,8 @@ def create_iso():
         if stderr_output:
             log_text.insert(tk.END, f"Error output: {stderr_output}\n")
 
+        process.wait()  # Ensure process completes before checking return code
+
         if process.returncode == 0:
             # Check if the ISO file has data
             if os.path.getsize(iso_path) > 0:
@@ -110,6 +121,9 @@ def create_iso():
 # Initialize the main application window
 app = tk.Tk()
 app.title("ISO Image Creator")
+
+# Check for sudo privileges
+check_sudo()
 
 frame = tk.Frame(app)
 frame.pack(pady=10, padx=10)
