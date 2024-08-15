@@ -1,0 +1,10 @@
+[9f6f35d0-7450-43f7-8918-bb9df4a6dcbc]
+Description=looking-glass-client
+desktops=080c2eae-fa13-4d3c-bfe7-0d3250f7ba19
+desktopsrule=2
+wmclass=looking-glass-client
+wmclassmatch=1
+
+[General]
+count=1
+rules=9f6f35d0-7450-43f7-8918-bb9df4a6dcbc
