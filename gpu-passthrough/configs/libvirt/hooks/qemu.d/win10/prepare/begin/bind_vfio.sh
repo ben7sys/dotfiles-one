@@ -62,6 +62,9 @@ fi
 # Restart pipewire and pipewire-pulse
 systemctl --user restart pipewire pipewire-pulse
 
+# Start looking-glass-client
+looking-glass-client -g EGL -C ~/.config/looking-glass/client.ini
+
 ## Unbind gpu from nvidia and bind to vfio
 #virsh nodedev-detach $VIRSH_GPU_VIDEO
 #virsh nodedev-detach $VIRSH_GPU_AUDIO
