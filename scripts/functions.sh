@@ -128,6 +128,8 @@ error_handler() {
     log_message "$error_message" "red" "ERROR"
 }
 
+## feature request: log_message with date and time to have a better log file
+## example: log_message "Dotfiles: start.sh DATE: TIME: " "yellow"
 # Function to log messages
 log_message() {
     local message="$1"

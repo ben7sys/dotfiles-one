@@ -55,12 +55,22 @@ END_COMMENT
 # Main function to orchestrate the setup
 main() {
     local os=$(check_os)
+    log_message "Checking requirements for $os..." "yellow"
     log_message "Starting setup process for $os..." "green"
     
     #ensure_correct_location
     check_not_root
     check_requirements
     
+    log_message "Asking the user to backup the existing dotfiles" "yellow"
+    # ask the user to backup existing dotfiles before proceeding
+    if ! ask_question "Do you want to backup your existing dotfiles?"; then
+    log_message "Skipping backup of existing dotfiles..." "yellow"
+    else
+    backup_dotfiles
+    log_message "Your original dotfiles have been backed up to $dotfiles_backup_dir" "cyan"
+    fi
+
     log_message "Trying to backup the existing dotfiles" "yellow"
     # Backup existing dotfiles before proceeding
     backup_dotfiles
