@@ -6,6 +6,47 @@
 [ -n "$DOTFILES_FUNCTIONS_SOURCED" ] && return
 DOTFILES_FUNCTIONS_SOURCED=1
 
+## Function to make sure the script is run from the correct location
+ensure_correct_location() {
+    local current_dir=$(pwd)
+
+    if [[ "$current_dir" != "$DOTFILES_DIR" ]]; then
+        log_message "Error: Script must run from: $DOTFILES_DIR" "red"
+        log_message "Current location: $current_dir" "yellow"
+        log_message "You have two options:" "cyan"
+        
+        echo ""
+        # Provide options
+        echo "Options:"
+        log_message "1. Clone the repository to the correct location:" "cyan"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo "   git clone $REPO_URL \"$DOTFILES_DIR\""
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo ""
+        
+        log_message "* Any other key to exit" "cyan"
+        echo ""
+        
+        read -p "Choose an option (1 or any key to exit): " choice
+        
+        case $choice in
+            1)
+                if git clone "$REPO_URL" "$DOTFILES_DIR" && cd "$DOTFILES_DIR"; then
+                    log_message "Repository cloned successfully to $DOTFILES_DIR" "green"
+                else
+                    log_message "Failed to clone repository or change directory" "red"
+                    exit 1
+                fi
+                ;;
+            *)
+                log_message "Exiting. Please run the script from the correct directory." "yellow"
+                exit 1
+                ;;
+        esac
+    fi
+
+    log_message "Running from the correct directory: $DOTFILES_DIR" "green"
+}
 
 # Function to ask for user confirmation
 confirm_action() {
@@ -79,6 +120,12 @@ color_text() {
     *) color_code="";;
   esac
   echo -e "${color_code}$2\e[0m"
+}
+
+## --- Function to handle errors ---
+error_handler() {
+    local error_message="$1"
+    log_message "$error_message" "red" "ERROR"
 }
 
 # Function to log messages
