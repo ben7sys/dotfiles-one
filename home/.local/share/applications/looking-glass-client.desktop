@@ -1,0 +1,18 @@
+[Desktop Entry]
+Categories=Utility;Application;
+Comment[de_DE]=Startet das Looking Glass Client Script
+Comment=Startet das Looking Glass Client Script
+Exec=/home/sieben/.config/looking-glass/start_default.sh
+GenericName[de_DE]=
+GenericName=
+Icon=aspia_client
+MimeType=
+Name[de_DE]=Looking Glass Client
+Name=Looking Glass Client
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
