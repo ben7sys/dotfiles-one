@@ -1,17 +1,38 @@
 #!/bin/bash
 ## config.sh - Configuration file for setup.sh
 
+## Check if this file is config.sh 
+if [ "$(basename "${BASH_SOURCE[0]}")" != "config.sh" ]; then
+    log_message "Error: Missing config.sh" "red"
+    exit 1
+fi
+
+# Check if DOTFILES_DIR is set
+if [ -z "${DOTFILES_DIR+x}" ]; then
+    log_message "Error: DOTFILES_DIR is not set (source: config.sh)" "red"
+    exit 1
+fi
+
+## Set DOTFILES_DIR one parent folder based on the location of this file if not already set
+if [ -z "${DOTFILES_DIR+x}" ]; then
+    DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
+export DOTFILES_DIR
+
+
+REPO_URL="${REPO_URL:-https://github.com/ben7sys/dotfiles.git}"
+
 # Prevent double sourcing
 [ -n "$DOTFILES_CONFIG_SOURCED" ] && return
 DOTFILES_CONFIG_SOURCED=1
 
 # Export and set the main directories and files as environment variables
 export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
-export SCRIPTS_DIR="$DOTFILES_DIR/scripts"
-export DOTFILES_BACKUP_DIR="$HOME/dotfiles_backup"
-export DOTFILES_LOG_FILE="$HOME/dotfiles_setup.log"
-export DOTFILES_FUNCTIONS="$SCRIPTS_DIR/functions.sh"
+export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
 export DOTFILES_CONFIG="$SCRIPTS_DIR/config.sh"
+export DOTFILES_FUNCTIONS="$SCRIPTS_DIR/functions.sh"
+export DOTFILES_LOG="$HOME/dotfiles_setup.log"
+export DOTFILES_BACKUP="$HOME/dotfiles_backup"
 export DOTFILES_INSTALL_PACKAGES="$SCRIPTS_DIR/install_packages.sh"
 
 # Default theme (Breeze Dark)
