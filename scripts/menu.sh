@@ -4,9 +4,9 @@
 log_message "Running Dotfiles: menu.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
 
 # Source necessary files
-source "config.sh"
-source "functions.sh"
-source "install_packages.sh"
+source "$DOTFILES_SCRIPTS/config.sh"
+source "$DOTFILES_SCRIPTS/functions.sh"
+source "$DOTFILES_SCRIPTS/install_packages.sh"
 
 # Error handling
 exec 2> >(while read -r line; do error_handler "$line"; done)
