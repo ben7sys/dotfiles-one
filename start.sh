@@ -24,7 +24,7 @@ fi
 
 # Check if menu.sh exists
 if [ ! -f "$DOTFILES_SCRIPTS/menu.sh" ]; then
-    echo "Error: menu.sh not found in $DOTFILES_SCRIPTS" >&2
+    log_message "Error: menu.sh not found in $DOTFILES_SCRIPTS" >&2
     exit 1
 fi
 
