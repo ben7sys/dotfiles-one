@@ -5,15 +5,19 @@
 # Set your DOTFILES_DIR
 export DOTFILES_DIR="$HOME/.dotfiles"
 
+# Source necessary files
+source "$DOTFILES_DIR/scripts/config.sh"
+source "$DOTFILES_DIR/scripts/functions.sh"
+
+## --- CUSTOM SCRIPT CONFIGURATION ---
+
 # Define script directories
 SCRIPT_DIRS=("$DOTFILES_SCRIPTS" "$DOTFILES_DIR/gpu-passthrough/scripts")
 
 # Define excluded scripts
 EXCLUDED_SCRIPTS=("config.sh" "menu.sh")
 
-# Source necessary files
-source "$DOTFILES_DIR/scripts/config.sh"
-source "$DOTFILES_DIR/scripts/functions.sh"
+## --- CUSTOM SCRIPT CONFIGURATION END ---
 
 # Log the start of the script
 log_message "Running Dotfiles: menu.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
