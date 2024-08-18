@@ -1,6 +1,12 @@
 #!/bin/bash
 ## config.sh - Configuration file for setup.sh
 
+## Set your REPO_URL
+REPO_URL="${REPO_URL:-https://github.com/ben7sys/dotfiles.git}"
+
+## Default theme (Breeze Dark)
+#DEFAULT_THEME="org.kde.breezedark.desktop"
+
 ## Check if this file is config.sh 
 if [ "$(basename "${BASH_SOURCE[0]}")" != "config.sh" ]; then
     log_message "Error: Missing config.sh" "red"
@@ -19,30 +25,17 @@ if [ -z "${DOTFILES_DIR+x}" ]; then
 fi
 export DOTFILES_DIR
 
-
-REPO_URL="${REPO_URL:-https://github.com/ben7sys/dotfiles.git}"
-
-# Prevent double sourcing
-[ -n "$DOTFILES_CONFIG_SOURCED" ] && return
-DOTFILES_CONFIG_SOURCED=1
-
-# Export and set the main directories and files as environment variables
-export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
+## Export and set the main directories and files as environment variables
 export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
 export DOTFILES_CONFIG="$DOTFILES_SCRIPTS/config.sh"
 export DOTFILES_FUNCTIONS="$DOTFILES_SCRIPTS/functions.sh"
-export DOTFILES_LOG="$HOME/dotfiles_setup.log"
+export DOTFILES_INSTALL_PACKAGES="$DOTFILES_SCRIPTS/install_packages.sh"
+
+## Export log and backup directories/files
+export DOTFILES_LOG="$HOME/dotfiles.log"
 export DOTFILES_BACKUP="$HOME/dotfiles_backup"
-export DOTFILES_INSTALL_PACKAGES="$SCRIPTS_DIR/install_packages.sh"
 
-# Default theme (Breeze Dark)
-DEFAULT_THEME="org.kde.breezedark.desktop"
-
-# Source functions
-source "$DOTFILES_FUNCTIONS"
-source "$DOTFILES_INSTALL_PACKAGES"
-
-# Additional configurations and variables
+## Install Packages configurations and variables
 
 # Easy package installation
 available_packages="$DOTFILES_DIR/packages.yaml"
