@@ -66,7 +66,7 @@ log_message() {
     esac
 
     # Format the log entry with type, date, time, and message
-    local log_entry="$type $(date '+%Y-%m-%d %H:%M:%S') $message"
+    local log_entry="$(date '+%Y-%m-%d %H:%M:%S') $type $message"
     
     # Write the log entry to the log file
     echo "$log_entry" >> "$DOTFILES_LOG"
