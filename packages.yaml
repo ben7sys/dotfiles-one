@@ -35,6 +35,8 @@ pacman:
   - python
   - python-pip
   - qemu
+  - kcmshell5
+  - kwriteconfig5
   - kvantum
   - kvantum-qt5
   - kvantum-qt6
