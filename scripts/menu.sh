@@ -19,12 +19,12 @@ SCRIPT_DIRS=(
 )
 
 # Define excluded scripts
-EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh")
+EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh" "_template.sh")
 
 ## --- CUSTOM SCRIPT CONFIGURATION END ---
 
 # Log the start of the script
-log_message "Running Dotfiles: menu.sh" "yellow"
+log_message "Running Dotfiles: menu.sh" "cyan"
 
 # --- FUNCTIONS ---
 

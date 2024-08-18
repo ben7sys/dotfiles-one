@@ -11,8 +11,8 @@ source "$DOTFILES_DIR/scripts/functions.sh"
 export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
 
 ## Log the start of the script
-log_message "#######################################################" "yellow"
-log_message "Running Dotfiles: start.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
+log_message "#######################################################" "cyan"
+log_message "Running Dotfiles: start.sh $(date '+%Y-%m-%d %H:%M:%S')" "cyan"
 
 check_environment_variables
 
