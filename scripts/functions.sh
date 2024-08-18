@@ -125,18 +125,30 @@ color_text() {
 ## --- Function to handle errors ---
 error_handler() {
     local error_message="$1"
-    log_message "$error_message" "red" "ERROR"
+    log_message "$error_message" "" ""
 }
 
 ## feature request: log_message with date and time to have a better log file
 ## example: log_message "Dotfiles: start.sh DATE: TIME: " "yellow"
+
+# Function to log messages
 # Function to log messages
 log_message() {
     local message="$1"
-    local color="${2:-normal}"
-    local level="${3:-INFO}"
-    color_text "$color" "[$level] $message"
-    echo "$(date): [$level] $message" >> "$DOTFILES_LOG"
+    local level="${2:-neutral}"
+    local status="${3:-LOG}"
+
+    case "$level" in
+        red|yellow|green|blue|cyan|magenta)
+            color_text "$level" "[$status] $message"
+            ;;
+        neutral|*)
+            color_text "" "[$status] $message"
+            ;;
+    esac
+
+    # Log the message with a timestamp into the log file
+    echo "$(date): [$status] $message" >> "$DOTFILES_LOG"
 }
 
 # Function to check required environment variables
