@@ -11,6 +11,7 @@ if [ -z "${DOTFILES_DIR+x}" ]; then
     esac
 fi
 export DOTFILES_DIR
+export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
 
 ## Ensure the scripts directory exists
 if [ ! -d "$DOTFILES_SCRIPTS" ]; then
