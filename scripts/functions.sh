@@ -1,51 +1,99 @@
 #!/bin/bash
 
-# common_functions.sh: Reusable functions for dotfiles management scripts
+# functions.sh: Reusable functions for dotfiles management scripts
 
-# Prevent double sourcing
-[ -n "$DOTFILES_FUNCTIONS_SOURCED" ] && return
-DOTFILES_FUNCTIONS_SOURCED=1
 
-## Function to make sure the script is run from the correct location
-ensure_correct_location() {
-    local current_dir=$(pwd)
+# -----------------------------------------------------------------------------
+# --- ERROR AND LOGGING FUNCTIONS ---
+#
+# 1. log_message:
+#    - Logs detailed messages to a log file without console output by default.
+#    - Format: TYP Date Time Message
+#    - TYP is determined automatically based on the color:
+#      - LOG = green, cyan, blue, magenta, or any color not specified as WARNING or ERROR.
+#      - WARNING = yellow.
+#      - ERROR = red.
+#    - If a color is specified, the message will also be shown on the console in that color.
+#
+#    Usage:
+#    log_message "Your message here" "optional_color"
+#    Example: log_message "Backup process started" "none"  # Logs only, no console output
+#    Example: log_message "Disk space is running low" "yellow"  # Logs and shows on console in yellow
+#
+# 2. error_handler:
+#    - Handles errors by logging them using the log_message function.
+#    - Automatically sets the TYP to ERROR and the color to red.
+#    - Logs the error and optionally shows it on the console if a color is provided.
+#
+#    Usage:
+#    error_handler "Your error message here"
+#    Example: error_handler "Failed to backup files"  # Logs as ERROR and shows on console in red
+#
+# 3. color_text (already defined):
+#    - Handles the actual color formatting for console output.
+#    - Used internally by log_message to colorize output when needed.
+#
+# -----------------------------------------------------------------------------
 
-    if [[ "$current_dir" != "$DOTFILES_DIR" ]]; then
-        log_message "Error: Script must run from: $DOTFILES_DIR" "red"
-        log_message "Current location: $current_dir" "yellow"
-        log_message "You have two options:" "cyan"
-        
-        echo ""
-        # Provide options
-        echo "Options:"
-        log_message "1. Clone the repository to the correct location:" "cyan"
-        echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo "   git clone $REPO_URL \"$DOTFILES_DIR\""
-        echo "   ──────────────────────────────────────────────────────────────────────────────"
-        echo ""
-        
-        log_message "* Any other key to exit" "cyan"
-        echo ""
-        
-        read -p "Choose an option (1 or any key to exit): " choice
-        
-        case $choice in
-            1)
-                if git clone "$REPO_URL" "$DOTFILES_DIR" && cd "$DOTFILES_DIR"; then
-                    log_message "Repository cloned successfully to $DOTFILES_DIR" "green"
-                else
-                    log_message "Failed to clone repository or change directory" "red"
-                    exit 1
-                fi
-                ;;
-            *)
-                log_message "Exiting. Please run the script from the correct directory." "yellow"
-                exit 1
-                ;;
-        esac
+
+# Function to handle errors by logging them using the log_message function
+error_handler() {
+    local error_message="$1"
+    local error_type="${2:-ERROR}"  # Default type is ERROR
+    local color="red"  # Default color for errors
+
+    # Log the error message using log_message, with the type determined by the color
+    log_message "$error_message" "$color" "$error_type"
+}
+
+# Function to log messages to the log file with detailed information, and optionally to the console if a color is provided
+log_message() {
+    local message="$1"
+    local color="${2:-none}"  # Default is 'none', meaning no console output
+    local type="LOG"  # Default type is LOG
+
+    # Determine the type based on the color
+    case "$color" in
+        yellow)
+            type="WARNING"
+            ;;
+        red)
+            type="ERROR"
+            ;;
+        green|cyan|blue|magenta)
+            type="LOG"
+            ;;
+    esac
+
+    # Format the log entry with type, date, time, and message
+    local log_entry="$type $(date '+%Y-%m-%d %H:%M:%S') $message"
+    
+    # Write the log entry to the log file
+    echo "$log_entry" >> "$DOTFILES_LOG"
+    
+    # If a color is provided, output to the console
+    if [[ "$color" != "none" ]]; then
+        color_text "$color" "$log_entry"
     fi
+}
 
-    log_message "Running from the correct directory: $DOTFILES_DIR" "green"
+# -----------------------------------------------------------------------------
+# --- REUSABLE FUNCTIONS ---
+# -----------------------------------------------------------------------------
+
+# Function for color formatting
+color_text() {
+  local color_code=""
+  case $1 in
+    green) color_code="\e[32m";;
+    yellow) color_code="\e[33m";;
+    red) color_code="\e[31m";;
+    blue) color_code="\e[34m";;
+    cyan) color_code="\e[36m";;
+    magenta) color_code="\e[35m";;
+    *) color_code="";;
+  esac
+  echo -e "${color_code}$2\e[0m"
 }
 
 # Function to ask for user confirmation
@@ -105,49 +153,6 @@ EOF
 
     systemctl daemon-reload
     systemctl enable "${service_name}.service"
-}
-
-# Function for color formatting
-color_text() {
-  local color_code=""
-  case $1 in
-    green) color_code="\e[32m";;
-    yellow) color_code="\e[33m";;
-    red) color_code="\e[31m";;
-    blue) color_code="\e[34m";;
-    cyan) color_code="\e[36m";;
-    magenta) color_code="\e[35m";;
-    *) color_code="";;
-  esac
-  echo -e "${color_code}$2\e[0m"
-}
-
-# Basic error handler function that logs everything as neutral by default
-error_handler() {
-    local error_message="$1"
-    log_message "$error_message" "neutral" "LOG"
-}
-
-## feature request: log_message with date and time to have a better log file
-## example: log_message "Dotfiles: start.sh DATE: TIME: " "yellow"
-
-# Function to log messages
-log_message() {
-    local message="$1"
-    local level="${2:-neutral}"
-    local status="${3:-LOG}"
-
-    case "$level" in
-        red|yellow|green|blue|cyan|magenta)
-            color_text "$level" "[$status] $message"
-            ;;
-        neutral|*)
-            color_text "" "[$status] $message"
-            ;;
-    esac
-
-    # Log the message with a timestamp into the log file
-    echo "$(date): [$status] $message" >> "$DOTFILES_LOG"
 }
 
 # Function to check required environment variables
@@ -343,7 +348,57 @@ venv_info() {
     log_message "Python virtual environment created and .bashrc updated" "green"
 }
 
+# Prevent double sourcing
+[ -n "$DOTFILES_FUNCTIONS_SOURCED" ] && return
+DOTFILES_FUNCTIONS_SOURCED=1
+
+## Function to make sure the script is run from the correct location
+ensure_correct_location() {
+    local current_dir=$(pwd)
+
+    if [[ "$current_dir" != "$DOTFILES_DIR" ]]; then
+        log_message "Error: Script must run from: $DOTFILES_DIR" "red"
+        log_message "Current location: $current_dir" "yellow"
+        log_message "You have two options:" "cyan"
+        
+        echo ""
+        # Provide options
+        echo "Options:"
+        log_message "1. Clone the repository to the correct location:" "cyan"
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo "   git clone $REPO_URL \"$DOTFILES_DIR\""
+        echo "   ──────────────────────────────────────────────────────────────────────────────"
+        echo ""
+        
+        log_message "* Any other key to exit" "cyan"
+        echo ""
+        
+        read -p "Choose an option (1 or any key to exit): " choice
+        
+        case $choice in
+            1)
+                if git clone "$REPO_URL" "$DOTFILES_DIR" && cd "$DOTFILES_DIR"; then
+                    log_message "Repository cloned successfully to $DOTFILES_DIR" "green"
+                else
+                    log_message "Failed to clone repository or change directory" "red"
+                    exit 1
+                fi
+                ;;
+            *)
+                log_message "Exiting. Please run the script from the correct directory." "yellow"
+                exit 1
+                ;;
+        esac
+    fi
+
+    log_message "Running from the correct directory: $DOTFILES_DIR" "green"
+}
+
+
 # Export all functions
 export -f color_text log_message check_requirements backup_dotfiles \
            check_root check_not_root confirm command_exists \
-           ensure_dir_exists symlink_file install_aur_helper check_os setup_user_env
+           ensure_dir_exists symlink_file install_aur_helper check_os setup_user_env \
+           ensure_correct_location parse_yaml create_systemd_service \
+           check_environment_variables autodetect_dotfiles_dir confirm_action \
+           error_handler
