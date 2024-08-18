@@ -43,7 +43,7 @@ error_handler() {
     local color="red"  # Default color for errors
 
     # Log the error message using log_message, with the type determined by the color
-    log_message "$error_message" "$color" "$error_type"
+    log_message "$error_type" "$error_message" "$color" 
 }
 
 # Function to log messages to the log file with detailed information, and optionally to the console if a color is provided
