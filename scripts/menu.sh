@@ -13,13 +13,13 @@ source "$DOTFILES_DIR/scripts/functions.sh"
 
 # Define script directories
 SCRIPT_DIRS=(
-    "$DOTFILES_DIR/scripts" 
+    "$DOTFILES_DIR/scripts"
     "$DOTFILES_DIR/gpu-passthrough/scripts"
     "$DOTFILES_DIR/system/scripts"
 )
 
 # Define excluded scripts
-EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh" "_template.sh")
+EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh")
 
 ## --- CUSTOM SCRIPT CONFIGURATION END ---
 
@@ -27,29 +27,6 @@ EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh" "_template.sh")
 log_message "Running Dotfiles: menu.sh" "yellow"
 
 # --- FUNCTIONS ---
-
-# Function to format directory names into user-friendly titles
-format_directory_name() {
-    local dir="$1"
-    local base_dir=$(basename "$dir")
-
-    # Convert directory names into user-friendly titles
-    case "$base_dir" in
-        scripts)
-            echo "Dotfiles Scripts"
-            ;;
-        gpu-passthrough)
-            echo "GPU-Passthrough Scripts"
-            ;;
-        system)
-            echo "System Scripts"
-            ;;
-        *)
-            # Default to capitalizing the first letter and replacing hyphens/underscores with spaces
-            echo "$(echo "$base_dir" | sed -r 's/(^|-|_)(\w)/\U\2/g') Scripts"
-            ;;
-    esac
-}
 
 # Function to list scripts in a specific directory, excluding specified scripts
 list_scripts_in_dir() {
@@ -75,8 +52,10 @@ display_menu() {
 
     for dir in "${SCRIPT_DIRS[@]}"; do
         if [[ -d "$dir" ]]; then
-            # Generate and display the dynamic title
-            local title=$(format_directory_name "$dir")
+            # Derive the section title from the parent directory name
+            local parent_dir=$(basename "$(dirname "$dir")")
+            local title="${parent_dir^} Scripts" # Capitalize the first letter
+
             echo "### $title ###"
             local scripts=($(list_scripts_in_dir "$dir"))
             for script in "${scripts[@]}"; do
