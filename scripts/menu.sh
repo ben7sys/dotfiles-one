@@ -20,10 +20,7 @@ EXCLUDED_SCRIPTS=("config.sh" "menu.sh")
 ## --- CUSTOM SCRIPT CONFIGURATION END ---
 
 # Log the start of the script
-log_message "Running Dotfiles: menu.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
-
-# Error handling
-exec 2> >(while read -r line; do error_handler "$line"; done)
+log_message "Running Dotfiles: menu.sh" "yellow"
 
 # --- FUNCTIONS ---
 
