@@ -1,6 +1,15 @@
 #!/bin/bash
 
+# --- CUSTOM CONFIGURATION ---
 
+# Set your DOTFILES_DIR
+export DOTFILES_DIR="$HOME/.dotfiles"
+
+# Define script directories
+SCRIPT_DIRS=("$DOTFILES_SCRIPTS" "$DOTFILES_DIR/gpu-passthrough/scripts")
+
+# Define excluded scripts
+EXCLUDED_SCRIPTS=("config.sh" "menu.sh")
 
 # Source necessary files
 source "$DOTFILES_DIR/scripts/config.sh"
@@ -12,14 +21,6 @@ log_message "Running Dotfiles: menu.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
 
 # Error handling
 exec 2> >(while read -r line; do error_handler "$line"; done)
-
-# --- CONFIGURATION ---
-
-# Define script directories
-SCRIPT_DIRS=("$DOTFILES_SCRIPTS" "$DOTFILES_DIR/gpu-passthrough/scripts")
-
-# Define excluded scripts
-EXCLUDED_SCRIPTS=("config.sh" "menu.sh")
 
 # --- FUNCTIONS ---
 
@@ -56,9 +57,8 @@ show_menu() {
     done
 }
 
+#ensure_correct_location # Ensure the script is run from the correct directory
+
 # --- MENU ---
-
-ensure_correct_location # Ensure the script is run from the correct directory
-
 # Display the menu to the user
 show_menu
