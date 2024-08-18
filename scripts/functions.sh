@@ -150,13 +150,17 @@ check_environment_variables() {
 
 # Function to autodetect DOTFILES_DIR
 autodetect_dotfiles_dir() {
-    # Example logic to autodetect DOTFILES_DIR
-    # You can customize this logic to suit your needs
     if [ -d "$HOME/.dotfiles" ]; then
-        export DOTFILES_DIR="$HOME/.dotfiles"
-        echo "DOTFILES_DIR autodetected and set to $DOTFILES_DIR"
+        read -p "DOTFILES_DIR was autodetected as $HOME/.dotfiles. Do you want to use this directory? (y/n): " choice
+        if [[ "$choice" =~ ^[Yy]$ ]]; then
+            export DOTFILES_DIR="$HOME/.dotfiles"
+            log_message "DOTFILES_DIR set to $DOTFILES_DIR" "green"
+        else
+            log_message "DOTFILES_DIR was not set. Please set it manually in start.sh" "red"
+            exit 1
+        fi
     else
-        echo "Failed to autodetect DOTFILES_DIR. Please set it manually."
+        log_message "Failed to autodetect DOTFILES_DIR. Please set it manually in start.sh" "red"
         exit 1
     fi
 }

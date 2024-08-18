@@ -1,21 +1,24 @@
 #!/bin/bash
 
-# Check if DOTFILES_DIR is set, if not, try to autodetect it
-if [ -z "$DOTFILES_DIR" ]; then
-    echo "Error: DOTFILES_DIR is not set. Attempting to autodetect..."
-    if [ -d "$HOME/.dotfiles" ]; then
-        export DOTFILES_DIR="$HOME/.dotfiles"
-        echo "DOTFILES_DIR autodetected and set to $DOTFILES_DIR"
-    else
-        echo "Failed to autodetect DOTFILES_DIR. Please set it manually."
-        exit 1
-    fi
-fi
-export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
+# Set your DOTFILES_DIR
+export DOTFILES_DIR="$HOME/.dotfiles"
+
+## Set the scripts directory ** DO NOT CHANGE **
+export DOTFILES_SCRIPTS="DOTFILES_DIR/scripts"
+
+# Source necessary files
+source "$DOTFILES_SCRIPTS/config.sh"
+source "$DOTFILES_SCRIPTS/functions.sh"
+
+## Log the start of the script
+log_message "#######################################################" "yellow"
+log_message "Running Dotfiles: start.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
+
+check_environment_variables
 
 ## Ensure the scripts directory exists
 if [ ! -d "$DOTFILES_SCRIPTS" ]; then
-    echo "Error: Scripts directory not found at $DOTFILES_SCRIPTS" >&2
+    log_message "Error: Scripts directory not found at $DOTFILES_SCRIPTS" "red"
     exit 1
 fi
 
@@ -24,12 +27,6 @@ if [ ! -f "$DOTFILES_SCRIPTS/menu.sh" ]; then
     echo "Error: menu.sh not found in $DOTFILES_SCRIPTS" >&2
     exit 1
 fi
-
-## Dynamically set DOTFILES_SCRIPTS based on the location of start.sh
-if [ -z "${DOTFILES_SCRIPTS+x}" ]; then
-    DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
-fi
-export DOTFILES_SCRIPTS
 
 ## Execute menu.sh
 exec "$DOTFILES_SCRIPTS/menu.sh"
