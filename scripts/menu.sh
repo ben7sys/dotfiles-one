@@ -36,7 +36,7 @@ list_scripts() {
             # Check if the script is in the excluded list
             local base_script=$(basename "$script")
             if [[ ! " ${EXCLUDED_SCRIPTS[@]} " =~ " ${base_script} " ]]; then
-                scripts+=("$script")
+                scripts+=("$base_script")
             fi
         done
     done
@@ -52,7 +52,7 @@ show_menu() {
     select script in "${scripts[@]}"; do
         if [[ -n "$script" ]]; then
             echo "You selected $script"
-            bash "$script"
+            bash "$DOTFILES_DIR/scripts/$script"
             break
         else
             echo "Invalid selection. Please try again."

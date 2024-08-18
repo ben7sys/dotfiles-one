@@ -122,16 +122,15 @@ color_text() {
   echo -e "${color_code}$2\e[0m"
 }
 
-## --- Function to handle errors ---
+# Basic error handler function that logs everything as neutral by default
 error_handler() {
     local error_message="$1"
-    log_message "$error_message" "" ""
+    log_message "$error_message" "neutral" "LOG"
 }
 
 ## feature request: log_message with date and time to have a better log file
 ## example: log_message "Dotfiles: start.sh DATE: TIME: " "yellow"
 
-# Function to log messages
 # Function to log messages
 log_message() {
     local message="$1"
