@@ -8,7 +8,7 @@ source "$DOTFILES_DIR/scripts/config.sh"
 source "$DOTFILES_DIR/scripts/functions.sh"
 
 ## Set the scripts directory ** DO NOT CHANGE **
-export DOTFILES_SCRIPTS="DOTFILES_DIR/scripts"
+export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
 
 ## Log the start of the script
 log_message "#######################################################" "yellow"
