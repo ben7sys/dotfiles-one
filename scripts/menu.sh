@@ -24,7 +24,7 @@ EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh" "_template.sh")
 ## --- CUSTOM SCRIPT CONFIGURATION END ---
 
 # Log the start of the script
-log_message "Running Dotfiles: menu.sh" "cyan"
+log_message "Starting menu.sh..." "cyan"
 
 # --- FUNCTIONS ---
 
