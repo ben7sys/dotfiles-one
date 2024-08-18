@@ -14,7 +14,6 @@ EXCLUDED_SCRIPTS=("config.sh" "menu.sh")
 # Source necessary files
 source "$DOTFILES_DIR/scripts/config.sh"
 source "$DOTFILES_DIR/scripts/functions.sh"
-source "$DOTFILES_DIR/scripts/install_packages.sh"
 
 # Log the start of the script
 log_message "Running Dotfiles: menu.sh $(date '+%Y-%m-%d %H:%M:%S')" "yellow"
