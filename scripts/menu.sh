@@ -49,6 +49,16 @@ show_menu() {
     local PS3="Please select a script to execute: "
 
     echo "Available scripts:"
+    # Format the output into columns for better readability
+    printf "%-4s %-30s %s\n" "No." "Script Name" "Description"
+    echo "----------------------------------------------"
+    for i in "${!scripts[@]}"; do
+        # Customize the description as needed or leave it blank
+        local description=""
+        printf "%-4d %-30s %s\n" $((i + 1)) "${scripts[$i]}" "$description"
+    done
+    echo "----------------------------------------------"
+
     select script in "${scripts[@]}"; do
         if [[ -n "$script" ]]; then
             echo "You selected $script"
@@ -59,6 +69,7 @@ show_menu() {
         fi
     done
 }
+
 
 #ensure_correct_location # Ensure the script is run from the correct directory
 
