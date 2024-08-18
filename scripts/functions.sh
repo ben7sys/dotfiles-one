@@ -136,7 +136,7 @@ log_message() {
     local color="${2:-normal}"
     local level="${3:-INFO}"
     color_text "$color" "[$level] $message"
-    echo "$(date): [$level] $message" >> "$DOTFILES_LOG_FILE"
+    echo "$(date): [$level] $message" >> "$DOTFILES_LOG"
 }
 
 # Function to check required environment variables
