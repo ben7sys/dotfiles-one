@@ -3,12 +3,12 @@
 # Set your DOTFILES_DIR
 export DOTFILES_DIR="$HOME/.dotfiles"
 
+# Source necessary files
+source "$DOTFILES_DIR/scripts/config.sh"
+source "$DOTFILES_DIR/scripts/functions.sh"
+
 ## Set the scripts directory ** DO NOT CHANGE **
 export DOTFILES_SCRIPTS="DOTFILES_DIR/scripts"
-
-# Source necessary files
-source "$DOTFILES_SCRIPTS/config.sh"
-source "$DOTFILES_SCRIPTS/functions.sh"
 
 ## Log the start of the script
 log_message "#######################################################" "yellow"
