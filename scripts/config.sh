@@ -30,6 +30,7 @@ export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
 export DOTFILES_CONFIG="$DOTFILES_SCRIPTS/config.sh"
 export DOTFILES_FUNCTIONS="$DOTFILES_SCRIPTS/functions.sh"
 export DOTFILES_INSTALL_PACKAGES="$DOTFILES_SCRIPTS/install_packages.sh"
+export DOTFILES_USER="$DOTFILES_DIR/user"
 
 ## Export log and backup directories/files
 export DOTFILES_LOG="$HOME/dotfiles.log"
