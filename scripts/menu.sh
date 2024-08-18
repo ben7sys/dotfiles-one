@@ -19,7 +19,7 @@ SCRIPT_DIRS=(
 )
 
 # Define excluded scripts
-EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh")
+EXCLUDED_SCRIPTS=("config.sh" "menu.sh" "functions.sh" "_template.sh")
 
 ## --- CUSTOM SCRIPT CONFIGURATION END ---
 
