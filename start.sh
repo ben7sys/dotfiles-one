@@ -18,13 +18,13 @@ check_environment_variables
 
 ## Ensure the scripts directory exists
 if [ ! -d "$DOTFILES_SCRIPTS" ]; then
-    log_message "Error: Scripts directory not found at $DOTFILES_SCRIPTS" "red"
+    log_message "Error: Scripts directory not found at $DOTFILES_SCRIPTS ...Exit..." "red"
     exit 1
 fi
 
 # Check if menu.sh exists
 if [ ! -f "$DOTFILES_SCRIPTS/menu.sh" ]; then
-    log_message "Error: menu.sh not found in $DOTFILES_SCRIPTS" "red"
+    log_message "Error: menu.sh not found in $DOTFILES_SCRIPTS ...Exit..." "red"
     exit 1
 fi
 
