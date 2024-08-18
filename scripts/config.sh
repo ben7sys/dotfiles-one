@@ -29,8 +29,8 @@ DOTFILES_CONFIG_SOURCED=1
 # Export and set the main directories and files as environment variables
 export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
 export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
-export DOTFILES_CONFIG="$SCRIPTS_DIR/config.sh"
-export DOTFILES_FUNCTIONS="$SCRIPTS_DIR/functions.sh"
+export DOTFILES_CONFIG="$DOTFILES_SCRIPTS/config.sh"
+export DOTFILES_FUNCTIONS="$DOTFILES_SCRIPTS/functions.sh"
 export DOTFILES_LOG="$HOME/dotfiles_setup.log"
 export DOTFILES_BACKUP="$HOME/dotfiles_backup"
 export DOTFILES_INSTALL_PACKAGES="$SCRIPTS_DIR/install_packages.sh"

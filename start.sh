@@ -1,16 +1,16 @@
 #!/bin/bash
 
-## Dynamically set DOTFILES_DIR based on the location of start.sh
-if [ -z "${DOTFILES_DIR+x}" ]; then
-    DETECTED_DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    read -p "Detected DOTFILES_DIR: $DETECTED_DOTFILES_DIR. Do you want to set this as the global DOTFILES_DIR? (y/n) " yn
-    case $yn in
-        [Yy]* ) DOTFILES_DIR="$DETECTED_DOTFILES_DIR";;
-        [Nn]* ) echo "Aborted by user." >&2; exit 1;;
-        * ) echo "Invalid response. Aborted." >&2; exit 1;;
-    esac
+# Check if DOTFILES_DIR is set, if not, try to autodetect it
+if [ -z "$DOTFILES_DIR" ]; then
+    echo "Error: DOTFILES_DIR is not set. Attempting to autodetect..."
+    if [ -d "$HOME/.dotfiles" ]; then
+        export DOTFILES_DIR="$HOME/.dotfiles"
+        echo "DOTFILES_DIR autodetected and set to $DOTFILES_DIR"
+    else
+        echo "Failed to autodetect DOTFILES_DIR. Please set it manually."
+        exit 1
+    fi
 fi
-export DOTFILES_DIR
 export DOTFILES_SCRIPTS="$DOTFILES_DIR/scripts"
 
 ## Ensure the scripts directory exists

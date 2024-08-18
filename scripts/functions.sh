@@ -139,6 +139,28 @@ log_message() {
     echo "$(date): [$level] $message" >> "$DOTFILES_LOG_FILE"
 }
 
+# Function to check required environment variables
+check_environment_variables() {
+    if [ -z "$DOTFILES_DIR" ]; then
+        echo "Error: The environment variable DOTFILES_DIR is not set."
+        echo "Attempting to autodetect DOTFILES_DIR..."
+        autodetect_dotfiles_dir
+    fi
+}
+
+# Function to autodetect DOTFILES_DIR
+autodetect_dotfiles_dir() {
+    # Example logic to autodetect DOTFILES_DIR
+    # You can customize this logic to suit your needs
+    if [ -d "$HOME/.dotfiles" ]; then
+        export DOTFILES_DIR="$HOME/.dotfiles"
+        echo "DOTFILES_DIR autodetected and set to $DOTFILES_DIR"
+    else
+        echo "Failed to autodetect DOTFILES_DIR. Please set it manually."
+        exit 1
+    fi
+}
+
 # Function to check system requirements
 check_requirements() {
     log_message "Checking system requirements..." "yellow"
