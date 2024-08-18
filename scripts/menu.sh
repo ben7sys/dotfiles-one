@@ -24,47 +24,52 @@ log_message "Running Dotfiles: menu.sh" "yellow"
 
 # --- FUNCTIONS ---
 
-# Function to list scripts in the given directories, excluding specified scripts
-list_scripts() {
+# Function to list scripts in a specific directory, excluding specified scripts
+list_scripts_in_dir() {
+    local dir="$1"
     local scripts=()
+
+    while IFS= read -r -d '' script; do
+        script_name=$(basename "$script")
+        if [[ ! " ${EXCLUDED_SCRIPTS[@]} " =~ " ${script_name} " ]]; then
+            scripts+=("$script")
+        fi
+    done < <(find "$dir" -maxdepth 1 -type f -name "*.sh" -print0)
+
+    echo "${scripts[@]}"
+}
+
+# Function to display a menu of available scripts, grouped by directory
+display_menu() {
+    local all_scripts=()
+    local script_number=1
+
+    echo -e "Available scripts:\n"
 
     for dir in "${SCRIPT_DIRS[@]}"; do
         if [[ -d "$dir" ]]; then
-            # Find all scripts in the directory, excluding the ones in EXCLUDED_SCRIPTS
-            while IFS= read -r -d '' script; do
-                script_name=$(basename "$script")
-                if [[ ! " ${EXCLUDED_SCRIPTS[@]} " =~ " ${script_name} " ]]; then
-                    scripts+=("$script")
-                fi
-            done < <(find "$dir" -type f -name "*.sh" -print0)
+            echo "### $(basename "$dir") ###"
+            local scripts=($(list_scripts_in_dir "$dir"))
+            for script in "${scripts[@]}"; do
+                echo "$script_number. $(basename "$script")"
+                all_scripts+=("$script")
+                ((script_number++))
+            done
+            echo ""
         else
             log_message "Directory $dir does not exist" "red"
         fi
     done
 
-    echo "${scripts[@]}"
-}
-
-# Function to display a menu of available scripts
-display_menu() {
-    local scripts=($(list_scripts))
-    local script_count=${#scripts[@]}
-
-    if [[ $script_count -eq 0 ]]; then
+    if [[ ${#all_scripts[@]} -eq 0 ]]; then
         log_message "No scripts found" "red"
         return
     fi
 
-    echo "Available scripts:"
-    for i in "${!scripts[@]}"; do
-        echo "$((i + 1)). $(basename "${scripts[$i]}")"
-    done
-
-    echo ""
     read -p "Select a script to run (or type 'q' to quit): " choice
 
-    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice > 0 && choice <= script_count )); then
-        run_script "${scripts[$((choice - 1))]}"
+    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice > 0 && choice <= ${#all_scripts[@]} )); then
+        run_script "${all_scripts[$((choice - 1))]}"
     elif [[ "$choice" == "q" ]]; then
         echo "Exiting menu."
     else
