@@ -27,19 +27,17 @@ set_profile_picture() {
     fi
 
     # Set profile picture using KDE's user manager
-    if command_exists kcmshell5; then
-        log_message "Setting profile picture using KDE User Manager..." "cyan"
-        kcmshell5 kcm_users --set-face "$face_file"
-        log_message "Profile picture set successfully" "green"
-    else
-        log_message "KDE User Manager not found. Unable to set profile picture." "red"
-        return 1
-    fi
+    log_message "Setting profile picture using KDE User Manager..." "cyan"
+    kwriteconfig5 --file "$HOME/.face.icon" --group "General" --key "Face" "$face_file"
+    kcmshell5 kcm_users
+    log_message "Profile picture set successfully" "green"
+    log_message "You may need to log out and log back in to see the changes." "yellow"
 }
 
 # Main function
 main() {
     check_not_root
+    check_requirements
     set_profile_picture
 }
 

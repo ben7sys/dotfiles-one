@@ -184,7 +184,7 @@ autodetect_dotfiles_dir() {
 # Function to check system requirements
 check_requirements() {
     log_message "Checking system requirements..." "yellow"
-    local required_commands=(git stow jq python)
+    local required_commands=(git stow jq python kcmshell5 kwriteconfig5)
     local missing_commands=()
 
     for cmd in "${required_commands[@]}"; do
