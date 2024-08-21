@@ -1,0 +1,8 @@
+[Unit]
+Description=Automount syno-archiv
+
+[Automount]
+Where=/syno/archiv
+
+[Install]
+WantedBy=multi-user.target

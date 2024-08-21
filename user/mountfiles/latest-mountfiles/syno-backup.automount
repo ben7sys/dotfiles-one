@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount syno-backup
+Wants=network-online.target
+After=network-online.target
+
+[Automount]
+Where=/syno/backup
+
+[Install]
+WantedBy=multi-user.target

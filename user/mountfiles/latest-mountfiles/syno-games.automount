@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount syno-games
+Wants=network-online.target
+After=network-online.target
+
+[Automount]
+Where=/syno/games
+
+[Install]
+WantedBy=multi-user.target

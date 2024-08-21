@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount syno-archiv
+Wants=network-online.target
+After=network-online.target
+
+[Automount]
+Where=/syno/archiv
+
+[Install]
+WantedBy=multi-user.target
