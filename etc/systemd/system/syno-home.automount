@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount syno-home
+Wants=network-online.target
+After=network-online.target
+
+[Automount]
+Where=/syno/home
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount syno-sieben
+Wants=network-online.target
+After=network-online.target
+
+[Automount]
+Where=/syno/sieben
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Add static route for 192.168.77.0/24
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ip route add 192.168.77.0/24 via 10.0.10.1 dev enp5s0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

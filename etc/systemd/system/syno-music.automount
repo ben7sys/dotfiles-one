@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount syno-music
+Wants=network-online.target
+After=network-online.target
+
+[Automount]
+Where=/syno/music
+
+[Install]
+WantedBy=multi-user.target

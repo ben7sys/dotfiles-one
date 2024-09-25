@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer mount syno-home
+
+[Timer]
+OnBootSec=10s
+Unit=syno-home.mount
+
+[Install]
+WantedBy=multi-user.target

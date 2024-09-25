@@ -1,0 +1,11 @@
+[Unit]
+Description=Mount SMB Share //192.168.77.77/video
+
+[Mount]
+What=//192.168.77.77/video
+Where=%h/syno/video
+Type=cifs
+Options=credentials=%h/.smbcred,uid=%U,gid=%G,_netdev,nofail
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer mount syno-sieben
+
+[Timer]
+OnBootSec=15s
+Unit=syno-sieben.mount
+
+[Install]
+WantedBy=multi-user.target

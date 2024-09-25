@@ -1,0 +1,6 @@
+[Unit]
+Description=Rsync Backup Sieben Service 
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rsync -h --progress --stats -r -tgo -p -l -D --update --delete-after --delete-excluded --exclude=**/*tmp*/ --exclude=**/*cache*/ --exclude=**/*Cache*/ --exclude=**/*Trash*/ --exclude=**/*trash*/ --exclude=/sieben/.cache/ --exclude=/sieben/.local/share/Steam/ --exclude=/sieben/.local/share/Trash/ --exclude=/sieben/.local/share/baloo/ --exclude=/sieben/Games/ /home/sieben /syno/sieben/eos/

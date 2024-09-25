@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount syno-video
+Wants=network-online.target
+After=network-online.target
+
+[Automount]
+Where=/syno/video
+
+[Install]
+WantedBy=multi-user.target
